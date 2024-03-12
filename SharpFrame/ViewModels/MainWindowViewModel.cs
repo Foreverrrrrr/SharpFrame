@@ -8,7 +8,7 @@ namespace SharpFrame.ViewModels
         public string Title
         {
             get { return _title; }
-            set { SetProperty(ref _title, value); }
+            set { _title = value; RaisePropertyChanged(); }
         }
 
         public MainWindowViewModel()

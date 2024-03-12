@@ -64,6 +64,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ViewModels\SystemLogInViewModel.cs" />
     <Compile Include="Views\SystemLogIn.xaml.cs">
       <DependentUpon>SystemLogIn.xaml</DependentUpon>
     </Compile>
