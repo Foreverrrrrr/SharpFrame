@@ -1,0 +1,74 @@
+﻿<Window x:Class="SharpFrame.Views.SystemLogIn"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SharpFrame.Views" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        mc:Ignorable="d"
+        Title="SystemLogIn" Height="550" Width="400" 
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="{x:Null}">
+    <Border Margin="5" CornerRadius="15" Background="White">
+        <Border.Effect >
+            <DropShadowEffect Color="Black" ShadowDepth="0" BlurRadius="5" Opacity="0.1" Direction="10"/>
+        </Border.Effect>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.8*"/>
+                <RowDefinition Height="3*"/>
+                <RowDefinition Height="60"/>
+            </Grid.RowDefinitions>
+            <Border Background="White" CornerRadius="15,15,0,0"/>
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="{materialDesign:PackIcon CloseThick}" ToolTip="Icon"/>
+            <Grid>
+                <Grid.Resources>
+                    <Storyboard x:Key="WaterStoryboard">
+                        <PointAnimation AutoReverse="True"
+                                RepeatBehavior="Forever"
+                                Storyboard.TargetName="bs_Water"
+                                Storyboard.TargetProperty="Point1"
+                                From="15,-5"
+                                To="15,5"
+                                Duration="00:00:2"/>
+                        <PointAnimation AutoReverse="True"
+                                RepeatBehavior="Forever"
+                                Storyboard.TargetName="bs_Water"
+                                Storyboard.TargetProperty="Point2"
+                                From="35,5"
+                                To="40,-5"
+                                Duration="00:00:2" />
+                    </Storyboard>
+                </Grid.Resources>
+                <Grid.Triggers>
+                    <EventTrigger RoutedEvent="Loaded">
+                        <BeginStoryboard Storyboard="{StaticResource WaterStoryboard}" />
+                    </EventTrigger>
+                </Grid.Triggers>
+                <StackPanel VerticalAlignment="Bottom">
+                    <!--  水波  -->
+                    <Path Height="50"
+                  Margin="0,0,0,-1"
+                  Fill="#FF0FBE09"
+                  Stretch="Fill">
+                        <Path.Data>
+                            <PathGeometry>
+                                <PathFigure StartPoint="0,0">
+                                    <BezierSegment x:Name="bs_Water"
+                                           Point1="15,0"
+                                           Point2="35,0"
+                                           Point3="50,0" />
+                                    <PolyLineSegment Points="50,5 0,5" />
+                                </PathFigure>
+                            </PathGeometry>
+                        </Path.Data>
+                    </Path>
+                    <!--  矩形  -->
+                    <Rectangle Name="rec_Water"
+                       Height="40"
+                       Fill="#FF0FBE09"
+                       Opacity="0.2" />
+                </StackPanel>
+            </Grid>
+
+        </Grid>
+    </Border>
+</Window>
