@@ -1,5 +1,7 @@
-﻿using System;
+﻿using SharpFrame.ViewModels;
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +21,11 @@ namespace SharpFrame.Views
     /// </summary>
     public partial class SystemLogIn : Window
     {
+        public static SystemLogInViewModel viewModel;
         public SystemLogIn()
         {
             InitializeComponent();
+            viewModel = (SystemLogInViewModel)this.DataContext;
         }
     }
 
@@ -82,4 +86,36 @@ namespace SharpFrame.Views
         }
     }
 
+    public class PasswordBoxHelper : DependencyObject
+    {
+        public static readonly DependencyProperty PasswordProperty =
+        DependencyProperty.RegisterAttached("Password", typeof(string), typeof(PasswordBoxHelper), new FrameworkPropertyMetadata(string.Empty, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault, OnPasswordPropertyChanged));
+        public static string GetPassword(DependencyObject d)
+        {
+            return (string)d.GetValue(PasswordProperty);
+        }
+
+        public static void SetPassword(DependencyObject d, string value)
+        {
+            d.SetValue(PasswordProperty, value);
+        }
+
+        private static void OnPasswordPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            if (d is PasswordBox passwordBox)
+            {
+                passwordBox.PasswordChanged -= PasswordBox_PasswordChanged;
+                passwordBox.Password = (string)e.NewValue;
+                passwordBox.PasswordChanged += PasswordBox_PasswordChanged;
+            }
+        }
+
+        private static void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (sender is PasswordBox passwordBox)
+            {
+                SetPassword(passwordBox, passwordBox.Password);
+            }
+        }
+    }
 }

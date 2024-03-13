@@ -64,6 +64,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\Cloud_Client.cs" />
+    <Compile Include="Common\Software_Licence.cs" />
     <Compile Include="ViewModels\SystemLogInViewModel.cs" />
     <Compile Include="Views\SystemLogIn.xaml.cs">
       <DependentUpon>SystemLogIn.xaml</DependentUpon>
@@ -115,8 +117,6 @@
     </PackageReference>
     <PackageReference Include="Prism.DryIoc" Version="8.0.0.1909" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Common\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -10,8 +10,6 @@ namespace SharpFrame.Views
         public MainWindow()
         {
             InitializeComponent();
-            SystemLogIn systemLogIn = new SystemLogIn();
-            systemLogIn.Show();
         }
     }
 }
