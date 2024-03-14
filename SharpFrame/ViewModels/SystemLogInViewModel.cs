@@ -44,7 +44,6 @@ namespace SharpFrame.ViewModels
             set { _longin_log = value; RaisePropertyChanged(); }
         }
 
-
         private string _title = "瑞弘测控";
         public string Title
         {
