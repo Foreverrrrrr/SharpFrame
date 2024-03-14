@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Microsoft.Xaml.Behaviors;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace SharpFrame.Views
 {

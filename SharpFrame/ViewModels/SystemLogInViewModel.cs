@@ -16,22 +16,18 @@ namespace SharpFrame.ViewModels
     {
         public static event Action<string, string> LogInLoad;
 
-        IEventAggregator eventAggregator;
-
         public DelegateCommand Login_button { get; set; }
 
         public DelegateCommand Close { get; set; }
 
         public SystemLogInViewModel(IEventAggregator aggregators)
         {
-            this.eventAggregator = aggregators;
             Login_button = new DelegateCommand(() =>
             {
                 LogInLoad?.Invoke(Username, PassWord);
             });
             Close = new DelegateCommand(() =>
             {
-                eventAggregator.GetEvent<Close_MessageEvent>().Publish();
                 System.Environment.Exit(0);
             });
         }
@@ -44,7 +40,6 @@ namespace SharpFrame.ViewModels
             set { _longin_log = value; RaisePropertyChanged(); }
         }
 
-
         private string _title = "瑞弘测控";
         public string Title
         {
@@ -52,7 +47,7 @@ namespace SharpFrame.ViewModels
             set { _title = value; RaisePropertyChanged(); }
         }
 
-        private string _password;
+        private string _password = "666888";
 
         public string PassWord
         {
@@ -75,7 +70,13 @@ namespace SharpFrame.ViewModels
             get { return _client_on_line; }
             set { _client_on_line = value; RaisePropertyChanged(); }
         }
-    }
 
-    public class Close_MessageEvent : PubSubEvent { }
+        private object _warranty = null;
+
+        public object Warranty
+        {
+            get { return _warranty; }
+            set { _warranty = value; RaisePropertyChanged(); }
+        }
+    }
 }

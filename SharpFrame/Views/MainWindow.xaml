@@ -3,7 +3,64 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding Title}" Height="350" Width="525"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
+        Title="{Binding Title}" 
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" 
+        Height="1050" Width="1900" Background="White">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding Close}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
+        </Grid.RowDefinitions>
+        <Border Margin="10,10,10,0" CornerRadius="15" Background="White">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="320"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="0" Grid.Row="0">
+                    <StackPanel Orientation="Horizontal">
+                        <RadioButton ToolTip="启动" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Start_State,Mode=TwoWay}" BorderBrush="#FF2EFF00" Foreground="Black">
+                          <materialDesign:PackIcon Kind="Play" Height="40" Width="40" Foreground="Black"/>
+                        </RadioButton>
+                        <RadioButton ToolTip="暂停" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Suspend_State,Mode=TwoWay}" BorderBrush="#FFFFD408" Foreground="Black">
+                            <materialDesign:PackIcon Kind="Pause" Height="40" Width="40"/>
+                        </RadioButton>
+                        <RadioButton ToolTip="停止" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Stop_State,Mode=TwoWay}" BorderBrush="Red" Foreground="Black">
+                            <materialDesign:PackIcon Kind="Stop" Height="40" Width="40"/>
+                        </RadioButton>
+                        <RadioButton ToolTip="复位" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Reset_State,Mode=TwoWay}" BorderBrush="#FF087DFF" Foreground="Black">
+                            <materialDesign:PackIcon Kind="Cached" Height="40" Width="40" BorderBrush="Black"/>
+                        </RadioButton>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="0">
 
+                </Grid>
+            </Grid>
+            
+        </Border>
+        <Grid  Grid.Row="1">
+            <ProgressBar Orientation="Horizontal" Height="8" IsIndeterminate="{Binding LoadingBarState}" Foreground="#FFE2E2E2" Background="{x:Null}" BorderBrush="{x:Null}"/>
+        </Grid>
+        <Border Grid.Row="2">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Border CornerRadius="15" Background="#FF2871D2">
+
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>

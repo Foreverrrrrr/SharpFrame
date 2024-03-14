@@ -20,7 +20,7 @@
                 <RowDefinition Height="35"/>
             </Grid.RowDefinitions>
             <Border CornerRadius="15,15,0,0"/>
-            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="{materialDesign:PackIcon CloseThick}" ToolTip="关闭" BorderBrush="{x:Null}" Background="{x:Null}" Command="{Binding Close}"/>
+            <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="{materialDesign:PackIcon CloseThick}" ToolTip="关闭" BorderBrush="{x:Null}" Background="{x:Null}" Command="{Binding Close}" />
             <Grid Grid.Row="0" >
                 <Grid>
                     <FrameworkElement.Resources>
@@ -132,7 +132,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Width="190" VerticalAlignment="Center">
                     <materialDesign:PackIcon Kind="Account" Height="30" Width="30" Margin="0,3,10,0"/>
-                    <ComboBox Width="130" FontSize="20" SelectedIndex="0" HorizontalContentAlignment="Center" SelectedValue="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content">
+                    <ComboBox Width="130" FontSize="20" SelectedIndex="2" HorizontalContentAlignment="Center" SelectedValue="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content" Panel.ZIndex="1" Background="White" BorderBrush="Black">
                         <ComboBoxItem Content="供应商"/>
                         <ComboBoxItem Content="工程师"/>
                         <ComboBoxItem Content="生产员"/>
@@ -141,10 +141,10 @@
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Width="190" VerticalAlignment="Center">
                     <materialDesign:PackIcon Kind="Key" Height="30" Width="30" Margin="0,0,10,0"/>
                     <PasswordBox x:Name="PasswordBox" FontSize="20" Width="130" CaretBrush="Black"
-                     local:PasswordBoxHelper.Password="{Binding PassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                     local:PasswordBoxHelper.Password="{Binding PassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderBrush="Black" />
                 </StackPanel>
-                <StackPanel Grid.Row="3" Orientation="Horizontal" Width="200" VerticalAlignment="Center">
-                    <Button Style="{StaticResource MaterialDesignRaisedLightButton}" BorderBrush="{x:Null}" Background="#FF3C3C3C" Height="40" Width="200" FontSize="23" Foreground="White" Command="{Binding Login_button}">
+                <StackPanel Margin="0,30,0,0" Grid.Row="3" Orientation="Horizontal" Width="230" VerticalAlignment="Center" Cursor="">
+                    <Button Style="{StaticResource MaterialDesignRaisedLightButton}" BorderBrush="{x:Null}" Background="#FF3C3C3C" Height="45" Width="230" FontSize="23" Foreground="White" Command="{Binding Login_button}">
                         <TextBlock Text="登入"/>
                     </Button>
                 </StackPanel>
@@ -158,26 +158,45 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="5" Grid.Column="0" FontSize="13" Text="{Binding Lonin_Log}" Height="15" FontWeight="Bold"/>
-                <RadioButton Margin="5" Grid.Column="3" IsChecked="True" Content="试用" Background="Red" GroupName="Group1"/>
-                <RadioButton Margin="5" Grid.Column="4" IsChecked="{Binding Client_On_Line}" GroupName="Group2" FontWeight="Bold">
+                <RadioButton Margin="5" Grid.Column="3" IsChecked="{Binding Warranty}" GroupName="Group1" FontWeight="Bold" IsThreeState="True" Focusable="False" IsHitTestVisible="False" BorderBrush="{x:Null}">
                     <RadioButton.Template>
                         <ControlTemplate TargetType="RadioButton">
-                            <Border Background="{TemplateBinding Background}"
-                    BorderBrush="{TemplateBinding BorderBrush}"
-                    BorderThickness="{TemplateBinding BorderThickness}"
-                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center"
-                                  VerticalAlignment="Center"
-                                  Content="{TemplateBinding Content}" />
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Content="{TemplateBinding Content}"/>
                             </Border>
                             <ControlTemplate.Triggers>
                                 <Trigger Property="IsChecked" Value="True">
-                                    <Setter Property="Content" Value="On line" />
-                                    <Setter Property="Background" Value="#FF00FF1B" />
+                                    <Setter Property="Content" Value="已授权"/>
+                                    <Setter Property="Background" Value="#FF00FF1B"/>
                                 </Trigger>
                                 <Trigger Property="IsChecked" Value="False">
-                                    <Setter Property="Content" Value="Off line" />
-                                    <Setter Property="Background" Value="#FFFF0000" />
+                                    <Setter Property="Content" Value="试用"/>
+                                    <Setter Property="Background" Value="#FFFFEA03"/> 
+                                </Trigger>
+                                <DataTrigger Binding="{Binding Warranty}" Value="{x:Null}">
+                                    <Setter Property="Content" Value="未授权"/>
+                                    <Setter Property="Background" Value="#FFFF0000"/>
+                                </DataTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </RadioButton.Template>
+                </RadioButton>
+                <RadioButton Margin="5" Grid.Column="4" IsChecked="{Binding Client_On_Line}" GroupName="Group2" FontWeight="Bold" IsHitTestVisible="False" BorderBrush="{x:Null}">
+                    <RadioButton.Template>
+                        <ControlTemplate TargetType="RadioButton">
+                            <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
+                                <ContentPresenter HorizontalAlignment="Center"
+                                  VerticalAlignment="Center"
+                                  Content="{TemplateBinding Content}"/>
+                            </Border>
+                            <ControlTemplate.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Content" Value="在线"/>
+                                    <Setter Property="Background" Value="#FF00FF1B"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="Content" Value="离线"/>
+                                    <Setter Property="Background" Value="#FFFF0000"/>
                                 </Trigger>
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
