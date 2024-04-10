@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace SharpFrame.Logic.Base
 {
-    public static class Exchange
+    public class Exchange
     {
         private static bool Initialization_State { get; set; }
 
@@ -15,7 +15,7 @@ namespace SharpFrame.Logic.Base
 
         public enum Send_Variable : ushort
         {
-            a, b, c, d, e, f, g,
+            启动, 停止, 复位, 紧急停止
         }
 
         public enum Send_Error : ushort
@@ -57,12 +57,25 @@ namespace SharpFrame.Logic.Base
             }
         }
 
-        public static void Set_Output()
+        public static void AwaitInput(Send_Variable input1, Send_Variable input2, bool state, int time = 0)
         {
             if (Initialization_State)
             {
-
+                Stopwatch stopwatch = new Stopwatch();
+                stopwatch.Start();
+                do
+                {
+                    Thread.Sleep(50);
+                    if (time > 0 && stopwatch.ElapsedMilliseconds > time)
+                        break;
+                } while (Variable[(ushort)input1] != state || Variable[(ushort)input2] != state);
             }
+        }
+
+        public static void Set_Output(Send_Variable input, bool state)
+        {
+            if (Initialization_State)
+                Variable[(ushort)input] = state;
         }
     }
 }

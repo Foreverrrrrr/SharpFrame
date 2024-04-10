@@ -104,7 +104,9 @@ namespace SharpFrame.ViewModels
                 if (!_reset_state && value)
                 {
                     Log.Info("软复位按钮触发");
+                    LoadingBarState = true;
                     eventAggregator.GetEvent<ResetInform>().Publish();
+                    LoadingBarState = false;
                 }
                 _reset_state = value;
                 RaisePropertyChanged();
@@ -133,14 +135,14 @@ namespace SharpFrame.ViewModels
         }
 
         #region 获取显示器分辨率
-        private double _height = SystemParameters.PrimaryScreenHeight - 35;
+        private double _height = SystemParameters.PrimaryScreenHeight - 30;
         public double Height
         {
             get { return _height; }
             set { _height = value; RaisePropertyChanged(); }
         }
 
-        private double _width = SystemParameters.PrimaryScreenWidth;
+        private double _width = SystemParameters.PrimaryScreenWidth + 10;
 
         public double Width
         {

@@ -2,12 +2,11 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:prism="http://prismlibrary.com/"
-        prism:ViewModelLocator.AutoWireViewModel="True"
-        Title="{Binding Title}" 
+        prism:ViewModelLocator.AutoWireViewModel="True" Title="{Binding Title}" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" 
-        Height="1050" Width="1900" Background="White">
+        Height="{Binding Height}" Width="{Binding Width}" Background="White">
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding Close}"/>
@@ -29,7 +28,7 @@
                 <Grid Grid.Column="0" Grid.Row="0">
                     <StackPanel Orientation="Horizontal">
                         <RadioButton ToolTip="启动" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Start_State,Mode=TwoWay}" BorderBrush="#FF2EFF00" Foreground="Black">
-                          <materialDesign:PackIcon Kind="Play" Height="40" Width="40" Foreground="Black"/>
+                            <materialDesign:PackIcon Kind="Play" Height="40" Width="40" Foreground="Black"/>
                         </RadioButton>
                         <RadioButton ToolTip="暂停" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Suspend_State,Mode=TwoWay}" BorderBrush="#FFFFD408" Foreground="Black">
                             <materialDesign:PackIcon Kind="Pause" Height="40" Width="40"/>
@@ -43,10 +42,12 @@
                     </StackPanel>
                 </Grid>
                 <Grid Grid.Column="1" Grid.Row="0">
-
+                    <ContentControl prism:RegionManager.RegionName="TitleRegion" 
+        HorizontalAlignment="Right"
+        Foreground="{x:Null}" 
+        Panel.ZIndex="1"/>
                 </Grid>
             </Grid>
-            
         </Border>
         <Grid  Grid.Row="1">
             <ProgressBar Orientation="Horizontal" Height="8" IsIndeterminate="{Binding LoadingBarState}" Foreground="#FFE2E2E2" Background="{x:Null}" BorderBrush="{x:Null}"/>
@@ -57,10 +58,29 @@
                     <ColumnDefinition Width="130"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Border CornerRadius="15" Background="#FF2871D2">
-
+                <Border CornerRadius="15" Background="#FF3583EA">
+                    <StackPanel>
+                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="主页面" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="参数配置" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="调试" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="数据库" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="生产数据" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="日志" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                    </StackPanel>
                 </Border>
+                <Grid Grid.Column="1">
+                    <ContentControl prism:RegionManager.RegionName="MainRegion" 
+                                    HorizontalAlignment="Right"
+                                    Foreground="{x:Null}" 
+                                    Panel.ZIndex="1"/>
+                </Grid>
             </Grid>
         </Border>
+        <Grid Grid.Row="3" Margin="5">
+            <ContentControl prism:RegionManager.RegionName="ToolRegion" 
+                    HorizontalAlignment="Right"
+                    Foreground="{x:Null}" 
+                    Panel.ZIndex="1"/>
+        </Grid>
     </Grid>
 </Window>

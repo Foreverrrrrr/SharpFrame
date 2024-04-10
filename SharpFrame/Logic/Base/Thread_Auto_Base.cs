@@ -21,6 +21,7 @@ namespace SharpFrame.Logic.Base
 
         public static void NewClass(int spintime = 50)
         {
+            Exchange.Cache_Initialization();
             Type baseType = typeof(Thread_Auto_Base);
             Assembly assembly = Assembly.GetExecutingAssembly();
             Type[] derivedTypes = assembly.GetTypes().Where(t => t.IsSubclassOf(baseType)).ToArray();
@@ -46,7 +47,10 @@ namespace SharpFrame.Logic.Base
             {
                 Target = method.Name,
                 Thread_Name = descriptionAttribute?.Description ?? method.Name,
-                New_Thread = new Thread(() => { while (true) { try { Thread.Sleep(spintime); method.Invoke(instance, new object[] { instance }); } catch (ThreadAbortException ex) { instance.ThreadRestartEvent(ex, class_na); Thread_Configuration(class_na, method, class_new, spintime); break; } } }),
+                New_Thread = new Thread(() =>
+                {
+                    while (true) { try { Thread.Sleep(spintime); method.Invoke(instance, new Thread_Auto_Base[] { instance }); } catch (ThreadAbortException ex) { instance.ThreadRestartEvent(class_na, instance, ex); Thread_Configuration(class_na, method, class_new, spintime); GC.Collect(); break; } }
+                }),
             };
             threadBase.New_Thread.Name = class_na + "." + threadBase.Thread_Name;
             threadBase.New_Thread.IsBackground = true;
@@ -59,8 +63,12 @@ namespace SharpFrame.Logic.Base
             if (Auto_Th != null)
                 if (Auto_Th.Count > 0)
                 {
-                    foreach (var item in Thread_Auto_Base.Auto_Th)
+                    var t = Thread_Auto_Base.Auto_Th.ToList();
+                    foreach (var item in t)
+                    {
                         item.New_Thread.Abort();
+                        item.New_Thread.Join();
+                    }
                 }
         }
 
@@ -69,18 +77,19 @@ namespace SharpFrame.Logic.Base
             if (Auto_Th != null)
                 if (Auto_Th.Count > 0)
                 {
-                    var t = Thread_Auto_Base.Auto_Th.FirstOrDefault(x => x.Thread_Name == "diyds");
+                    var t = Thread_Auto_Base.Auto_Th.FirstOrDefault(x => x.Thread_Name == Thread_Name);
                     t.New_Thread.Abort();
+                    t.New_Thread.Join();
                 }
         }
 
         public abstract void Initialize(object thread);
 
-        [ProductionThreadBase]
-        public abstract void Main(object thread);
-
         public abstract void Error(object thread);
 
-        public abstract void ThreadRestartEvent(ThreadAbortException ex, string class_na);
+        [ProductionThreadBase]
+        public abstract void Main(Thread_Auto_Base thread);
+
+        public abstract void ThreadRestartEvent(string class_na, Thread_Auto_Base thread, ThreadAbortException ex);
     }
 }
