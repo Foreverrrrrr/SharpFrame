@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Windows.Input;
 
 namespace SharpFrame.Logic.Base
 {
@@ -15,7 +16,7 @@ namespace SharpFrame.Logic.Base
 
         public enum Send_Variable : ushort
         {
-            启动, 停止, 复位, 紧急停止
+            Start, AwaitStarted, Suspend, Stop, Reset, E_Stop
         }
 
         public enum Send_Error : ushort
@@ -76,6 +77,70 @@ namespace SharpFrame.Logic.Base
         {
             if (Initialization_State)
                 Variable[(ushort)input] = state;
+        }
+
+        public static bool External_IO(Send_Variable io)
+        {
+            if (Exchange.Variable == null)
+                Cache_Initialization();
+            switch (io)
+            {
+                case Send_Variable.Start:
+                    if (Exchange.Variable[(int)Exchange.Send_Variable.Suspend])//恢复
+                    {
+                        Exchange.Set_Output(Exchange.Send_Variable.Suspend, false);
+                        Exchange.Set_Output(Exchange.Send_Variable.Start, true);
+                        Exchange.Set_Output(Exchange.Send_Variable.AwaitStarted, true);
+                        return true;
+                    }
+                    else if (Exchange.Variable[(int)Exchange.Send_Variable.Reset])//复位后启动
+                    {
+                        Exchange.Set_Output(Exchange.Send_Variable.Reset, false);
+                        Exchange.Set_Output(Exchange.Send_Variable.Start, true);
+                        Exchange.Set_Output(Exchange.Send_Variable.AwaitStarted, true);
+                        return true;
+                    }
+                    else if (Exchange.Variable[(int)Exchange.Send_Variable.AwaitStarted] && !Exchange.Variable[(int)Exchange.Send_Variable.Start])//连续启动
+                    {
+                        Exchange.Set_Output(Exchange.Send_Variable.Start, true);
+                        Exchange.Set_Output(Exchange.Send_Variable.AwaitStarted, true);
+                        return true;
+                    }
+                    break;
+                case Send_Variable.Suspend:
+                    if (Exchange.Variable[(int)Exchange.Send_Variable.AwaitStarted] && Exchange.Variable[(int)Exchange.Send_Variable.Start])//暂停
+                    {
+                        Exchange.Set_Output(Exchange.Send_Variable.Suspend, true);
+                        Exchange.Set_Output(Exchange.Send_Variable.Start, false);
+                        return true;
+                    }
+                    break;
+                case Send_Variable.Stop:
+                    Exchange.Set_Output(Exchange.Send_Variable.Suspend, false);
+                    Exchange.Set_Output(Exchange.Send_Variable.Stop, true);
+                    Exchange.Set_Output(Exchange.Send_Variable.Reset, false);
+                    Exchange.Set_Output(Exchange.Send_Variable.Start, false);
+                    Exchange.Set_Output(Exchange.Send_Variable.AwaitStarted, false);
+                    return true;
+                case Send_Variable.Reset:
+                    if ((Exchange.Variable[(int)Exchange.Send_Variable.Stop] || Exchange.Variable[(int)Exchange.Send_Variable.Suspend])
+                 && !Exchange.Variable[(int)Exchange.Send_Variable.Reset])
+                    {
+                        Thread_Auto_Base.Thraead_Dispose();
+                        Exchange.Set_Output(Exchange.Send_Variable.Suspend, false);
+                        Exchange.Set_Output(Exchange.Send_Variable.Reset, true);
+                        Exchange.Set_Output(Exchange.Send_Variable.Stop, false);
+                        Exchange.Set_Output(Exchange.Send_Variable.AwaitStarted, false);
+                        Exchange.Set_Output(Exchange.Send_Variable.Suspend, false);
+                        return true;
+                    }
+                    break;
+                case Send_Variable.E_Stop:
+                    break;
+                default:
+                    break;
+            }
+            return false;
         }
     }
 }

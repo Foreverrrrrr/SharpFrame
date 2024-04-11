@@ -11,6 +11,9 @@
         <i:EventTrigger EventName="Closed">
             <i:InvokeCommandAction Command="{Binding Close}"/>
         </i:EventTrigger>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding PageLoadFinish}"/>
+        </i:EventTrigger>
     </i:Interaction.Triggers>
     <Grid>
         <Grid.RowDefinitions>
@@ -22,26 +25,30 @@
         <Border Margin="10,10,10,0" CornerRadius="15" Background="White">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="130"/>
                     <ColumnDefinition Width="320"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0" Grid.Row="0">
+                    <TextBlock  Text="{Binding SystemState}" FontSize="18" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Grid>
+                <Grid Grid.Column="1" Grid.Row="0">
                     <StackPanel Orientation="Horizontal">
-                        <RadioButton ToolTip="启动" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Start_State,Mode=TwoWay}" BorderBrush="#FF2EFF00" Foreground="Black">
+                        <RadioButton GroupName="Group" ToolTip="启动" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Start_State,Mode=TwoWay}" BorderBrush="#FF2EFF00" Foreground="Black">
                             <materialDesign:PackIcon Kind="Play" Height="40" Width="40" Foreground="Black"/>
                         </RadioButton>
-                        <RadioButton ToolTip="暂停" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Suspend_State,Mode=TwoWay}" BorderBrush="#FFFFD408" Foreground="Black">
+                        <RadioButton GroupName="Group"  ToolTip="暂停" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Suspend_State,Mode=TwoWay}" BorderBrush="#FFFFD408" Foreground="Black">
                             <materialDesign:PackIcon Kind="Pause" Height="40" Width="40"/>
                         </RadioButton>
-                        <RadioButton ToolTip="停止" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Stop_State,Mode=TwoWay}" BorderBrush="Red" Foreground="Black">
+                        <RadioButton GroupName="Group"  ToolTip="停止" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Stop_State,Mode=TwoWay}" BorderBrush="Red" Foreground="Black">
                             <materialDesign:PackIcon Kind="Stop" Height="40" Width="40"/>
                         </RadioButton>
-                        <RadioButton ToolTip="复位" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Reset_State,Mode=TwoWay}" BorderBrush="#FF087DFF" Foreground="Black">
+                        <RadioButton GroupName="Group"  ToolTip="复位" Style="{StaticResource MaterialDesignTabRadioButton}" IsChecked="{Binding Reset_State,Mode=TwoWay}" BorderBrush="#FF087DFF" Foreground="Black">
                             <materialDesign:PackIcon Kind="Cached" Height="40" Width="40" BorderBrush="Black"/>
                         </RadioButton>
                     </StackPanel>
                 </Grid>
-                <Grid Grid.Column="1" Grid.Row="0">
+                <Grid Grid.Column="2" Grid.Row="0">
                     <ContentControl prism:RegionManager.RegionName="TitleRegion" 
         HorizontalAlignment="Right"
         Foreground="{x:Null}" 
@@ -68,11 +75,11 @@
                         <Button Command="{Binding VisionSwitching}" CommandParameter="LogView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="日志" Foreground="Black" FontWeight="Bold" FontSize="16"/>
                     </StackPanel>
                 </Border>
-                <Grid Grid.Column="1">
+                <Grid Grid.Column="1" Margin="5">
                     <ContentControl prism:RegionManager.RegionName="MainRegion" 
                                     HorizontalAlignment="Left"
                                     Foreground="{x:Null}" 
-                                    Panel.ZIndex="1" Width="1000" Height="300"/>
+                                    Panel.ZIndex="1" Width="1800" Height="900"/>
                 </Grid>
             </Grid>
         </Border>

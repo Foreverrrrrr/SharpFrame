@@ -16,11 +16,14 @@ namespace SharpFrame.ViewModels
         public ParameterViewModel(IEventAggregator eventaggregator)
         {
             aggregator = eventaggregator;
-            aggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
+            aggregator.GetEvent<LoginPermission>().Subscribe((type) =>
             {
 
             });
-            aggregator.GetEvent<LoginPermission>().Subscribe((type) =>
+            aggregator.GetEvent<PageLoadEvent>().Subscribe(() =>
+            {
+
+            }); aggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
             {
 
             });
