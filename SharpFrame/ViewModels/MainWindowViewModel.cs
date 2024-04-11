@@ -1,22 +1,41 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Regions;
 using ProductAssembly.FunctionCall;
+using SharpFrame.Views;
+using System;
 using System.Windows;
 
 namespace SharpFrame.ViewModels
 {
     public class MainWindowViewModel : BindableBase
     {
-        private IEventAggregator eventAggregator;
+        private readonly IEventAggregator eventAggregator;
+
+        private readonly IRegionManager regionManager;
+
+        public DelegateCommand<string> VisionSwitching { get; set; }
 
         public DelegateCommand Close { get; set; }
 
         public static DelegateCommand<Permission> PermissionCommand { get; set; }
 
-        public MainWindowViewModel(IEventAggregator aggregator)
+        public MainWindowViewModel(IEventAggregator aggregator, IRegionManager regionManager)
         {
+            this.regionManager = regionManager;
             this.eventAggregator = aggregator;
+            VisionSwitching = new DelegateCommand<string>((ManagerName) =>
+            {
+                try
+                {
+                    regionManager.Regions["MainRegion"].RequestNavigate(ManagerName);
+                }
+                catch (Exception ex)
+                {
+
+                }
+            });
             Close = new DelegateCommand(() =>
             {
                 eventAggregator.GetEvent<Close_MessageEvent>().Publish();
@@ -26,6 +45,15 @@ namespace SharpFrame.ViewModels
             {
                 eventAggregator.GetEvent<LoginPermission>().Publish(t);
             });
+            Viewinitial();
+        }
+
+        /// <summary>
+        /// 页面初始化加载
+        /// </summary>
+        public void Viewinitial()
+        {
+            regionManager.RegisterViewWithRegion("MainRegion", typeof(ParameterView));
         }
 
         #region 启动按钮

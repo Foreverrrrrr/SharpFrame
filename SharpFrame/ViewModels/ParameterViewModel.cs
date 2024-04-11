@@ -1,4 +1,5 @@
-﻿using Prism.Events;
+﻿using Prism.Commands;
+using Prism.Events;
 using Prism.Mvvm;
 using System;
 using System.Collections.Generic;
@@ -8,14 +9,18 @@ using System.Threading.Tasks;
 
 namespace SharpFrame.ViewModels
 {
-    public class ParameterPageViewModel : BindableBase
+    public class ParameterViewModel : BindableBase
     {
         IEventAggregator aggregator;
 
-        public ParameterPageViewModel(IEventAggregator eventaggregator)
+        public ParameterViewModel(IEventAggregator eventaggregator)
         {
             aggregator = eventaggregator;
             aggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
+            {
+
+            });
+            aggregator.GetEvent<LoginPermission>().Subscribe((type) =>
             {
 
             });

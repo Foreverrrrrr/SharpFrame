@@ -19,13 +19,11 @@ namespace SharpFrame.Views
     /// <summary>
     /// ParameterPage.xaml 的交互逻辑
     /// </summary>
-    public partial class ParameterPage : UserControl
+    public partial class ParameterView : UserControl
     {
-        public static ParameterPage viewModel;
-        public ParameterPage()
+        public ParameterView()
         {
             InitializeComponent();
-            viewModel = (ParameterPage)this.DataContext;
         }
     }
 }

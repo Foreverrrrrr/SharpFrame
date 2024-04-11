@@ -97,13 +97,9 @@ namespace SharpFrame
             System.Diagnostics.Process current = System.Diagnostics.Process.GetCurrentProcess();
             System.Diagnostics.Process[] processes = System.Diagnostics.Process.GetProcessesByName(current.ProcessName);
             if (processes.Length >= 2)
-            {
                 return true;
-            }
             else
-            {
                 return false;
-            }
         }
 
         protected override Window CreateShell()
@@ -113,9 +109,8 @@ namespace SharpFrame
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<SystemLogIn>();
-            containerRegistry.RegisterSingleton<MainWindow>();
-            containerRegistry.RegisterSingleton<ParameterPage>();
+            containerRegistry.RegisterForNavigation<MainWindow>();
+            containerRegistry.RegisterForNavigation<ParameterView>();
         }
     }
 }

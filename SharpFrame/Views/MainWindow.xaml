@@ -60,19 +60,19 @@
                 </Grid.ColumnDefinitions>
                 <Border CornerRadius="15" Background="#FF3583EA">
                     <StackPanel>
-                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="主页面" Foreground="Black" FontWeight="Bold" FontSize="16"/>
-                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="参数配置" Foreground="Black" FontWeight="Bold" FontSize="16"/>
-                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="调试" Foreground="Black" FontWeight="Bold" FontSize="16"/>
-                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="数据库" Foreground="Black" FontWeight="Bold" FontSize="16"/>
-                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="生产数据" Foreground="Black" FontWeight="Bold" FontSize="16"/>
-                        <Button Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="日志" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Command="{Binding VisionSwitching}" CommandParameter="HomeView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="主页面" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Command="{Binding VisionSwitching}" CommandParameter="ParameterView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="参数配置" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Command="{Binding VisionSwitching}" CommandParameter="DebugView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="调试" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Command="{Binding VisionSwitching}" CommandParameter="DatabaseView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="数据库" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Command="{Binding VisionSwitching}" CommandParameter="ProduceInfoView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="生产数据" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+                        <Button Command="{Binding VisionSwitching}" CommandParameter="LogView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="日志" Foreground="Black" FontWeight="Bold" FontSize="16"/>
                     </StackPanel>
                 </Border>
                 <Grid Grid.Column="1">
                     <ContentControl prism:RegionManager.RegionName="MainRegion" 
-                                    HorizontalAlignment="Right"
+                                    HorizontalAlignment="Left"
                                     Foreground="{x:Null}" 
-                                    Panel.ZIndex="1"/>
+                                    Panel.ZIndex="1" Width="1000" Height="300"/>
                 </Grid>
             </Grid>
         </Border>

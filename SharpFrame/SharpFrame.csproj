@@ -91,10 +91,10 @@
     <Compile Include="Logic\Base\Thread_Auto_Base.cs" />
     <Compile Include="Logic\Base\Exchange.cs" />
     <Compile Include="Logic\Base\ProductionThreadBase.cs" />
-    <Compile Include="ViewModels\ParameterPageViewModel.cs" />
+    <Compile Include="ViewModels\ParameterViewModel.cs" />
     <Compile Include="ViewModels\SystemLogInViewModel.cs" />
-    <Compile Include="Views\ParameterPage.xaml.cs">
-      <DependentUpon>ParameterPage.xaml</DependentUpon>
+    <Compile Include="Views\ParameterView.xaml.cs">
+      <DependentUpon>ParameterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SystemLogIn.xaml.cs">
       <DependentUpon>SystemLogIn.xaml</DependentUpon>
@@ -112,7 +112,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\ParameterPage.xaml">
+    <Page Include="Views\ParameterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
