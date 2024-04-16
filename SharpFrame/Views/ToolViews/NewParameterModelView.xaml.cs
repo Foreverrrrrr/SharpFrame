@@ -1,7 +1,5 @@
-﻿using SharpFrame.ViewModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,17 +10,16 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SharpFrame.Views
+namespace SharpFrame.Views.ToolViews
 {
     /// <summary>
-    /// ParameterPage.xaml 的交互逻辑
+    /// NewParameterModelView.xaml 的交互逻辑
     /// </summary>
-    public partial class ParameterView : UserControl
+    public partial class NewParameterModelView : Window
     {
-        public ParameterView()
+        public NewParameterModelView()
         {
             InitializeComponent();
         }

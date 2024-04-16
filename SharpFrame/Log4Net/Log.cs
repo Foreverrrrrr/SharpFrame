@@ -5,7 +5,7 @@ using System.Windows;
 
 [assembly: XmlConfigurator(ConfigFile = @"Log4Net\\log4net.config", Watch = true)]
 
-namespace ProductAssembly.FunctionCall
+namespace SharpFrame.log4Net
 {
     /// <summary>
     /// 运行日志

@@ -75,11 +75,11 @@
                         <Button Command="{Binding VisionSwitching}" CommandParameter="LogView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" ToolTip="MaterialDesignFlatLightButton" Content="日志" Foreground="Black" FontWeight="Bold" FontSize="16"/>
                     </StackPanel>
                 </Border>
-                <Grid Grid.Column="1" Margin="5">
+                <Grid Grid.Column="1" Margin="3">
                     <ContentControl prism:RegionManager.RegionName="MainRegion" 
                                     HorizontalAlignment="Left"
                                     Foreground="{x:Null}" 
-                                    Panel.ZIndex="1" Width="1800" Height="900"/>
+                                    Panel.ZIndex="1" Width="1770" Height="900"/>
                 </Grid>
             </Grid>
         </Border>

@@ -126,12 +126,12 @@ namespace SharpFrame.Logic.Base
                     if ((Exchange.Variable[(int)Exchange.Send_Variable.Stop] || Exchange.Variable[(int)Exchange.Send_Variable.Suspend])
                  && !Exchange.Variable[(int)Exchange.Send_Variable.Reset])
                     {
-                        Thread_Auto_Base.Thraead_Dispose();
                         Exchange.Set_Output(Exchange.Send_Variable.Suspend, false);
                         Exchange.Set_Output(Exchange.Send_Variable.Reset, true);
                         Exchange.Set_Output(Exchange.Send_Variable.Stop, false);
                         Exchange.Set_Output(Exchange.Send_Variable.AwaitStarted, false);
                         Exchange.Set_Output(Exchange.Send_Variable.Suspend, false);
+                        Thread_Auto_Base.Thraead_Dispose();
                         return true;
                     }
                     break;

@@ -6,17 +6,22 @@ using Prism.Modularity;
 using SharpFrame.Common;
 using SharpFrame.ViewModels;
 using SharpFrame.Views;
+using SharpFrame.Views.ToolViews;
 using System;
 using System.Diagnostics;
+using System.Net;
+using System.Runtime.Remoting.Lifetime;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
 namespace SharpFrame
 {
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
+    //Copyright © 2024 Mr. Xu YiFan
+    // 1. This software is intended for demonstration and educational purposes only and must not be used for commercial purposes.
+    // 2. Modification, reproduction, or redistribution of this software without authorization from Mr.Xu YiFan is prohibited.
+    // 3. Mr.Xu YiFan shall not be liable for any loss or damage resulting from the use of this software.
+    // 4. In case of encountering bugs or providing suggestions for improvement, please contact Mr.Xu YiFan at awalkingonthecloud@gmail.com.
     public partial class App : PrismApplication
     {
         public App()
@@ -111,6 +116,7 @@ namespace SharpFrame
         {
             containerRegistry.RegisterForNavigation<MainWindow>();
             containerRegistry.RegisterForNavigation<ParameterView>();
+            containerRegistry.RegisterForNavigation<System_AddView>();
         }
     }
 }

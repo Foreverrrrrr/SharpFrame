@@ -12,7 +12,7 @@ using System.Windows;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("SharpFrame")]
-[assembly: AssemblyCopyright("Copyright ©  2024")]
+[assembly: AssemblyCopyright("Copyright © 2024 Mr. Xu YiFan")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -133,9 +133,9 @@
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Width="190" VerticalAlignment="Center">
                     <materialDesign:PackIcon Kind="Account" Height="30" Width="30" Margin="0,3,10,0"/>
                     <ComboBox Width="130" FontSize="20" SelectedIndex="2" HorizontalContentAlignment="Center" SelectedValue="{Binding Username, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content" Panel.ZIndex="1" Background="White" BorderBrush="Black">
-                        <ComboBoxItem Content="供应商"/>
-                        <ComboBoxItem Content="工程师"/>
-                        <ComboBoxItem Content="生产员"/>
+                        <ComboBoxItem Content="供应商" Background="White"/>
+                        <ComboBoxItem Content="工程师" Background="White"/>
+                        <ComboBoxItem Content="生产员" Background="White"/>
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Width="190" VerticalAlignment="Center">

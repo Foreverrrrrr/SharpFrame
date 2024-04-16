@@ -2,9 +2,10 @@
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
-using ProductAssembly.FunctionCall;
+using SharpFrame.log4Net;
 using SharpFrame.Logic.Base;
 using SharpFrame.Views;
+using SharpFrame.Views.ToolViews;
 using System;
 using System.Web.UI.WebControls;
 using System.Windows;
@@ -79,6 +80,7 @@ namespace SharpFrame.ViewModels
         private void Viewinitial()
         {
             regionManager.RegisterViewWithRegion("MainRegion", typeof(ParameterView));
+            regionManager.RegisterViewWithRegion("MainRegion", typeof(LogView));
         }
 
         #region 启动按钮

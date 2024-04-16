@@ -1,7 +1,8 @@
-﻿using SharpFrame.ViewModels;
+﻿using Prism.Events;
+using SharpFrame.ViewModels;
+using SharpFrame.ViewModels.ToolViewModels;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,19 +13,19 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SharpFrame.Views
+namespace SharpFrame.Views.ToolViews
 {
     /// <summary>
-    /// ParameterPage.xaml 的交互逻辑
+    /// System_AddView.xaml 的交互逻辑
     /// </summary>
-    public partial class ParameterView : UserControl
+    public partial class System_AddView : Window
     {
-        public ParameterView()
+        public System_AddView(IEventAggregator aggregator, SystemStructure system)
         {
             InitializeComponent();
+            this.DataContext = new System_AddViewModel(aggregator, system);
         }
     }
 }
