@@ -22,7 +22,7 @@ namespace SharpFrame.Views.ToolViews
     /// </summary>
     public partial class System_AddView : Window
     {
-        public System_AddView(IEventAggregator aggregator, SystemStructure system)
+        public System_AddView(IEventAggregator aggregator, SystemParameter system)
         {
             InitializeComponent();
             this.DataContext = new System_AddViewModel(aggregator, system);

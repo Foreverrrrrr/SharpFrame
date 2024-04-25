@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Shapes;
 
-namespace SharpFrame.SystemParameter
+namespace SharpFrame.ParameterJson
 {
     public static class ParameterJsonTool
     {

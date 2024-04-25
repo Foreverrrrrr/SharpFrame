@@ -17,7 +17,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Margin="10,0,0,0" Text="型号名称：" FontSize="16" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <ComboBox Margin="0,0,10,0" SelectedIndex="{Binding ParameterIndexes}" DisplayMemberPath="Name" SelectedValuePath="ID" ItemsSource="{Binding ParameterNameList}" FontSize="16" Width="120" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" Background="White"/>
-                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="型号添加" FontSize="15" Background="#FF259CDA" BorderBrush="{x:Null}"/>
+                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="型号添加" FontSize="15" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding NewModel}"/>
                 <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="参数保存" FontSize="15" Background="#FF259CDA" BorderBrush="{x:Null}"/>
             </StackPanel>
         </Grid>

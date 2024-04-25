@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Prism.Events;
+using SharpFrame.ViewModels.ToolViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +21,11 @@ namespace SharpFrame.Views.ToolViews
     /// </summary>
     public partial class NewParameterModelView : Window
     {
-        public NewParameterModelView()
+        public NewParameterModelView(IEventAggregator aggregator, List<string> parameterslist)
         {
             InitializeComponent();
+            this.DataContext = new NewParameterModelViewModel(aggregator, parameterslist);
+
         }
     }
 }

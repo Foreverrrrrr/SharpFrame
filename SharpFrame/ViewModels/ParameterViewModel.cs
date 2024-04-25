@@ -2,6 +2,7 @@
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using SharpFrame.ParameterJson;
 using SharpFrame.ViewModels.ToolViewModels;
 using SharpFrame.Views.ToolViews;
 using System;
@@ -27,7 +28,7 @@ namespace SharpFrame.ViewModels
             });
             aggregator.GetEvent<PageLoadEvent>().Subscribe(() =>
             {
-                var system_list = SystemParameter.ParameterJsonTool.GetJson();
+                var system_list = ParameterJsonTool.GetJson();
                 if (system_list.Count > 0)
                 {
                     for (int i = 0; i < system_list.Count; i++)
@@ -35,36 +36,36 @@ namespace SharpFrame.ViewModels
                         ParameterNameList.Add(new ComboxList { ID = i, Name = system_list[i] });
                     }
                     ParameterIndexes = ParameterNameList.ToList().Find(x => x.Name == "ModelName").ID;
-                    ObservableCollection<SystemStructure> systems = new ObservableCollection<SystemStructure>();
-                    SystemParameter.ParameterJsonTool.ReadJson(system_list[0], ref systems);
+                    ObservableCollection<SystemParameter> systems = new ObservableCollection<SystemParameter>();
+                    ParameterJsonTool.ReadJson(system_list[0], ref systems);
                     SystemArguments = systems;
                 }
                 else
                 {
-                    SystemArguments.Add(new SystemStructure() { ID = 0, Name = "0", Value = 0.211f });
-                    SystemArguments.Add(new SystemStructure() { ID = 1, Name = "1", Value = 0.333 });
-                    SystemArguments.Add(new SystemStructure() { ID = 2, Name = "2", Value = "sasda" });
-                    SystemParameter.ParameterJsonTool.NewJosn("2024_4_24");
+                    SystemArguments.Add(new SystemParameter() { ID = 0, Name = "0", Value = 0.211f });
+                    SystemArguments.Add(new SystemParameter() { ID = 1, Name = "1", Value = 0.333 });
+                    SystemArguments.Add(new SystemParameter() { ID = 2, Name = "2", Value = "sasda" });
+                    ParameterJsonTool.NewJosn("2024_4_24");
                 }
-                system_list = SystemParameter.ParameterJsonTool.GetJson();
+                system_list = ParameterJsonTool.GetJson();
             });
             aggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
             {
 
             });
-            SystemArguments_Add_Line = new DelegateCommand<SystemStructure>((checkdata) =>
+            SystemArguments_Add_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
                 System_AddView system = new System_AddView(aggregator, checkdata);
                 system.Show();
             });
-            SystemArguments_Remove_Line = new DelegateCommand<SystemStructure>((checkdata) =>
+            SystemArguments_Remove_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
                 if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
                 {
                     SystemArguments.Remove(checkdata);
-                    ObservableCollection<SystemStructure> systemStructures = new ObservableCollection<SystemStructure>();
+                    ObservableCollection<SystemParameter> systemStructures = new ObservableCollection<SystemParameter>();
                     int index = 0;
-                    foreach (SystemStructure item in SystemArguments.Select(x => new SystemStructure(x)))
+                    foreach (SystemParameter item in SystemArguments.Select(x => new SystemParameter(x)))
                     {
                         item.ID = index;
                         systemStructures.Add(item);
@@ -78,9 +79,9 @@ namespace SharpFrame.ViewModels
             {
                 var k = SystemArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
                 SystemArguments.Insert(k, t.NewParameter);
-                ObservableCollection<SystemStructure> systemStructures = new ObservableCollection<SystemStructure>();
+                ObservableCollection<SystemParameter> systemStructures = new ObservableCollection<SystemParameter>();
                 int index = 0;
-                foreach (SystemStructure item in SystemArguments.Select(x => new SystemStructure(x)))
+                foreach (SystemParameter item in SystemArguments.Select(x => new SystemParameter(x)))
                 {
                     item.ID = index;
                     systemStructures.Add(item);
@@ -91,21 +92,23 @@ namespace SharpFrame.ViewModels
             }, ThreadOption.UIThread);
         }
 
+        public DelegateCommand NewModel { get; set; }
+
         /// <summary>
         /// 系统参数添加行请求
         /// </summary>
-        public DelegateCommand<SystemStructure> SystemArguments_Add_Line { get; set; }
+        public DelegateCommand<SystemParameter> SystemArguments_Add_Line { get; set; }
 
         /// <summary>
         /// 系统参数移除行请求
         /// </summary>
-        public DelegateCommand<SystemStructure> SystemArguments_Remove_Line { get; set; }
+        public DelegateCommand<SystemParameter> SystemArguments_Remove_Line { get; set; }
 
-        private ObservableCollection<SystemStructure> _systemarguments = new ObservableCollection<SystemStructure>();
+        private ObservableCollection<SystemParameter> _systemarguments = new ObservableCollection<SystemParameter>();
         /// <summary>
         /// 系统参数表
         /// </summary>
-        public ObservableCollection<SystemStructure> SystemArguments
+        public ObservableCollection<SystemParameter> SystemArguments
         {
             get { return _systemarguments; }
             set { _systemarguments = value; RaisePropertyChanged(); }
@@ -138,13 +141,24 @@ namespace SharpFrame.ViewModels
         public int ID { get; set; }
     }
 
-    public class SystemStructure
+    /// <summary>
+    /// 程序参数
+    /// </summary>
+    public class Parameter
     {
-        public SystemStructure()
-        {
+        public ObservableCollection<SystemParameter> SystemParameters_Obse { get; set; }
+        public ObservableCollection<PointLocationParameter> PointLocationParameter_Obse { get; set; }
+        public ObservableCollection<TestParameter> TestParameter_Obse { get; set; }
+    }
 
-        }
-        public SystemStructure(SystemStructure system)
+    /// <summary>
+    /// 系统参数结构
+    /// </summary>
+    public class SystemParameter
+    {
+        public SystemParameter() { }
+
+        public SystemParameter(SystemParameter system)
         {
             if (system != null)
             {
@@ -175,13 +189,36 @@ namespace SharpFrame.ViewModels
         public Type ValueType { get; set; }
     }
 
-    public class PointLocation
+    /// <summary>
+    /// 点位参数结构
+    /// </summary>
+    public class PointLocationParameter
     {
         public int ID { get; set; }
 
         public string Name { get; set; }
 
         public bool Enable { get; set; }
+
+        public double PointA { get; set; }
+
+        public double PointB { get; set; }
+
+        public double PointC { get; set; }
+
+        public double PointD { get; set; }
+
+        public double PointE { get; set; }
+
+        public double PointF { get; set; }
+    }
+
+    /// <summary>
+    /// 测试参数结构
+    /// </summary>
+    public class TestParameter
+    {
+
     }
 
     /// <summary>
@@ -191,8 +228,8 @@ namespace SharpFrame.ViewModels
 
     public class Add_Ins
     {
-        public SystemStructure NewParameter { get; set; }
+        public SystemParameter NewParameter { get; set; }
 
-        public SystemStructure InsertionParameter { get; set; }
+        public SystemParameter InsertionParameter { get; set; }
     }
 }

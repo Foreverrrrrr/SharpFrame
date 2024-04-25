@@ -173,7 +173,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="SystemParameter\System.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ClientKeyMaker">

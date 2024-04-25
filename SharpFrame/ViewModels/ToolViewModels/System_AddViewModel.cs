@@ -13,9 +13,9 @@ namespace SharpFrame.ViewModels.ToolViewModels
     {
         private readonly IEventAggregator eventAggregator;
 
-        private SystemStructure this_checkdata;
+        private SystemParameter this_checkdata;
 
-        public System_AddViewModel(IEventAggregator aggregator, SystemStructure checkdata)
+        public System_AddViewModel(IEventAggregator aggregator, SystemParameter checkdata)
         {
             this.eventAggregator = aggregator;
             this.this_checkdata = checkdata;
@@ -26,7 +26,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
             });
             OkButton = new DelegateCommand(() =>
             {
-                SystemStructure structure = new SystemStructure();
+                SystemParameter structure = new SystemParameter();
                 structure.Name = Name;
                 string input_value = Input_Value;
                 switch (TypeModel)
