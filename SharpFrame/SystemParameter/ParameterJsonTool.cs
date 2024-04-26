@@ -118,7 +118,7 @@ namespace SharpFrame.ParameterJson
         }
 
         /// <summary>
-        /// 读取Json格式参数
+        /// 读取指定Json格式参数
         /// </summary>
         /// <typeparam name="T">Json反序列化类型</typeparam>
         /// <param name="table">参数名称</param>
@@ -140,6 +140,26 @@ namespace SharpFrame.ParameterJson
             }
             else
                 return false;
+        }
+
+        public static ObservableCollection<T> ReadAllJson<T>(T t) where T : class
+        {
+            string path = "";
+            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            DirectoryInfo root = new DirectoryInfo(path + "\\");
+            FileInfo[] files = root.GetFiles();
+            ObservableCollection<T> values = new ObservableCollection<T>();
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (files[i].Name != "Base.json")
+                {
+                    string destinationFile = path + "\\" + files[i].Name;
+                    string jsonStr = File.ReadAllText(destinationFile);
+                    T deserializeResult = JsonConvert.DeserializeObject<T>(jsonStr);
+                    values.Add(deserializeResult);
+                }
+            }
+            return values;
         }
 
         /// <summary>

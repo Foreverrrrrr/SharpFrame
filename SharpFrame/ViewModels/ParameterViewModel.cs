@@ -1,5 +1,6 @@
 ﻿using ImTools;
 using Prism.Commands;
+using Prism.Common;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.ParameterJson;
@@ -8,7 +9,9 @@ using SharpFrame.Views.ToolViews;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -31,27 +34,68 @@ namespace SharpFrame.ViewModels
                 var system_list = ParameterJsonTool.GetJson();
                 if (system_list.Count > 0)
                 {
+                    var all_parameters = ParameterJsonTool.ReadAllJson(new Parameter());
+                    int index = all_parameters.Select((item, idx) => new { Item = item, Index = idx }).FirstOrDefault(x => x.Item.DefaultModel == true)?.Index ?? -1;
                     for (int i = 0; i < system_list.Count; i++)
                     {
                         ParameterNameList.Add(new ComboxList { ID = i, Name = system_list[i] });
                     }
-                    ParameterIndexes = ParameterNameList.ToList().Find(x => x.Name == "ModelName").ID;
-                    ObservableCollection<SystemParameter> systems = new ObservableCollection<SystemParameter>();
-                    ParameterJsonTool.ReadJson(system_list[0], ref systems);
-                    SystemArguments = systems;
+                    ParameterIndexes = index;
+                    Parameter systems = new Parameter();
+                    ParameterJsonTool.ReadJson(system_list[index], ref systems);
+                    SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                 }
                 else
                 {
-                    SystemArguments.Add(new SystemParameter() { ID = 0, Name = "0", Value = 0.211f });
-                    SystemArguments.Add(new SystemParameter() { ID = 1, Name = "1", Value = 0.333 });
-                    SystemArguments.Add(new SystemParameter() { ID = 2, Name = "2", Value = "sasda" });
-                    ParameterJsonTool.NewJosn("2024_4_24");
+                    Parameter parameter = new Parameter();
+                    parameter.DefaultModel = false;
+                    parameter.SystemParameters_Obse.Add(new SystemParameter(0, "0", 0.211f));
+                    parameter.SystemParameters_Obse.Add(new SystemParameter(1, "1", 131.00));
+                    parameter.SystemParameters_Obse.Add(new SystemParameter(2, "2", "dsadas"));
+                    parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 0, Name = "安全点", Enable = true });
+                    parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 1, Name = "P1", Enable = true });
+                    parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 2, Name = "P2", Enable = true });
+                    parameter.TestParameter_Obse.Add(new TestParameter() { ID = 0, Name = "0", Value = 0.211f });
+                    parameter.TestParameter_Obse.Add(new TestParameter() { ID = 1, Name = "1", Value = 0.333 });
+                    parameter.TestParameter_Obse.Add(new TestParameter() { ID = 2, Name = "2", Value = "sasda" });
+                    ParameterJsonTool.Set_NullJson(parameter);
+                    ParameterJsonTool.NewJosn(DateTime.Now.ToString("yyyy_MM_dd"));
                 }
                 system_list = ParameterJsonTool.GetJson();
             });
             aggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
             {
 
+            });
+            ModelSwitching = new DelegateCommand(() =>
+            {
+                Parameter systems = new Parameter();
+                var system_list = ParameterJsonTool.GetJson();
+                ParameterJsonTool.ReadJson(system_list[ParameterIndexes], ref systems);
+                SystemArguments = systems.SystemParameters_Obse;
+            });
+            ParameterSave = new DelegateCommand(() =>
+            {
+                var t = SystemArguments;
+                foreach (var item in t)
+                {
+                    try
+                    {
+                        Type targetType = item.ValueType;
+                        if (targetType != null)
+                        {
+                            object convertedValue = Convert.ChangeType(item.Value, targetType);
+                        }
+                        else
+                        {
+                            throw new Exception($"系统参数中输入值“{item.Value}”与“{item.ValueTypeName}”类型不符！");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception($"系统参数中输入值“{item.Value}”与“{item.ValueTypeName}”类型不符！");
+                    }
+                }
             });
             SystemArguments_Add_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
@@ -133,6 +177,16 @@ namespace SharpFrame.ViewModels
             get { return _parameterNameList; }
             set { _parameterNameList = value; RaisePropertyChanged(); }
         }
+
+        /// <summary>
+        /// 型号切换DropDownClosed命令
+        /// </summary>
+        public DelegateCommand ModelSwitching { get; set; }
+
+        /// <summary>
+        /// 参数保存
+        /// </summary>
+        public DelegateCommand ParameterSave { get; set; }
     }
 
     public struct ComboxList
@@ -144,11 +198,39 @@ namespace SharpFrame.ViewModels
     /// <summary>
     /// 程序参数
     /// </summary>
-    public class Parameter
+    public class Parameter : BindableBase
     {
-        public ObservableCollection<SystemParameter> SystemParameters_Obse { get; set; }
-        public ObservableCollection<PointLocationParameter> PointLocationParameter_Obse { get; set; }
-        public ObservableCollection<TestParameter> TestParameter_Obse { get; set; }
+        public Parameter()
+        {
+            SystemParameters_Obse = new ObservableCollection<SystemParameter>();
+            PointLocationParameter_Obse = new ObservableCollection<PointLocationParameter>();
+            TestParameter_Obse = new ObservableCollection<TestParameter>();
+        }
+        public bool DefaultModel { get; set; }
+        private ObservableCollection<SystemParameter> _systemparameters_obse;
+
+        public ObservableCollection<SystemParameter> SystemParameters_Obse
+        {
+            get { return _systemparameters_obse; }
+            set { _systemparameters_obse = value; RaisePropertyChanged(); }
+        }
+
+
+        private ObservableCollection<PointLocationParameter> _pointLocationparameter_obse;
+
+        public ObservableCollection<PointLocationParameter> PointLocationParameter_Obse
+        {
+            get { return _pointLocationparameter_obse; }
+            set { _pointLocationparameter_obse = value; RaisePropertyChanged(); }
+        }
+
+        private ObservableCollection<TestParameter> _testParameter_obse;
+
+        public ObservableCollection<TestParameter> TestParameter_Obse
+        {
+            get { return _testParameter_obse; }
+            set { _testParameter_obse = value; RaisePropertyChanged(); }
+        }
     }
 
     /// <summary>
@@ -168,6 +250,15 @@ namespace SharpFrame.ViewModels
             }
         }
 
+        public SystemParameter(int iD, string name, object value)
+        {
+            ID = iD;
+            Name = name;
+            Value = value;
+            ValueType = Value.GetType();
+            ValueTypeName = ValueType.Name;
+        }
+
         public int ID { get; set; }
 
         public string Name { get; set; }
@@ -176,17 +267,11 @@ namespace SharpFrame.ViewModels
         public object Value
         {
             get { return value; }
-            set
-            {
-                this.value = value;
-                ValueType = value.GetType();
-                ValueTypeName = ValueType.Name;
-            }
+            set { this.value = value; }
         }
+        public Type ValueType { get; set; }
 
         public string ValueTypeName { get; set; }
-
-        public Type ValueType { get; set; }
     }
 
     /// <summary>
@@ -218,7 +303,37 @@ namespace SharpFrame.ViewModels
     /// </summary>
     public class TestParameter
     {
+        public TestParameter() { }
 
+        public TestParameter(TestParameter system)
+        {
+            if (system != null)
+            {
+                this.ID = system.ID;
+                this.Name = system.Name;
+                this.Value = system.Value;
+            }
+        }
+
+        public int ID { get; set; }
+
+        public string Name { get; set; }
+
+        private object value;
+        public object Value
+        {
+            get { return value; }
+            set
+            {
+                this.value = value;
+                ValueType = value.GetType();
+                ValueTypeName = ValueType.Name;
+            }
+        }
+
+        public string ValueTypeName { get; set; }
+
+        public Type ValueType { get; set; }
     }
 
     /// <summary>
