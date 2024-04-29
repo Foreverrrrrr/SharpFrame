@@ -5,7 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SharpFrame.Views"
              mc:Ignorable="d" 
-             xmlns:prism="http://prismlibrary.com/" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:prism="http://prismlibrary.com/" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              prism:ViewModelLocator.AutoWireViewModel="True"
              Width="1770" Height="900" Background="White">
     <Grid>
@@ -141,23 +143,13 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <CheckBox Margin="30,5,0,0" IsChecked="{Binding Enable,Mode=TwoWay}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="参数值">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="30,5,0,0" Text="{Binding Value,Mode=TwoWay}" Foreground="Black"/>
+                                                <CheckBox IsChecked="{Binding Enable}" Background="#FF1587D0"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
                         </DataGrid>
-
                     </StackPanel>
                 </Border>
             </Grid>

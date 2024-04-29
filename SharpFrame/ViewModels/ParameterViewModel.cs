@@ -44,6 +44,7 @@ namespace SharpFrame.ViewModels
                     Parameter systems = new Parameter();
                     ParameterJsonTool.ReadJson(system_list[index], ref systems);
                     SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
+                    PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
                 }
                 else
                 {
@@ -138,6 +139,8 @@ namespace SharpFrame.ViewModels
 
         public DelegateCommand NewModel { get; set; }
 
+        #region 系统参数表
+
         /// <summary>
         /// 系统参数添加行请求
         /// </summary>
@@ -157,6 +160,24 @@ namespace SharpFrame.ViewModels
             get { return _systemarguments; }
             set { _systemarguments = value; RaisePropertyChanged(); }
         }
+
+        #endregion
+
+        #region 点位表
+        private ObservableCollection<PointLocationParameter> _pointlocationarguments = new ObservableCollection<PointLocationParameter>();
+        /// <summary>
+        /// 点位参数表
+        /// </summary>
+        public ObservableCollection<PointLocationParameter> PointLocationArguments
+        {
+            get { return _pointlocationarguments; }
+            set { _pointlocationarguments = value; RaisePropertyChanged(); }
+        }
+        #endregion
+
+        #region 测试判定表
+
+        #endregion
 
         private int _parameterindexes = 0;
         /// <summary>
@@ -214,7 +235,6 @@ namespace SharpFrame.ViewModels
             get { return _systemparameters_obse; }
             set { _systemparameters_obse = value; RaisePropertyChanged(); }
         }
-
 
         private ObservableCollection<PointLocationParameter> _pointLocationparameter_obse;
 
