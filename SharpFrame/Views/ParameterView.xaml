@@ -7,7 +7,6 @@
              mc:Ignorable="d" 
              xmlns:prism="http://prismlibrary.com/" 
              xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
-             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              prism:ViewModelLocator.AutoWireViewModel="True"
              Width="1770" Height="900" Background="White">
     <Grid>
@@ -27,6 +26,7 @@
                 </ComboBox>
                 <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="型号添加" FontSize="15" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding NewModel}"/>
                 <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="参数保存" FontSize="15" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding ParameterSave}"/>
+
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
@@ -149,6 +149,12 @@
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
                             </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                    <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
                         </DataGrid>
                     </StackPanel>
                 </Border>

@@ -8,7 +8,7 @@
         mc:Ignorable="d"
         Title="{Binding Title}" Height="300" Width="600" ResizeMode="NoResize" 
         WindowStartupLocation="CenterScreen" AllowsTransparency="True" 
-        WindowStyle="None" Background="{x:Null}">
+        WindowStyle="None">
     <Grid>
         <Border Margin="5" CornerRadius="20" Background="White" BorderThickness="1" BorderBrush="#FFABABAB">
             <Grid Margin="7" >
@@ -17,8 +17,8 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
-                <Button Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Right" Content="{materialDesign:PackIcon CloseThick}" ToolTip="关闭" BorderBrush="{x:Null}" Background="{x:Null}" Command="{Binding Close}"/>
-                <Grid Grid.Row="1" Margin="120,50,120,10">
+                <Button Grid.Row="0"  VerticalAlignment="Top" HorizontalAlignment="Right" Content="{materialDesign:PackIcon CloseThick}" ToolTip="关闭" Command="{Binding Close}" Background="{x:Null}" Foreground="Black" BorderBrush="{x:Null}"/>
+                <Grid Grid.Row="1" Margin="120,50,120,10" Cursor="">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel>
                             <TextBlock Margin="10" Text="型号名称：" HorizontalAlignment="Right" FontSize="20"/>
