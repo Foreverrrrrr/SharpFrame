@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Forms;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace SharpFrame.ViewModels.ToolViewModels
 {
@@ -35,11 +37,12 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         if (input_value != "Null" || input_value != "" || input_value != null)
                         {
                             structure.Value = input_value;
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_Ins() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符");
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
                         }
                         break;
                     case 1:
@@ -47,11 +50,12 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         if (float.TryParse(input_value, out float_value))
                         {
                             structure.Value = float_value;
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_Ins() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符");
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
                         }
                         break;
                     case 2:
@@ -59,11 +63,12 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         if (double.TryParse(input_value, out double_value))
                         {
                             structure.Value = double_value;
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_Ins() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符");
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
                         }
                         break;
                     case 3:
@@ -71,15 +76,16 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         if (bool.TryParse(input_value, out bool_value))
                         {
                             structure.Value = bool_value;
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_Ins() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符");
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
                         }
                         break;
                 }
-                System_AddView currentWindow = Application.Current.Windows.OfType<System_AddView>().SingleOrDefault(w => w.IsActive);
+                System_AddView currentWindow = System.Windows.Application.Current.Windows.OfType<System_AddView>().SingleOrDefault(w => w.IsActive);
                 currentWindow.Close();
             });
         }

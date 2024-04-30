@@ -100,6 +100,7 @@
     <Compile Include="ViewModels\ParameterViewModel.cs" />
     <Compile Include="ViewModels\SystemLogInViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\NewParameterModelViewModel.cs" />
+    <Compile Include="ViewModels\ToolViewModels\Point_AddViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\System_AddViewModel.cs" />
     <Compile Include="Views\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
@@ -112,6 +113,9 @@
     </Compile>
     <Compile Include="Views\ToolViews\NewParameterModelView.xaml.cs">
       <DependentUpon>NewParameterModelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToolViews\Point_AddView.xaml.cs">
+      <DependentUpon>Point_AddView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolViews\System_AddView.xaml.cs">
       <DependentUpon>System_AddView.xaml</DependentUpon>
@@ -142,6 +146,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ToolViews\NewParameterModelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolViews\Point_AddView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

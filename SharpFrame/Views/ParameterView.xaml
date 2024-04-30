@@ -11,8 +11,9 @@
              Width="1770" Height="900" Background="White">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="80"/>
+            <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <StackPanel Orientation="Horizontal">
@@ -24,9 +25,8 @@
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
                 </ComboBox>
-                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="型号添加" FontSize="15" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding NewModel}"/>
-                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="参数保存" FontSize="15" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding ParameterSave}"/>
-
+                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="型号添加" FontSize="16" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding NewModel}"/>
+                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="参数保存" FontSize="16" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding ParameterSave}"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">
@@ -41,9 +41,13 @@
             <Grid Grid.Column="0" Grid.Row="0">
                 <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
                     <Grid>
-                        <StackPanel>
-                            <TextBlock Text="系统参数" Height="25" Width="90" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                            <DataGrid x:Name="SystemArguments" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding SystemArguments,IsAsync=True}" ColumnWidth="*"  CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="系统参数" Height="25" Width="90" FontSize="21" Foreground="Black" FontWeight="Bold"/>
+                            <DataGrid Grid.Row="1" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding SystemArguments,IsAsync=True}" ColumnWidth="*"  CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                                 <DataGrid.CellStyle>
                                     <Style TargetType="DataGridCell">
                                         <Style.Triggers>
@@ -100,15 +104,19 @@
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                             </DataGrid>
-                        </StackPanel>
+                        </Grid>
                     </Grid>
                 </Border>
             </Grid>
             <Grid Grid.Column="1" Grid.Row="0">
                 <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
-                    <StackPanel>
-                        <TextBlock Text="点位表" Height="25" Width="70" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                        <DataGrid FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*"  CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="点位表" Height="25" Width="70" FontSize="21" Foreground="Black" FontWeight="Bold"/>
+                        <DataGrid Grid.Row="1" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Triggers>
@@ -125,7 +133,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="15,10,0,0" Text="{Binding ID,Mode=TwoWay}" Foreground="Black"/>
+                                                <TextBlock Margin="20,5,0,0" Text="{Binding ID,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -134,7 +142,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="15,10,0,0" Text="{Binding Name,Mode=TwoWay}" Foreground="Black"/>
+                                                <TextBox Margin="10,0,0,0" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -143,7 +151,34 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <CheckBox IsChecked="{Binding Enable}" Background="#FF1587D0"/>
+                                                <CheckBox Margin="30,0,0,0" IsChecked="{Binding Enable,UpdateSourceTrigger=PropertyChanged}" Background="#FF1587D0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn  Header="PointA">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="30,0,0,0" Text="{Binding PointA,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn  Header="PointB">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="30,0,0,0" Text="{Binding PointB,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn  Header="PointC">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="30,0,0,0" Text="{Binding PointC,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -156,7 +191,93 @@
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>
-                    </StackPanel>
+                    </Grid>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="0" Grid.Row="1">
+                <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="25"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="测试参数" Height="25" Width="85" FontSize="21" Foreground="Black" FontWeight="Bold"/>
+                        <DataGrid Grid.Row="1" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                            <DataGrid.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter Property="BorderThickness" Value="0"/>
+                                            <Setter Property="Background" Value="#FFCECCCC"/>
+                                            <Setter Property="Foreground" Value="#FF060606"/>
+                                        </Trigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </DataGrid.CellStyle>
+                            <DataGrid.Columns >
+                                <DataGridTemplateColumn Header="序号">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Margin="20,5,0,0" Text="{Binding ID,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="名称">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="10,0,0,0" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn  Header="是否启用">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <CheckBox Margin="30,0,0,0" IsChecked="{Binding Enable,UpdateSourceTrigger=PropertyChanged}" Background="#FF1587D0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn  Header="PointA">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="30,0,0,0" Text="{Binding PointA,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn  Header="PointB">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="30,0,0,0" Text="{Binding PointB,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn  Header="PointC">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBox Margin="30,0,0,0" Text="{Binding PointC,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                            <DataGrid.ContextMenu>
+                                <ContextMenu>
+                                    <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                    <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                </ContextMenu>
+                            </DataGrid.ContextMenu>
+                        </DataGrid>
+                    </Grid>
                 </Border>
             </Grid>
         </Grid>

@@ -36,6 +36,7 @@ namespace SharpFrame.ViewModels
                 {
                     var all_parameters = ParameterJsonTool.ReadAllJson(new Parameter());
                     int index = all_parameters.Select((item, idx) => new { Item = item, Index = idx }).FirstOrDefault(x => x.Item.DefaultModel == true)?.Index ?? -1;
+                    ParameterName = all_parameters[index].ParameterName;
                     for (int i = 0; i < system_list.Count; i++)
                     {
                         ParameterNameList.Add(new ComboxList { ID = i, Name = system_list[i] });
@@ -50,6 +51,7 @@ namespace SharpFrame.ViewModels
                 {
                     Parameter parameter = new Parameter();
                     parameter.DefaultModel = false;
+                    parameter.ParameterName = DateTime.Now.ToString("yyyy_MM_dd");
                     parameter.SystemParameters_Obse.Add(new SystemParameter(0, "0", 0.211f));
                     parameter.SystemParameters_Obse.Add(new SystemParameter(1, "1", 131.00));
                     parameter.SystemParameters_Obse.Add(new SystemParameter(2, "2", "dsadas"));
@@ -60,7 +62,7 @@ namespace SharpFrame.ViewModels
                     parameter.TestParameter_Obse.Add(new TestParameter() { ID = 1, Name = "1", Value = 0.333 });
                     parameter.TestParameter_Obse.Add(new TestParameter() { ID = 2, Name = "2", Value = "sasda" });
                     ParameterJsonTool.Set_NullJson(parameter);
-                    ParameterJsonTool.NewJosn(DateTime.Now.ToString("yyyy_MM_dd"));
+                    ParameterJsonTool.NewJosn(DateTime.Now.ToString(parameter.ParameterName));
                 }
                 system_list = ParameterJsonTool.GetJson();
             });
@@ -73,35 +75,27 @@ namespace SharpFrame.ViewModels
                 Parameter systems = new Parameter();
                 var system_list = ParameterJsonTool.GetJson();
                 ParameterJsonTool.ReadJson(system_list[ParameterIndexes], ref systems);
+                ParameterName = systems.ParameterName;
                 SystemArguments = systems.SystemParameters_Obse;
+                PointLocationArguments = systems.PointLocationParameter_Obse;
             });
             ParameterSave = new DelegateCommand(() =>
             {
-                var t = SystemArguments;
-                foreach (var item in t)
-                {
-                    try
-                    {
-                        Type targetType = item.ValueType;
-                        if (targetType != null)
-                        {
-                            object convertedValue = Convert.ChangeType(item.Value, targetType);
-                        }
-                        else
-                        {
-                            throw new Exception($"系统参数中输入值“{item.Value}”与“{item.ValueTypeName}”类型不符！");
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception($"系统参数中输入值“{item.Value}”与“{item.ValueTypeName}”类型不符！");
-                    }
-                }
+                Parameter parameter = new Parameter();
+                parameter.ParameterName = ParameterName;
+                parameter.DefaultModel = true;
+                parameter.SystemParameters_Obse = SystemArguments;
+                parameter.PointLocationParameter_Obse = PointLocationArguments;
+                ParameterJsonTool.WriteJson(ParameterName, parameter);
+                MessageBox.Show($"“{ParameterName}”参数保存完成");
             });
             SystemArguments_Add_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
-                System_AddView system = new System_AddView(aggregator, checkdata);
-                system.Show();
+                if (checkdata != null)
+                {
+                    System_AddView system = new System_AddView(aggregator, checkdata);
+                    system.Show();
+                }
             });
             SystemArguments_Remove_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
@@ -120,6 +114,31 @@ namespace SharpFrame.ViewModels
                     SystemArguments = systemStructures;
                 }
             });
+            PointLocationArguments_Add_Line = new DelegateCommand<PointLocationParameter>((checkdata) =>
+            {
+                if (checkdata != null)
+                {
+                    Point_AddView addView = new Point_AddView(aggregator, checkdata);
+                    addView.Show();
+                }
+            });
+            PointLocationArguments_Remove_Line = new DelegateCommand<PointLocationParameter>((checkdata) =>
+            {
+                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                {
+                    PointLocationArguments.Remove(checkdata);
+                    ObservableCollection<PointLocationParameter> pointStructures = new ObservableCollection<PointLocationParameter>();
+                    int index = 0;
+                    foreach (PointLocationParameter item in PointLocationArguments.Select(x => new PointLocationParameter(x)))
+                    {
+                        item.ID = index;
+                        pointStructures.Add(item);
+                        index++;
+                    }
+                    PointLocationArguments = null;
+                    PointLocationArguments = pointStructures;
+                }
+            });
             aggregator.GetEvent<SystemParameterAddEvent>().Subscribe((t) =>
             {
                 var k = SystemArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
@@ -134,6 +153,22 @@ namespace SharpFrame.ViewModels
                 }
                 SystemArguments = null;
                 SystemArguments = systemStructures;
+            }, ThreadOption.UIThread);
+
+            aggregator.GetEvent<PointLocationParameterAddEvent>().Subscribe((t) =>
+            {
+                var k = PointLocationArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
+                PointLocationArguments.Insert(k, t.NewParameter);
+                ObservableCollection<PointLocationParameter> pointStructures = new ObservableCollection<PointLocationParameter>();
+                int index = 0;
+                foreach (PointLocationParameter item in PointLocationArguments.Select(x => new PointLocationParameter(x)))
+                {
+                    item.ID = index;
+                    pointStructures.Add(item);
+                    index++;
+                }
+                PointLocationArguments = null;
+                PointLocationArguments = pointStructures;
             }, ThreadOption.UIThread);
         }
 
@@ -164,6 +199,17 @@ namespace SharpFrame.ViewModels
         #endregion
 
         #region 点位表
+
+        /// <summary>
+        /// 点位参数添加行请求
+        /// </summary>
+        public DelegateCommand<PointLocationParameter> PointLocationArguments_Add_Line { get; set; }
+
+        /// <summary>
+        /// 点位参数移除行请求
+        /// </summary>
+        public DelegateCommand<PointLocationParameter> PointLocationArguments_Remove_Line { get; set; }
+
         private ObservableCollection<PointLocationParameter> _pointlocationarguments = new ObservableCollection<PointLocationParameter>();
         /// <summary>
         /// 点位参数表
@@ -208,6 +254,8 @@ namespace SharpFrame.ViewModels
         /// 参数保存
         /// </summary>
         public DelegateCommand ParameterSave { get; set; }
+
+        public string ParameterName { get; set; }
     }
 
     public struct ComboxList
@@ -227,6 +275,8 @@ namespace SharpFrame.ViewModels
             PointLocationParameter_Obse = new ObservableCollection<PointLocationParameter>();
             TestParameter_Obse = new ObservableCollection<TestParameter>();
         }
+        public string ParameterName { get; set; }
+
         public bool DefaultModel { get; set; }
         private ObservableCollection<SystemParameter> _systemparameters_obse;
 
@@ -299,6 +349,26 @@ namespace SharpFrame.ViewModels
     /// </summary>
     public class PointLocationParameter
     {
+        public PointLocationParameter(PointLocationParameter system)
+        {
+            if (system != null)
+            {
+                this.ID = system.ID;
+                this.Name = system.Name;
+                this.Enable = system.Enable;
+                this.PointA = system.PointA;
+                this.PointB = system.PointB;
+                this.PointC = system.PointC;
+                this.PointD = system.PointD;
+                this.PointE = system.PointE;
+                this.PointF = system.PointF;
+            }
+        }
+
+        public PointLocationParameter()
+        {
+
+        }
         public int ID { get; set; }
 
         public string Name { get; set; }
@@ -359,12 +429,24 @@ namespace SharpFrame.ViewModels
     /// <summary>
     /// 系统参数添加行通知
     /// </summary>
-    public class SystemParameterAddEvent : PubSubEvent<Add_Ins> { }
+    public class SystemParameterAddEvent : PubSubEvent<Add_SystemIns> { }
 
-    public class Add_Ins
+    public class Add_SystemIns
     {
         public SystemParameter NewParameter { get; set; }
 
         public SystemParameter InsertionParameter { get; set; }
+    }
+
+    /// <summary>
+    /// 点位参数添加行通知
+    /// </summary>
+    public class PointLocationParameterAddEvent : PubSubEvent<Add_PointLocationIns> { }
+
+    public class Add_PointLocationIns
+    {
+        public PointLocationParameter NewParameter { get; set; }
+
+        public PointLocationParameter InsertionParameter { get; set; }
     }
 }
