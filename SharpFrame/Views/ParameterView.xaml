@@ -47,7 +47,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="系统参数" Height="25" Width="90" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                            <DataGrid Grid.Row="1" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding SystemArguments,IsAsync=True}" ColumnWidth="*"  CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                            <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding SystemArguments,IsAsync=True}" ColumnWidth="*"  CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                                 <DataGrid.CellStyle>
                                     <Style TargetType="DataGridCell">
                                         <Style.Triggers>
@@ -113,10 +113,10 @@
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="25"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="360"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="点位表" Height="25" Width="70" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                        <DataGrid Grid.Row="1" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                        <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Triggers>
@@ -202,7 +202,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="测试参数" Height="25" Width="85" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                        <DataGrid Grid.Row="1" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                        <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Triggers>

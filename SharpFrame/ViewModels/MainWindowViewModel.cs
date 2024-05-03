@@ -9,6 +9,7 @@ using SharpFrame.Views.ToolViews;
 using System;
 using System.Web.UI.WebControls;
 using System.Windows;
+using static SharpFrame.Logic.Base.Thread_Auto_Base;
 
 namespace SharpFrame.ViewModels
 {
@@ -49,6 +50,7 @@ namespace SharpFrame.ViewModels
             PageLoadFinish = new DelegateCommand(() =>
             {
                 aggregator.GetEvent<PageLoadEvent>().Publish();
+                Thread_Auto_Base.NewClass();
                 Stop_State = true;
             });
             VisionSwitching = new DelegateCommand<string>((ManagerName) =>
@@ -93,7 +95,7 @@ namespace SharpFrame.ViewModels
             get { return _start_state; }
             set
             {
-                if (!_start_state && value && Exchange.External_IO(Exchange.Send_Variable.Start))
+                if (!_start_state && value && Exchange.External_IO(Send_Variable.Start))
                 {
 
                     Log.Info("启动按钮触发");
@@ -121,7 +123,7 @@ namespace SharpFrame.ViewModels
             get { return _suspend_state; }
             set
             {
-                if (!_suspend_state && value && Exchange.External_IO(Exchange.Send_Variable.Suspend))
+                if (!_suspend_state && value && Exchange.External_IO(Send_Variable.Suspend))
                 {
                     Log.Info("暂停按钮触发");
                     eventAggregator.GetEvent<SuspendInform>().Publish();
@@ -148,7 +150,7 @@ namespace SharpFrame.ViewModels
             get { return _stop_state; }
             set
             {
-                if (!_stop_state && value && Exchange.External_IO(Exchange.Send_Variable.Stop))
+                if (!_stop_state && value && Exchange.External_IO(Send_Variable.Stop))
                 {
                     Log.Info("停止按钮触发");
                     eventAggregator.GetEvent<StopInform>().Publish();
@@ -175,7 +177,7 @@ namespace SharpFrame.ViewModels
             get { return _reset_state; }
             set
             {
-                if (!_reset_state && value && Exchange.External_IO(Exchange.Send_Variable.Reset))
+                if (!_reset_state && value && Exchange.External_IO(Send_Variable.Reset))
                 {
                     SystemState = "复位中";
                     Log.Info("复位按钮触发");

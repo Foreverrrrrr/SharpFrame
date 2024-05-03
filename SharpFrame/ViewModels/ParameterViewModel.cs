@@ -89,6 +89,10 @@ namespace SharpFrame.ViewModels
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
             });
+            NewModel = new DelegateCommand(() =>
+            {
+
+            });
             SystemArguments_Add_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
                 if (checkdata != null)
@@ -172,6 +176,9 @@ namespace SharpFrame.ViewModels
             }, ThreadOption.UIThread);
         }
 
+        /// <summary>
+        /// 新建参数
+        /// </summary>
         public DelegateCommand NewModel { get; set; }
 
         #region 系统参数表
@@ -255,6 +262,9 @@ namespace SharpFrame.ViewModels
         /// </summary>
         public DelegateCommand ParameterSave { get; set; }
 
+        /// <summary>
+        /// 当前参数名称
+        /// </summary>
         public string ParameterName { get; set; }
     }
 

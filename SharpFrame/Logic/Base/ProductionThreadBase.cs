@@ -16,6 +16,6 @@ namespace SharpFrame.Logic.Base
 
         public string Target { get; set; }
 
-        public bool Is_Running => is_Running;
+        public bool Is_Running { get; set; }
     }
 }

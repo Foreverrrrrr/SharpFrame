@@ -13,6 +13,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -93,6 +94,7 @@
     <Compile Include="Common\Cloud_Client.cs" />
     <Compile Include="Log4Net\Log.cs" />
     <Compile Include="Logic\Base\Thread_Auto_Base.cs" />
+    <Compile Include="Logic\Base\DataConfigurationBase.cs" />
     <Compile Include="Logic\Base\Exchange.cs" />
     <Compile Include="Logic\Base\ProductionThreadBase.cs" />
     <Compile Include="SystemParameter\ParameterJsonTool.cs" />
