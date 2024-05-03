@@ -105,6 +105,9 @@
     <Compile Include="Views\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\NotificationViews\NotificationPopupView.xaml.cs">
+      <DependentUpon>NotificationPopupView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ParameterView.xaml.cs">
       <DependentUpon>ParameterView.xaml</DependentUpon>
     </Compile>
@@ -137,6 +140,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\NotificationViews\NotificationPopupView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\ParameterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -365,10 +365,7 @@ namespace SharpFrame.ViewModels
             }
         }
 
-        public PointLocationParameter()
-        {
-
-        }
+        public PointLocationParameter() { }
         public int ID { get; set; }
 
         public string Name { get; set; }
