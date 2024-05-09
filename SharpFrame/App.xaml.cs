@@ -118,6 +118,7 @@ namespace SharpFrame
             containerRegistry.RegisterForNavigation<ParameterView>();
             containerRegistry.RegisterForNavigation<System_AddView>();
             containerRegistry.RegisterForNavigation<DebuggingView>();
+            containerRegistry.RegisterForNavigation<RelationalDatabaseView>();
         }
     }
 }

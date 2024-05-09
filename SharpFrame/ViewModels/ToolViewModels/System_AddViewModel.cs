@@ -2,10 +2,7 @@
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.ToolViews;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Windows;
 using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
 
@@ -37,6 +34,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         if (input_value != "Null" || input_value != "" || input_value != null)
                         {
                             structure.Value = input_value;
+                            structure.ValueType = structure.Value.GetType();
                             aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else
@@ -46,10 +44,11 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         break;
                     case 1:
-                        float float_value = 0f;
-                        if (float.TryParse(input_value, out float_value))
+                        bool bool_value = false;
+                        if (bool.TryParse(input_value, out bool_value))
                         {
-                            structure.Value = float_value;
+                            structure.Value = bool_value;
+                            structure.ValueType = structure.Value.GetType();
                             aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else
@@ -59,10 +58,11 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         break;
                     case 2:
-                        double double_value = 0d;
-                        if (double.TryParse(input_value, out double_value))
+                        int int_value = 0;
+                        if (int.TryParse(input_value, out int_value))
                         {
-                            structure.Value = double_value;
+                            structure.Value = int_value;
+                            structure.ValueType = structure.Value.GetType();
                             aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else
@@ -72,10 +72,25 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         break;
                     case 3:
-                        bool bool_value = false;
-                        if (bool.TryParse(input_value, out bool_value))
+                        float float_value = 0f;
+                        if (float.TryParse(input_value, out float_value))
                         {
-                            structure.Value = bool_value;
+                            structure.Value = float_value;
+                            structure.ValueType = structure.Value.GetType();
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
+                        }
+                        else
+                        {
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
+                        break;
+                    case 4:
+                        double double_value = 0d;
+                        if (double.TryParse(input_value, out double_value))
+                        {
+                            structure.Value = double_value;
+                            structure.ValueType = structure.Value.GetType();
                             aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
                         }
                         else

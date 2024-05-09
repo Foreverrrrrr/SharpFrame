@@ -28,10 +28,11 @@
                         <StackPanel>
                             <TextBox Margin="5,7,0,0" Text="{Binding Name}" HorizontalAlignment="Left" Width="120" FontSize="20"/>
                             <ComboBox Margin="5,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" SelectedIndex="{Binding TypeModel,Mode=TwoWay}" Foreground="Black" FontSize="20" OpacityMask="Black">
-                                <ComboBoxItem Background="White">String</ComboBoxItem>
-                                <ComboBoxItem Background="White">Float</ComboBoxItem>
-                                <ComboBoxItem Background="White">Double</ComboBoxItem>
-                                <ComboBoxItem Background="White">Bool</ComboBoxItem>
+                                <ComboBoxItem Content="String"/>
+                                <ComboBoxItem Content="Bool"/>
+                                <ComboBoxItem Content="Int"/>
+                                <ComboBoxItem Content="Float"/>
+                                <ComboBoxItem Content="Double"/>
                             </ComboBox>
                             <TextBox Margin="5,12,0,0" Text="{Binding Input_Value}" HorizontalAlignment="Left" Width="120" FontSize="20" />
                         </StackPanel>

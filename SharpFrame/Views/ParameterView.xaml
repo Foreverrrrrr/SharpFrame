@@ -74,7 +74,7 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBox Margin="25,0,0,0" Text="{Binding Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                    <TextBox Margin="0,0,0,0" Text="{Binding Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -83,7 +83,13 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBlock Margin="10,5,0,0" Text="{Binding ValueTypeName,Mode=TwoWay}" Foreground="Black"/>
+                                                    <ComboBox Width="80" Margin="0,5,0,0" SelectedIndex="{Binding SelectedValue,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black">
+                                                        <ComboBoxItem Content="String"/>
+                                                        <ComboBoxItem Content="Bool"/>
+                                                        <ComboBoxItem Content="Int"/>
+                                                        <ComboBoxItem Content="Float"/>
+                                                        <ComboBoxItem Content="Double"/>
+                                                    </ComboBox>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
@@ -92,7 +98,7 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBox Margin="20,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                    <TextBox Width="150" Margin="20,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"  TextWrapping="Wrap" />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

@@ -1,0 +1,38 @@
+﻿<UserControl x:Class="SharpFrame.Views.RelationalDatabaseView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:SharpFrame.Views"
+             mc:Ignorable="d" 
+             xmlns:prism="http://prismlibrary.com/" 
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             Width="1770" Height="900" Background="White">
+    <Grid>
+        <Border>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Margin="20,0,0,0" Grid.Row="0" Height="100" Orientation="Horizontal">
+                    <DatePicker Height="35" Width="120" Background="White" BorderBrush="Black" Foreground="Black" Language="zh-CN" FontSize="17">
+                        <DatePicker.Resources>
+                            <Style TargetType="DatePickerTextBox">
+                                <Setter Property="IsReadOnly" Value="True"/>
+                            </Style>
+                        </DatePicker.Resources>
+                    </DatePicker>
+                    <TextBox Margin="15,0,0,0" x:Name="input_qr" Text="{Binding QR}" Width="250" Height="30" Foreground="Black" FontSize="14"/>
+                    <Button Margin="15,0,0,0" Width="140" Height="40" FontSize="16" Content="二维码查询"  Foreground="Black"/>
+                    <Button Margin="15,0,0,0" Width="100" Height="40" FontSize="16" Content="时间查询"  Foreground="Black"/>
+                    <Button Margin="15,0,0,0" Width="100" Height="40" Content="导出" Foreground="Black" Cursor="Hand"/>
+                </StackPanel>
+                <StackPanel Grid.Row="1" >
+                    <DataGrid ItemsSource="{Binding YourDataSource}" AutoGenerateColumns="True"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

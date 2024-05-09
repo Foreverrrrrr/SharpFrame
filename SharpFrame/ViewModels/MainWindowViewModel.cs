@@ -84,6 +84,7 @@ namespace SharpFrame.ViewModels
             regionManager.RegisterViewWithRegion("MainRegion", typeof(ParameterView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(LogView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(DebuggingView));
+            regionManager.RegisterViewWithRegion("MainRegion", typeof(RelationalDatabaseView));
         }
 
         #region 启动按钮

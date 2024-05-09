@@ -1,20 +1,12 @@
-﻿using ImTools;
-using Prism.Commands;
-using Prism.Common;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.ParameterJson;
-using SharpFrame.ViewModels.ToolViewModels;
 using SharpFrame.Views.ToolViews;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Configuration;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SharpFrame.ViewModels
@@ -93,6 +85,15 @@ namespace SharpFrame.ViewModels
             {
                 Parameter parameter = new Parameter();
                 parameter.SystemParameters_Obse = SystemArguments;
+                foreach (var item in parameter.SystemParameters_Obse)
+                {
+                    var bool_ret = TypeAndValueCheck(item);
+                    if (!bool_ret)
+                    {
+                        MessageBox.Show($"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”");
+                        return;
+                    }
+                }
                 parameter.PointLocationParameter_Obse = PointLocationArguments;
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
@@ -223,6 +224,46 @@ namespace SharpFrame.ViewModels
             configFileMap.ExeConfigFilename = configFile;
             Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
             return config.AppSettings.Settings["ParameterName"].Value;
+        }
+
+        public static bool TypeAndValueCheck(SystemParameter TypeModel)
+        {
+            string input_value = Convert.ToString(TypeModel.Value);
+            switch (TypeModel.SelectedValue)
+            {
+                case 0:
+                    if (input_value != "Null" || input_value != "" || input_value != null)
+                        return true;
+                    else
+                        return false;
+                case 1:
+                    bool bool_value = false;
+                    if (bool.TryParse(input_value, out bool_value))
+                        return true;
+                    else
+                        return false;
+                case 2:
+                    int int_value = 0;
+                    if (int.TryParse(input_value, out int_value))
+                        return true;
+                    else
+                        return false;
+                case 3:
+                    float float_value = 0f;
+                    if (float.TryParse(input_value, out float_value))
+                        return true;
+                    else
+                        return false;
+                case 4:
+                    double double_value = 0d;
+                    if (double.TryParse(input_value, out double_value))
+                        return true;
+                    else
+                        return false;
+                default:
+                    return false;
+            }
+
         }
 
         /// <summary>
@@ -379,6 +420,8 @@ namespace SharpFrame.ViewModels
                 this.ID = system.ID;
                 this.Name = system.Name;
                 this.Value = system.Value;
+                this.ValueType = system.ValueType;
+                this.SelectedValue = system.SelectedValue;
             }
         }
 
@@ -388,7 +431,19 @@ namespace SharpFrame.ViewModels
             Name = name;
             Value = value;
             ValueType = Value.GetType();
-            ValueTypeName = ValueType.Name;
+            switch (ValueType.Name)
+            {
+                case "String":
+                    SelectedValue = 0; break;
+                case "Boolean":
+                    SelectedValue = 1; break;
+                case "Int32":
+                    SelectedValue = 2; break;
+                case "Single":
+                    SelectedValue = 3; break;
+                case "Double":
+                    SelectedValue = 4; break;
+            }
         }
 
         public int ID { get; set; }
@@ -396,14 +451,36 @@ namespace SharpFrame.ViewModels
         public string Name { get; set; }
 
         private object value;
+        private Type valueType;
+
         public object Value
         {
             get { return value; }
             set { this.value = value; }
         }
-        public Type ValueType { get; set; }
+        public Type ValueType
+        {
+            get { return valueType; }
+            set
+            {
+                this.valueType = value;
+                switch (valueType.Name)
+                {
+                    case "String":
+                        SelectedValue = 0; break;
+                    case "Boolean":
+                        SelectedValue = 1; break;
+                    case "Int32":
+                        SelectedValue = 2; break;
+                    case "Single":
+                        SelectedValue = 3; break;
+                    case "Double":
+                        SelectedValue = 4; break;
+                }
+            }
+        }
 
-        public string ValueTypeName { get; set; }
+        public int SelectedValue { get; set; }
     }
 
     /// <summary>
@@ -509,6 +586,7 @@ namespace SharpFrame.ViewModels
 
         public PointLocationParameter InsertionParameter { get; set; }
     }
+
     public class NewModelEvent : PubSubEvent<Add_Model> { }
 
     public class Add_Model
@@ -516,4 +594,6 @@ namespace SharpFrame.ViewModels
         public string NewName { get; set; }
         public string InitialParameter { get; set; }
     }
+
+
 }

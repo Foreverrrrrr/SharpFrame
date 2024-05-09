@@ -94,6 +94,9 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Common\Cloud_Client.cs" />
+    <Compile Include="Common\ExcelTool.cs" />
+    <Compile Include="Common\Geometry.cs" />
+    <Compile Include="Common\SQL_Server.cs" />
     <Compile Include="Log4Net\Log.cs" />
     <Compile Include="Logic\Base\Thread_Auto_Base.cs" />
     <Compile Include="Logic\Base\DataConfigurationBase.cs" />
@@ -119,6 +122,9 @@
     </Compile>
     <Compile Include="Views\ParameterView.xaml.cs">
       <DependentUpon>ParameterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RelationalDatabaseView.xaml.cs">
+      <DependentUpon>RelationalDatabaseView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\SystemLogIn.xaml.cs">
       <DependentUpon>SystemLogIn.xaml</DependentUpon>
@@ -162,6 +168,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ParameterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\RelationalDatabaseView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -215,6 +225,9 @@
   <ItemGroup>
     <PackageReference Include="ClientKeyMaker">
       <Version>2.5.1</Version>
+    </PackageReference>
+    <PackageReference Include="EPPlus">
+      <Version>4.5.3.3</Version>
     </PackageReference>
     <PackageReference Include="log4net">
       <Version>2.0.17</Version>
