@@ -1,0 +1,61 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SharpFrame.Views">
+
+
+    <Style TargetType="{x:Type local:AxisManualOperation}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:AxisManualOperation}">
+                    <StackPanel Orientation="Vertical" Margin="10,10,0,0">
+                        <Border Height="20" Background="#FFFFA200" VerticalAlignment="Top" Width="560" HorizontalAlignment="Left">
+                            <TextBlock Text="{TemplateBinding AxisName}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20" Foreground="Black"/>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                            <StackPanel Height="120" Orientation="Vertical" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <TextBlock Text="当前位置：" VerticalAlignment="Center" Foreground="Black" Margin="10,10,0,10" FontSize="14" HorizontalAlignment="Right" FontWeight="Bold"/>
+                                <TextBlock Text="速度：" VerticalAlignment="Center" Foreground="Black" Margin="10,0,0,10" FontSize="14" HorizontalAlignment="Right" FontWeight="Bold"/>
+                                <TextBlock Text="运动模式：" VerticalAlignment="Center" Foreground="Black" Margin="10,0,0,10" FontSize="14" HorizontalAlignment="Right" FontWeight="Bold"/>
+                                <TextBlock Text="停止原因：" VerticalAlignment="Center" Foreground="Black" Margin="10,0,0,10" FontSize="14" HorizontalAlignment="Right" FontWeight="Bold"/>
+                            </StackPanel>
+                            <StackPanel Height="120" Orientation="Vertical" Margin="0,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <TextBlock Text="{Binding Pos, RelativeSource={RelativeSource TemplatedParent}}"  Width="120" VerticalAlignment="Center" Foreground="Black" Margin="0,12,0,10" FontSize="14"/>
+                                <TextBlock Text="{Binding Speed, RelativeSource={RelativeSource TemplatedParent}}"  Width="120" VerticalAlignment="Center" Foreground="Black" Margin="0,0,0,10" FontSize="14"/>
+                                <TextBlock Text="{Binding MoveModel, RelativeSource={RelativeSource TemplatedParent}}" Width="120" VerticalAlignment="Center" Foreground="Black" Margin="0,0,0,10" FontSize="14"/>
+                                <TextBlock Text="{Binding StopCause, RelativeSource={RelativeSource TemplatedParent}}" Width="120" VerticalAlignment="Center" Foreground="Black" Margin="0,0,0,10" FontSize="14"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="10,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <TextBlock x:Name="Servo_Run" Text="使能" Width="70"  Height="30" TextAlignment="Center" Background="{Binding Servo_Run_State, RelativeSource={RelativeSource TemplatedParent}}"  VerticalAlignment="Center" Foreground="Black" Margin="0,18,0,10" FontSize="18"  FontWeight="Normal" FontStyle="Italic" HorizontalAlignment="Stretch" Padding="0,1,2,0"/>
+                                <TextBlock Text="报警" Width="70" Height="30" TextAlignment="Center" VerticalAlignment="Center" Background="{Binding Error_State, RelativeSource={RelativeSource TemplatedParent}}" Foreground="Black" Margin="0,15,0,10"  FontSize="18" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" FlowDirection="LeftToRight" FontStyle="Italic" Padding="0,1,2,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="15,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <TextBlock Text="动态" Width="70" Height="30" TextAlignment="Center" VerticalAlignment="Center" Background="{Binding Operation_State, RelativeSource={RelativeSource TemplatedParent}}" Foreground="Black" Margin="0,18,0,10" FontSize="18" FontWeight="Normal" FontStyle="Italic" HorizontalAlignment="Stretch" Padding="0,1,2,0" />
+                                <TextBlock Text="急停" Width="70" Height="30" TextAlignment="Center" VerticalAlignment="Center" Background="{Binding EStop_State, RelativeSource={RelativeSource TemplatedParent}}" Foreground="Black" Margin="0,15,0,10" FontSize="18" HorizontalAlignment="Center" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Disabled" FlowDirection="LeftToRight" FontStyle="Italic" Padding="0,1,2,0"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Vertical" Margin="20,0,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                                <Button x:Name="Stop" Margin="0,15,0,0" Content="紧急停止" Width="80" Height="35" VerticalAlignment="Stretch" HorizontalAlignment="Left" Foreground="Black" Background="#FFFF210B" BorderBrush="{x:Null}" FontSize="12"/>
+                                <Button x:Name="Rset" Margin="0,15,0,0" Content="复位" Width="80" Height="35" VerticalAlignment="Stretch" HorizontalAlignment="Left" Foreground="Black" Background="{x:Null}" BorderBrush="#FF7F7D7D" FontSize="12"></Button>
+                            </StackPanel>
+                        </StackPanel>
+                        <StackPanel Orientation="Vertical" Margin="0,0,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="手动速度：" VerticalAlignment="Top" Margin="10,0,0,0" Foreground="Black" FontSize="14" HorizontalAlignment="Left" FontWeight="Bold"/>
+                                <Slider x:Name="Speed_Slider" Width="450" Height="30" Value="{Binding Set_Speed, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" IsSnapToTickEnabled="True" TickFrequency="1" Minimum="1" Maximum="100" TickPlacement="BottomRight" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding ElementName=Speed_Slider, Path=Value}" VerticalAlignment="Top" Margin="5,5,0,0" Foreground="Black" FontSize="12" HorizontalAlignment="Left" FontWeight="Bold"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Margin="0,5,0,0">
+                                <Button x:Name="Jogjust" Margin="0,0,5,0" Content="正方向" Width="90" Height="35" VerticalAlignment="Stretch" HorizontalAlignment="Left" Foreground="Black" Background="{x:Null}" BorderBrush="#FF7F7D7D" FontSize="12"/>
+                                <Button x:Name="Joglose" Margin="0,0,5,0" Content="负方向" Width="90" Height="35" VerticalAlignment="Stretch" HorizontalAlignment="Left" Foreground="Black" Background="{x:Null}" BorderBrush="#FF7F7D7D" FontSize="12"/>
+                                <Button x:Name="Homemove" Margin="0,0,5,0" Content="原点回归" Width="90" Height="35" VerticalAlignment="Stretch" HorizontalAlignment="Left" Foreground="Black" Background="{x:Null}" BorderBrush="#FF7F7D7D" FontSize="12"/>
+                                <TextBlock Text="定位地址：" Margin="0,10,0,0" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" FontSize="14"/>
+                                <TextBox x:Name="import_location" Text="{Binding Import_location, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}" Margin="0,10,0,0" Height="20" Width="80" HorizontalAlignment="Left" VerticalAlignment="Top" Foreground="Black" Cursor="Arrow" Padding="0,2,0,0"/>
+                                <Button x:Name="Relmove" Margin="5,0,5,0" Content="相对定位" Width="90" Height="35" VerticalAlignment="Stretch" HorizontalAlignment="Left" Foreground="Black" Background="{x:Null}" BorderBrush="#FF7F7D7D" FontSize="12"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

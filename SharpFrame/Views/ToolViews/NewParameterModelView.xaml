@@ -6,9 +6,7 @@
         xmlns:local="clr-namespace:SharpFrame.Views.ToolViews" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-        Title="{Binding Title}" Height="300" Width="600" ResizeMode="NoResize" 
-        WindowStartupLocation="CenterScreen" AllowsTransparency="True" 
-        WindowStyle="None">
+         Height="300" Width="600"  ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="{x:Null}">
     <Grid>
         <Border Margin="5" CornerRadius="20" Background="White" BorderThickness="1" BorderBrush="#FFABABAB">
             <Grid Margin="7" >
@@ -18,15 +16,15 @@
                     <RowDefinition Height="40"/>
                 </Grid.RowDefinitions>
                 <Button Grid.Row="0"  VerticalAlignment="Top" HorizontalAlignment="Right" Content="{materialDesign:PackIcon CloseThick}" ToolTip="关闭" Command="{Binding Close}" Background="{x:Null}" Foreground="Black" BorderBrush="{x:Null}"/>
-                <Grid Grid.Row="1" Margin="120,50,120,10" Cursor="">
+                <Grid Grid.Row="1" Margin="120,45,120,10" Cursor="">
                     <StackPanel Orientation="Horizontal">
                         <StackPanel>
                             <TextBlock Margin="10" Text="型号名称：" HorizontalAlignment="Right" FontSize="20"/>
-                            <TextBlock Margin="10" Text="初始值：" HorizontalAlignment="Right" FontSize="20"/>
+                            <TextBlock Margin="10" Text="初始参数：" HorizontalAlignment="Right" FontSize="20"/>
                         </StackPanel>
                         <StackPanel>
-                            <TextBox Margin="5,0,0,0" Text="{Binding NewName}" HorizontalAlignment="Left" Width="120" FontSize="20"/>
-                            <ComboBox Margin="5,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="120" SelectedIndex="{Binding OptionalParametersIndexes,Mode=TwoWay}" ItemsSource="{Binding OptionalParametersList}" Foreground="Black" FontSize="20" OpacityMask="Black"/>
+                            <TextBox Margin="5,0,0,0" Text="{Binding NewName,Mode=TwoWay}" HorizontalAlignment="Left" Width="180" FontSize="20"/>
+                            <ComboBox Margin="5,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="180" DisplayMemberPath="Name" SelectedValuePath="ID" SelectedIndex="{Binding OptionalParametersIndexes,Mode=TwoWay}" ItemsSource="{Binding OptionalParametersList}" Foreground="Black" FontSize="20" OpacityMask="Black"/>
                         </StackPanel>
                     </StackPanel>
 

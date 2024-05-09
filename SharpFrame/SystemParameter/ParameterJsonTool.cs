@@ -53,6 +53,26 @@ namespace SharpFrame.ParameterJson
         }
 
         /// <summary>
+        /// 创建Json格式参数
+        /// </summary>
+        /// <param name="table">参数名称</param>
+        public static void NewJosn(string table, string copy)
+        {
+            string path = "";
+            string basejson = "";
+            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            basejson = copy + ".json";
+            if (Directory.Exists(path))
+            {
+                string sourceFile = path + "\\" + basejson;
+                string destinationFile = path + "\\" + table + ".json";
+                bool isrewrite = true; // true=覆盖已存在的同名文件
+                System.IO.File.Copy(sourceFile, destinationFile, isrewrite);
+            }
+        }
+
+
+        /// <summary>
         /// 修改Json参数名称
         /// </summary>
         /// <param name="filename">原Json名称</param>
@@ -67,9 +87,7 @@ namespace SharpFrame.ParameterJson
                 {
                     if (!t.Contains(new_filename))
                     {
-
                         path = System.Environment.CurrentDirectory + @"\SystemParameter";
-
                         string destinationFile = path + "\\" + filename + ".json";
                         string new_destinationFile = path + "\\" + new_filename + ".json";
                         System.IO.File.Move(destinationFile, new_destinationFile);
@@ -94,7 +112,7 @@ namespace SharpFrame.ParameterJson
                 foreach (var item in files)
                 {
                     var st = item.Name;
-                    if (item.Name != "Base.json")
+                    if (item.Name != "Base.json" && item.Extension == ".json")
                         strings.Add(st.Replace(item.Extension, ""));
                 }
                 return strings;

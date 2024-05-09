@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Configuration;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -34,24 +35,32 @@ namespace SharpFrame.ViewModels
                 var system_list = ParameterJsonTool.GetJson();
                 if (system_list.Count > 0)
                 {
-                    var all_parameters = ParameterJsonTool.ReadAllJson(new Parameter());
-                    int index = all_parameters.Select((item, idx) => new { Item = item, Index = idx }).FirstOrDefault(x => x.Item.DefaultModel == true)?.Index ?? -1;
-                    ParameterName = all_parameters[index].ParameterName;
                     for (int i = 0; i < system_list.Count; i++)
                     {
                         ParameterNameList.Add(new ComboxList { ID = i, Name = system_list[i] });
                     }
-                    ParameterIndexes = index;
+                    string paramValue = GetParameterValue();
                     Parameter systems = new Parameter();
-                    ParameterJsonTool.ReadJson(system_list[index], ref systems);
-                    SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
-                    PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
+                    if (paramValue != "Null")
+                    {
+                        ParameterName = paramValue;
+                        ParameterJsonTool.ReadJson(paramValue, ref systems);
+                        ParameterIndexes = system_list.FindIndex(x => x == paramValue);
+                        SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
+                        PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
+                    }
+                    else
+                    {
+                        ParameterName = system_list[0];
+                        ParameterJsonTool.ReadJson(ParameterName, ref systems);
+                        ParameterIndexes = 0;
+                        SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
+                        PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
+                    }
                 }
                 else
                 {
                     Parameter parameter = new Parameter();
-                    parameter.DefaultModel = false;
-                    parameter.ParameterName = DateTime.Now.ToString("yyyy_MM_dd");
                     parameter.SystemParameters_Obse.Add(new SystemParameter(0, "0", 0.211f));
                     parameter.SystemParameters_Obse.Add(new SystemParameter(1, "1", 131.00));
                     parameter.SystemParameters_Obse.Add(new SystemParameter(2, "2", "dsadas"));
@@ -62,7 +71,7 @@ namespace SharpFrame.ViewModels
                     parameter.TestParameter_Obse.Add(new TestParameter() { ID = 1, Name = "1", Value = 0.333 });
                     parameter.TestParameter_Obse.Add(new TestParameter() { ID = 2, Name = "2", Value = "sasda" });
                     ParameterJsonTool.Set_NullJson(parameter);
-                    ParameterJsonTool.NewJosn(DateTime.Now.ToString(parameter.ParameterName));
+                    ParameterJsonTool.NewJosn(DateTime.Now.ToString("yyyy_MM_dd"));
                 }
                 system_list = ParameterJsonTool.GetJson();
             });
@@ -74,24 +83,45 @@ namespace SharpFrame.ViewModels
             {
                 Parameter systems = new Parameter();
                 var system_list = ParameterJsonTool.GetJson();
-                ParameterJsonTool.ReadJson(system_list[ParameterIndexes], ref systems);
-                ParameterName = systems.ParameterName;
+                ParameterName = system_list[ParameterIndexes];
+                SetParameterValue(ParameterName);
+                ParameterJsonTool.ReadJson(ParameterName, ref systems);
                 SystemArguments = systems.SystemParameters_Obse;
                 PointLocationArguments = systems.PointLocationParameter_Obse;
             });
             ParameterSave = new DelegateCommand(() =>
             {
                 Parameter parameter = new Parameter();
-                parameter.ParameterName = ParameterName;
-                parameter.DefaultModel = true;
                 parameter.SystemParameters_Obse = SystemArguments;
                 parameter.PointLocationParameter_Obse = PointLocationArguments;
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
             });
-            NewModel = new DelegateCommand(() =>
+            ParameterDelete = new DelegateCommand(() =>
             {
 
+            });
+            NewModel = new DelegateCommand(() =>
+            {
+                var parameter_list = ParameterJsonTool.GetJson();
+                NewParameterModelView modelView = new NewParameterModelView(aggregator, parameter_list);
+                modelView.Show();
+            });
+            aggregator.GetEvent<NewModelEvent>().Subscribe((model) =>
+            {
+                Parameter par = new Parameter();
+                ParameterJsonTool.NewJosn(model.NewName, model.InitialParameter);
+                var parameter_list = ParameterJsonTool.GetJson();
+                ParameterNameList.Clear();
+                for (int i = 0; i < parameter_list.Count; i++)
+                {
+                    ParameterNameList.Add(new ComboxList { ID = i, Name = parameter_list[i] });
+                }
+                ParameterIndexes = parameter_list.FindIndex(x => x == model.NewName);
+                ParameterName = model.NewName;
+                ParameterJsonTool.ReadJson(model.NewName, ref par);
+                SystemArguments = new ObservableCollection<SystemParameter>(par.SystemParameters_Obse.ToList());
+                PointLocationArguments = new ObservableCollection<PointLocationParameter>(par.PointLocationParameter_Obse.ToList());
             });
             SystemArguments_Add_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
@@ -174,6 +204,25 @@ namespace SharpFrame.ViewModels
                 PointLocationArguments = null;
                 PointLocationArguments = pointStructures;
             }, ThreadOption.UIThread);
+        }
+
+        public void SetParameterValue(string value)
+        {
+            string configFile = $"{Application.StartupPath}\\SystemParameter\\Parameter.config";
+            ExeConfigurationFileMap configFileMap = new ExeConfigurationFileMap();
+            configFileMap.ExeConfigFilename = configFile;
+            Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+            config.AppSettings.Settings["ParameterName"].Value = value;
+            config.Save();
+        }
+
+        public string GetParameterValue()
+        {
+            string configFile = $"{Application.StartupPath}\\SystemParameter\\Parameter.config";
+            ExeConfigurationFileMap configFileMap = new ExeConfigurationFileMap();
+            configFileMap.ExeConfigFilename = configFile;
+            Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
+            return config.AppSettings.Settings["ParameterName"].Value;
         }
 
         /// <summary>
@@ -263,6 +312,11 @@ namespace SharpFrame.ViewModels
         public DelegateCommand ParameterSave { get; set; }
 
         /// <summary>
+        /// 参数删除
+        /// </summary>
+        public DelegateCommand ParameterDelete { get; set; }
+
+        /// <summary>
         /// 当前参数名称
         /// </summary>
         public string ParameterName { get; set; }
@@ -285,9 +339,7 @@ namespace SharpFrame.ViewModels
             PointLocationParameter_Obse = new ObservableCollection<PointLocationParameter>();
             TestParameter_Obse = new ObservableCollection<TestParameter>();
         }
-        public string ParameterName { get; set; }
 
-        public bool DefaultModel { get; set; }
         private ObservableCollection<SystemParameter> _systemparameters_obse;
 
         public ObservableCollection<SystemParameter> SystemParameters_Obse
@@ -433,6 +485,7 @@ namespace SharpFrame.ViewModels
         public Type ValueType { get; set; }
     }
 
+
     /// <summary>
     /// 系统参数添加行通知
     /// </summary>
@@ -455,5 +508,12 @@ namespace SharpFrame.ViewModels
         public PointLocationParameter NewParameter { get; set; }
 
         public PointLocationParameter InsertionParameter { get; set; }
+    }
+    public class NewModelEvent : PubSubEvent<Add_Model> { }
+
+    public class Add_Model
+    {
+        public string NewName { get; set; }
+        public string InitialParameter { get; set; }
     }
 }

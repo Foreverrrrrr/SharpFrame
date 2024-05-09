@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using ImTools;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.ToolViews;
@@ -17,14 +18,25 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public NewParameterModelViewModel(IEventAggregator aggregator, List<string> parameterslist)
         {
             this.eventAggregator = aggregator;
+            for (int i = 0; i < parameterslist.Count; i++)
+            {
+                OptionalParametersList.Add(new ComboxList() { ID = i, Name = parameterslist[i].ToString() });
+            }
+            OptionalParametersList.Add(new ComboxList() { ID = OptionalParametersList.Count - 1, Name = "Null" });
+
             Close = new DelegateCommand(() =>
             {
-                System_AddView currentWindow = System.Windows.Application.Current.Windows.OfType<System_AddView>().SingleOrDefault(w => w.IsActive);
+                NewParameterModelView currentWindow = System.Windows.Application.Current.Windows.OfType<NewParameterModelView>().SingleOrDefault(w => w.IsActive);
                 currentWindow.Close();
             });
             OkButton = new DelegateCommand(() =>
             {
-
+                Add_Model modelEvent = new Add_Model();
+                modelEvent.NewName = NewName;
+                modelEvent.InitialParameter = OptionalParametersList[OptionalParametersIndexes].Name;
+                eventAggregator.GetEvent<NewModelEvent>().Publish(modelEvent);
+                NewParameterModelView currentWindow = System.Windows.Application.Current.Windows.OfType<NewParameterModelView>().SingleOrDefault(w => w.IsActive);
+                currentWindow.Close();
             });
         }
 
