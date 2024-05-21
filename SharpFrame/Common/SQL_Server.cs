@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,7 +10,6 @@ namespace SharpFrame.Common
 {
     public class SQL_Server
     {
-
         /// <summary>
         /// 数据库连接字符串
         /// </summary>
@@ -19,17 +19,8 @@ namespace SharpFrame.Common
 
         private static Hashtable parmCache = Hashtable.Synchronized(new Hashtable());
 
-        /// <summary>
-        /// 时间查询
-        /// </summary>
-        /// <param name="TimeMax"></param>
-        /// <param name="TimeMin"></param>
-        /// <returns></returns>
-        public static DataSet SpecialQuery(DateTime TimeMax, DateTime TimeMin)
-        {
-            string sql = "";
-            return SQL_Server.ExecuteDataSet(CommandType.Text, $"SELECT * FROM Test WHERE Time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss")}' ORDER BY Time");
-        }
+
+
 
         public static void WriteError(int id, string str, bool state)
         {
@@ -41,11 +32,9 @@ namespace SharpFrame.Common
             SQL_Server.ExecteNonQuery(CommandType.Text, $"insert into Error values('{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}',{id},'{str}','{s}')");
         }
 
-        public static DataSet ErrorSpecialQuery(DateTime TimeMax, DateTime TimeMin)
+        public static DataSet ErrorSpecialQuery(string table_name, DateTime TimeMax, DateTime TimeMin)
         {
-            string sql = "";
-            return SQL_Server.ExecuteDataSet(CommandType.Text, $"SELECT * FROM Error WHERE Error_Time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss")}'");
-
+            return SQL_Server.ExecuteDataSet(CommandType.Text, $"SELECT * FROM {table_name} WHERE Error_Time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss")}'");
         }
 
         /// <summary>
@@ -55,14 +44,33 @@ namespace SharpFrame.Common
         /// <param name="TimeMin"></param>
         /// <param name="res"></param>
         /// <returns></returns>
-        public static DataSet SpecialQuery(DateTime TimeMax, DateTime TimeMin, bool res)
+        public static DataSet SpecialQuery(string table_name, DateTime TimeMax, DateTime TimeMin, bool res)
         {
             string sql = "";
             if (res)
                 sql = "Pass";
             else
                 sql = "NG";
-            return SQL_Server.ExecuteDataSet(CommandType.Text, $"SELECT * FROM Test WHERE test_time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss.sss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss.sss")}' AND [total_result]  = '{sql}'");
+            return SQL_Server.ExecuteDataSet(CommandType.Text, $"SELECT * FROM {table_name} WHERE test_time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss.sss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss.sss")}' AND [total_result]  = '{sql}'");
+        }
+
+        /// <summary>
+        /// 时间查询
+        /// </summary>
+        /// <param name="TimeMax"></param>
+        /// <param name="TimeMin"></param>
+        /// <returns></returns>
+        public static List<T> SpecialQuery<T>(string table_name, DateTime TimeMax, DateTime TimeMin) where T : class, new()
+        {
+            Type type = typeof(T);
+            PropertyInfo[] properties = type.GetProperties();
+            string tableName = table_name ?? type.Name;
+            string columns = string.Join(", ", properties.Select(p => p.Name));
+            string whereClause = $"SELECT * FROM {table_name} WHERE Time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss")}' ORDER BY Time";
+            string sql = $"SELECT {columns} FROM {tableName} {whereClause}";
+
+            DataTable dataTable = SQL_Server.ExecuteQuery(ConnectionString_Default, CommandType.Text, sql);
+            return MapDataTableToObjects<T>(dataTable);
         }
 
         /// <summary>
@@ -160,9 +168,32 @@ namespace SharpFrame.Common
             return new string[] { time, serial_number };
         }
 
+        private static List<T> MapDataTableToObjects<T>(DataTable dataTable) where T : class, new()
+        {
+            List<T> result = new List<T>();
+
+            foreach (DataRow row in dataTable.Rows)
+            {
+                T obj = new T();
+
+                foreach (DataColumn column in dataTable.Columns)
+                {
+                    PropertyInfo property = typeof(T).GetProperty(column.ColumnName);
+                    if (property != null && row[column] != DBNull.Value)
+                    {
+                        property.SetValue(obj, Convert.ChangeType(row[column], property.PropertyType));
+                    }
+                }
+
+                result.Add(obj);
+            }
+
+            return result;
+        }
+
+
         public static DataSet SpecialQuery(string qr)
         {
-            string sql = "";
             //SQL_Server.ExecuteDataSet(CommandType.Text, $"SELECT * FROM Test WHERE Time BETWEEN '{DateTime.Now.AddDays(-1).ToString("yyyy-MM-dd HH:mm:ss")}' AND '{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}' AND [Result]  = 'Pass'");       
             return SQL_Server.ExecuteDataSet(CommandType.Text, $"SELECT * FROM Test WHERE QR='{qr}' ORDER BY TestTime");
         }
@@ -526,6 +557,17 @@ namespace SharpFrame.Common
 
         #endregion
 
+        public static SqlDataReader ExecuteDataReader(string connectionString, CommandType commandType, string commandText)
+        {
+            SqlConnection connection = new SqlConnection(connectionString);
+            SqlCommand command = new SqlCommand(commandText, connection);
+            command.CommandType = commandType;
+
+            connection.Open();
+
+            return command.ExecuteReader(CommandBehavior.CloseConnection);
+        }
+
         /// <summary>
         /// add parameter array to the cache
         /// </summary>
@@ -550,6 +592,33 @@ namespace SharpFrame.Common
             for (int i = 0, j = cachedParms.Length; i < j; i++)
                 clonedParms[i] = (SqlParameter)((ICloneable)cachedParms[i]).Clone();
             return clonedParms;
+        }
+
+        public static DataTable ExecuteQuery(string connectionString, CommandType commandType, string sql)
+        {
+            DataTable dataTable = new DataTable();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(sql, connection))
+                    {
+                        command.CommandType = commandType;
+                        connection.Open();
+                        using (SqlDataAdapter adapter = new SqlDataAdapter(command))
+                        {
+                            adapter.Fill(dataTable);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // 可以根据需要处理异常
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+
+            return dataTable;
         }
 
         /// <summary>
