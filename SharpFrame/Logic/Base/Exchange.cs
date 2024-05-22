@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Windows.Input;
-using static SharpFrame.Logic.Base.Thread_Auto_Base;
+﻿using static SharpFrame.Logic.Base.Thread_Auto_Base;
 
 namespace SharpFrame.Logic.Base
 {

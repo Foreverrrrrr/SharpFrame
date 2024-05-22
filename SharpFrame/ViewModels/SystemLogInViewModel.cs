@@ -1,14 +1,8 @@
-﻿using Prism.Commands;
+﻿using System;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
-using SharpFrame.Views;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
+using SharpFrame.Views.AuthorizedRegistrationViews;
 
 namespace SharpFrame.ViewModels
 {
@@ -30,7 +24,14 @@ namespace SharpFrame.ViewModels
             {
                 System.Environment.Exit(0);
             });
+            AuthorizationShow = new DelegateCommand(() =>
+            {
+                AuthorizedRegistrationView registrationView = new AuthorizedRegistrationView(aggregators);
+                registrationView.Show();
+            });
         }
+
+        public DelegateCommand AuthorizationShow { get; set; }
 
         private string _longin_log;
 

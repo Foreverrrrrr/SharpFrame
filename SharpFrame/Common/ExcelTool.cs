@@ -1,10 +1,9 @@
-﻿using OfficeOpenXml;
-using System;
+﻿using System;
 using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using OfficeOpenXml;
 
 namespace SharpFrame.Common
 {
@@ -75,39 +74,7 @@ namespace SharpFrame.Common
             }
         }
 
-        public static string[] TableNamess;
 
-        public static void SaveDataExport(string path, DataSet data)
-        {
-            if (TableNamess == null)
-            {
-                var cy = File.ReadAllLines(@"Save_Table.txt");
-                TableNamess = cy[0].Split(',');
-            }
-            FileInfo file = new System.IO.FileInfo(path);
-            using (ExcelPackage package = new ExcelPackage(file))
-            {
-                ExcelWorksheet worksheet = package.Workbook.Worksheets.Count != 0 ? package.Workbook.Worksheets[1] : package.Workbook.Worksheets.Add("Database");//是否存在工作表，不存在创建工作表
-                int rowCount = worksheet.Dimension != null ? worksheet.Dimension.End.Row : 0;//获取数据最后行
-                if (rowCount == 0)
-                {
-                    for (int i = 1; i < TableNamess.Length + 1; i++)
-                    {
-                        worksheet.Cells[1, i].Value = TableNamess[i - 1];
-                        worksheet.Cells[1, i].Style.Font.Name = "微软雅黑";
-                    }
-                    rowCount++;
-                }
-                for (int i = 0; i < data.Tables[0].Rows.Count; i++)
-                {
-                    for (int j = 0; j < data.Tables[0].Columns.Count; j++)
-                    {
-                        worksheet.Cells[i + 2, j + 1].Value = data.Tables[0].Rows[i][j];
-                    }
-                }
-                package.SaveAs(file);
-            };
-        }
 
         /// <summary>
         /// 文件定时删除

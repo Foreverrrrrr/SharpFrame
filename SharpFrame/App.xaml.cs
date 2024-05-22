@@ -89,7 +89,17 @@ namespace SharpFrame
                     SystemLogIn.viewModel.Warranty = true;
                 }
             });
+            clientToken.InAdvanceEvent += ((b, t1, t2) =>
+            {
+
+            });
+            clientToken.ExpireEvent += ((b, t1, t2) =>
+            {
+                System.Windows.Forms.MessageBox.Show($"软件授权到期", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                SystemLogIn.viewModel.Warranty = null;
+            });
             clientToken.Initialize();
+            ViewModels.AuthorizedRegistrationViewModels.AuthorizedRegistrationViewModel.token = clientToken;
         }
 
         /// <summary>

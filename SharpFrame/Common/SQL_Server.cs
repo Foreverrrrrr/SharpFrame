@@ -66,8 +66,7 @@ namespace SharpFrame.Common
             PropertyInfo[] properties = type.GetProperties();
             string tableName = table_name ?? type.Name;
             string columns = string.Join(", ", properties.Select(p => p.Name));
-            string whereClause = $"SELECT * FROM {table_name} WHERE Time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss")}' ORDER BY Time";
-            string sql = $"SELECT {columns} FROM {tableName} {whereClause}";
+            string sql = $"SELECT * FROM {table_name} WHERE Time BETWEEN '{TimeMax.ToString("yyyy-MM-dd HH:mm:ss")}' AND '{TimeMin.ToString("yyyy-MM-dd HH:mm:ss")}' ORDER BY Time";
 
             DataTable dataTable = SQL_Server.ExecuteQuery(ConnectionString_Default, CommandType.Text, sql);
             return MapDataTableToObjects<T>(dataTable);

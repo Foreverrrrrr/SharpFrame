@@ -16,22 +16,22 @@
                     <RowDefinition Height="100"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                <StackPanel Margin="20,0,0,0" Grid.Row="0" Height="100" Orientation="Horizontal">
-                    <DatePicker Height="35" Width="120" Background="White" BorderBrush="Black" Foreground="Black" Language="zh-CN" FontSize="17" SelectedDate="{Binding Time,Mode=TwoWay}">
+                <StackPanel Margin="25,0,0,0" Grid.Row="0" Height="100" Orientation="Horizontal">
+                    <DatePicker Height="40" Width="130" Background="White" BorderBrush="Black" Foreground="Black" Language="zh-CN" FontSize="19" SelectedDate="{Binding Time,Mode=TwoWay}">
                         <DatePicker.Resources>
                             <Style TargetType="DatePickerTextBox">
                                 <Setter Property="IsReadOnly" Value="True"/>
                             </Style>
                         </DatePicker.Resources>
                     </DatePicker>
-                    <TextBox Margin="15,0,0,0" Text="{Binding QR}" Width="250" Height="30" Foreground="Black" FontSize="14"/>
+                    <TextBox Margin="15,0,0,0" Text="QR" Width="250" Height="40" Foreground="Black" FontSize="14"/>
                     <Button Margin="15,0,0,0" Width="140" Height="40" FontSize="16" Content="二维码查询"  Foreground="Black"/>
                     <Button Margin="15,0,0,0" Width="100" Height="40" FontSize="16" Content="时间查询"  Foreground="Black" Command="{Binding DatabaseTimeQuery}"/>
-                    <Button Margin="15,0,0,0" Width="100" Height="40" Content="导出" Foreground="Black" Cursor="Hand"/>
+                    <Button Margin="15,0,0,0" Width="100" Height="40" Content="导出" Foreground="Black" Command="{Binding Export}"  CommandParameter="{Binding DatabaseView}"/>
                 </StackPanel>
-                <StackPanel Grid.Row="1" >
-                    <DataGrid ItemsSource="{Binding DatabaseView}" AutoGenerateColumns="True"/>
-                </StackPanel>
+                <Grid Margin="20" Grid.Row="1">
+                    <DataGrid x:Name="datagrid" ItemsSource="{Binding DatabaseView}" AutoGenerateColumns="True" IsReadOnly="True" FontSize="14"/>
+                </Grid>
             </Grid>
         </Border>
     </Grid>

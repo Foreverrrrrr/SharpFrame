@@ -39,7 +39,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         break;
@@ -53,7 +53,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         break;
@@ -67,7 +67,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         break;
@@ -81,7 +81,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         break;
@@ -95,7 +95,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         }
                         else
                         {
-                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            MessageBox.Show("输入参数值与类型不符", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                             return;
                         }
                         break;

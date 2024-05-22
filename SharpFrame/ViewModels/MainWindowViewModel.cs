@@ -1,14 +1,12 @@
-﻿using Prism.Commands;
+﻿using System;
+using System.Windows;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using SharpFrame.log4Net;
 using SharpFrame.Logic.Base;
 using SharpFrame.Views;
-using SharpFrame.Views.ToolViews;
-using System;
-using System.Web.UI.WebControls;
-using System.Windows;
 using static SharpFrame.Logic.Base.Thread_Auto_Base;
 
 namespace SharpFrame.ViewModels
@@ -67,7 +65,8 @@ namespace SharpFrame.ViewModels
             Close = new DelegateCommand(() =>
             {
                 eventAggregator.GetEvent<Close_MessageEvent>().Publish();
-                System.Environment.Exit(0);
+                //System.Environment.Exit(0);
+                Application.Current.Shutdown();
             });
             PermissionCommand = new DelegateCommand<Permission>((t) =>
             {
@@ -223,7 +222,7 @@ namespace SharpFrame.ViewModels
 
         private bool _loadingbarstate = false;
         /// <summary>
-        /// 加载条状态
+        /// 滑动加载条状态
         /// </summary>
         public bool LoadingBarState
         {

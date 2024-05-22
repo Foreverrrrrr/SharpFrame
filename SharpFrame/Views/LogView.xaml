@@ -9,10 +9,10 @@
     <UserControl.Resources>
         <local:ConVerter x:Key="Converter"/>
     </UserControl.Resources>
-    <Grid>
+    <Grid>         
         <DataGrid  AutoGenerateColumns="True"  Height="700" ColumnWidth="*" ItemsSource="{Binding ObservableObj}" HorizontalContentAlignment="Center" Focusable="False" CanUserReorderColumns="False" VerticalAlignment="Top" Margin="20,20,20,0" MinColumnWidth="10">
             <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell" >
+                <Style TargetType="DataGridCell">
                     <Setter Property="Background" Value="{Binding Path=状态, Converter={StaticResource Converter}}"/>
                 </Style>
             </DataGrid.CellStyle>
@@ -23,6 +23,5 @@
                 </Style>
             </DataGrid.RowStyle>
         </DataGrid>
-
     </Grid>
 </UserControl>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -20,7 +21,21 @@ namespace SharpFrame.ViewModels
             }, ThreadOption.BackgroundThread);
             DatabaseTimeQuery = new DelegateCommand(() =>
             {
+                Data data = new Data();
+                data.Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                data.result = "pass";
+                data.value = "312";
+                SQL_Server.Write(data, "NewTable");
                 var t = SQL_Server.SpecialQuery<Data>("NewTable", Time.Date, Time.AddDays(1).Date);
+                DatabaseView = ParameterJsonTool.ConvertOBse(t);
+            });
+            Export = new DelegateCommand<object>((obj) =>
+            {
+                ObservableCollection<Data> data = obj as ObservableCollection<Data>;
+                if (data != null)
+                {
+
+                }
             });
         }
 
@@ -29,6 +44,11 @@ namespace SharpFrame.ViewModels
         /// </summary>
         public DelegateCommand DatabaseTimeQuery { get; set; }
 
+        /// <summary>
+        /// 数据导出Excel命令
+        /// </summary>
+        public DelegateCommand<object> Export { get; set; }
+
         private DateTime _time = DateTime.Now;
 
         public DateTime Time
@@ -36,6 +56,15 @@ namespace SharpFrame.ViewModels
             get { return _time; }
             set { _time = value; RaisePropertyChanged(); }
         }
+
+        private ObservableCollection<Data> _databaseview;
+
+        public ObservableCollection<Data> DatabaseView
+        {
+            get { return _databaseview; }
+            set { _databaseview = value; RaisePropertyChanged(); }
+        }
+
     }
 
     public class Data

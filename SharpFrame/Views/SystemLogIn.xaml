@@ -6,9 +6,12 @@
         xmlns:local="clr-namespace:SharpFrame.Views" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"  Padding="0" Height="600" Width="450" 
-        xmlns:prism="http://prismlibrary.com/"
+        xmlns:prism="http://prismlibrary.com/" xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         prism:ViewModelLocator.AutoWireViewModel="True"
         ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="{x:Null}" Title="{Binding Title}">
+    <Window.InputBindings>
+        <KeyBinding Key="Enter" Command="{Binding Login_button}"/>
+    </Window.InputBindings>
     <Border Margin="0" CornerRadius="15">
         <Border.Effect>
             <DropShadowEffect Color="Black" ShadowDepth="0" BlurRadius="5" Opacity="0.1" Direction="10"/>
@@ -20,6 +23,7 @@
                 <RowDefinition Height="35"/>
             </Grid.RowDefinitions>
             <Border CornerRadius="15,15,0,0"/>
+            <Button Margin="0,0,50,0" VerticalAlignment="Top" HorizontalAlignment="Right" Content="注册" BorderBrush="{x:Null}" Background="{x:Null}" FontSize="12" Command="{Binding AuthorizationShow}" FontWeight="Bold" />
             <Button VerticalAlignment="Top" HorizontalAlignment="Right" Content="{materialDesign:PackIcon CloseThick}" ToolTip="关闭" BorderBrush="{x:Null}" Background="{x:Null}" Command="{Binding Close}" />
             <Grid Grid.Row="0" >
                 <Grid>
@@ -139,7 +143,7 @@
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Width="190" VerticalAlignment="Center">
-                    <materialDesign:PackIcon Kind="Key" Height="30" Width="30" Margin="0,0,10,0"/>
+                    <materialDesign:PackIcon Kind="Key" Height="30" Width="30" Margin="0,3,10,0"/>
                     <PasswordBox x:Name="PasswordBox" FontSize="20" Width="130" CaretBrush="Black"
                      local:PasswordBoxHelper.Password="{Binding PassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderBrush="Black" />
                 </StackPanel>
@@ -158,7 +162,7 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock Margin="5" Grid.Column="0" FontSize="13" Text="{Binding Lonin_Log}" Height="15" FontWeight="Bold"/>
-                <RadioButton Margin="5" Grid.Column="3" IsChecked="{Binding Warranty}" GroupName="Group1" FontWeight="Bold" IsThreeState="True" Focusable="False" IsHitTestVisible="False" BorderBrush="{x:Null}">
+                <RadioButton Margin="5" Grid.Column="4" IsChecked="{Binding Warranty}" GroupName="Group1" FontWeight="Bold" IsHitTestVisible="False" IsThreeState="True" Focusable="True" BorderBrush="{x:Null}" Command="{Binding AuthorizationShow}">
                     <RadioButton.Template>
                         <ControlTemplate TargetType="RadioButton">
                             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
@@ -181,7 +185,7 @@
                         </ControlTemplate>
                     </RadioButton.Template>
                 </RadioButton>
-                <RadioButton Margin="5" Grid.Column="4" IsChecked="{Binding Client_On_Line}" GroupName="Group2" FontWeight="Bold" IsHitTestVisible="False" BorderBrush="{x:Null}">
+                <!--<RadioButton Margin="5" Grid.Column="4" IsChecked="{Binding Client_On_Line}" GroupName="Group2" FontWeight="Bold" IsHitTestVisible="False" BorderBrush="{x:Null}">
                     <RadioButton.Template>
                         <ControlTemplate TargetType="RadioButton">
                             <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="{TemplateBinding Padding}">
@@ -201,7 +205,7 @@
                             </ControlTemplate.Triggers>
                         </ControlTemplate>
                     </RadioButton.Template>
-                </RadioButton>
+                </RadioButton>-->
             </Grid>
         </Grid>
     </Border>

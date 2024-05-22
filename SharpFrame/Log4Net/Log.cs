@@ -1,7 +1,6 @@
-﻿using log4net;
+﻿using System;
+using log4net;
 using log4net.Config;
-using System;
-using System.Windows;
 
 [assembly: XmlConfigurator(ConfigFile = @"Log4Net\\log4net.config", Watch = true)]
 

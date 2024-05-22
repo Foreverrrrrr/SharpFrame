@@ -92,7 +92,7 @@ namespace SharpFrame.ViewModels
                     var bool_ret = TypeAndValueCheck(item);
                     if (!bool_ret)
                     {
-                        MessageBox.Show($"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”");
+                        MessageBox.Show($"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
                 }

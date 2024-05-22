@@ -1,13 +1,10 @@
-﻿using ImTools;
+﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.ToolViews;
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows.Documents;
 
 namespace SharpFrame.ViewModels.ToolViewModels
 {
