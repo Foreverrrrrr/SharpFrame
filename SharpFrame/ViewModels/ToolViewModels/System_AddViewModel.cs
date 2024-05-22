@@ -1,9 +1,9 @@
-﻿using Prism.Commands;
+﻿using System.Linq;
+using System.Windows.Forms;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.ToolViews;
-using System.Linq;
-using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace SharpFrame.ViewModels.ToolViewModels
@@ -12,9 +12,9 @@ namespace SharpFrame.ViewModels.ToolViewModels
     {
         private readonly IEventAggregator eventAggregator;
 
-        private SystemParameter this_checkdata;
+        private Structure.Parameter.SystemParameter this_checkdata;
 
-        public System_AddViewModel(IEventAggregator aggregator, SystemParameter checkdata)
+        public System_AddViewModel(IEventAggregator aggregator, Structure.Parameter.SystemParameter checkdata)
         {
             this.eventAggregator = aggregator;
             this.this_checkdata = checkdata;
@@ -25,7 +25,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
             });
             OkButton = new DelegateCommand(() =>
             {
-                SystemParameter structure = new SystemParameter();
+                Structure.Parameter.SystemParameter structure = new Structure.Parameter.SystemParameter();
                 structure.Name = Name;
                 string input_value = Input_Value;
                 switch (TypeModel)

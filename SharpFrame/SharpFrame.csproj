@@ -17,7 +17,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
     <IsWebBootstrapper>false</IsWebBootstrapper>
-    <PublishUrl>publish\</PublishUrl>
+    <PublishUrl>D:\FTP\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -27,9 +27,10 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationRevision>1</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -56,7 +57,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Debug\</OutputPath>
-    <WarningLevel>5</WarningLevel>
+    <WarningLevel>3</WarningLevel>
     <Optimize>false</Optimize>
     <UseWinFormsOutOfProcDesigner>True</UseWinFormsOutOfProcDesigner>
   </PropertyGroup>
@@ -67,6 +68,21 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>428DDB0A6176E136A559F6A5A7FA23941D87DC61</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>SharpFrame_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>false</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualStudio.DebuggerVisualizers, Version=17.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -102,10 +118,20 @@
     <Compile Include="Logic\Base\DataConfigurationBase.cs" />
     <Compile Include="Logic\Base\Exchange.cs" />
     <Compile Include="Logic\Base\ProductionThreadBase.cs" />
-    <Compile Include="SystemParameter\ParameterJsonTool.cs" />
+    <Compile Include="Structure\Debugging\AxisConfigurationFile.cs" />
+    <Compile Include="Structure\Debugging\Axis_Json.cs" />
+    <Compile Include="Structure\Debugging\Input_Json.cs" />
+    <Compile Include="Structure\Debugging\Json_Deploy.cs" />
+    <Compile Include="Structure\Debugging\Output_Json.cs" />
+    <Compile Include="Structure\Parameter\Parameter.cs" />
+    <Compile Include="Structure\Parameter\ParameterJsonTool.cs" />
+    <Compile Include="Structure\Parameter\PointLocationParameter.cs" />
+    <Compile Include="Structure\Parameter\SystemParameter.cs" />
+    <Compile Include="Structure\Parameter\TestParameter.cs" />
     <Compile Include="ViewModels\DebuggingViewModel.cs" />
     <Compile Include="ViewModels\LogViewModel.cs" />
     <Compile Include="ViewModels\ParameterViewModel.cs" />
+    <Compile Include="ViewModels\RelationalDatabaseViewModel.cs" />
     <Compile Include="ViewModels\SystemLogInViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\NewParameterModelViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\Point_AddViewModel.cs" />
@@ -218,9 +244,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="SystemParameter\Parameter.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Structure\Parameter\Parameter.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ClientKeyMaker">

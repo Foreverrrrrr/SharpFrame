@@ -1,27 +1,15 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Shapes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
-namespace SharpFrame.ParameterJson
+namespace SharpFrame.Structure.Parameter
 {
     public static class ParameterJsonTool
     {
-        /// <summary>
-        /// 系统参数保存文件夹
-        /// </summary>
-        public static string SystemJsonFolder { get; set; } = "SystemParameter";
-
-        /// <summary>
-        /// 点位参数保存文件夹
-        /// </summary>
-        public static string PointLocationJsonFolder { get; set; } = "PointLocation";
 
         /// <summary>
         /// 测试测试保存文件夹
@@ -41,7 +29,7 @@ namespace SharpFrame.ParameterJson
         {
             string path = "";
             string basejson = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             basejson = "Base.json";
             if (Directory.Exists(path))
             {
@@ -60,7 +48,7 @@ namespace SharpFrame.ParameterJson
         {
             string path = "";
             string basejson = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             basejson = copy + ".json";
             if (Directory.Exists(path))
             {
@@ -87,7 +75,7 @@ namespace SharpFrame.ParameterJson
                 {
                     if (!t.Contains(new_filename))
                     {
-                        path = System.Environment.CurrentDirectory + @"\SystemParameter";
+                        path = System.Environment.CurrentDirectory + @"\Parameter";
                         string destinationFile = path + "\\" + filename + ".json";
                         string new_destinationFile = path + "\\" + new_filename + ".json";
                         System.IO.File.Move(destinationFile, new_destinationFile);
@@ -103,7 +91,7 @@ namespace SharpFrame.ParameterJson
         public static List<string> GetJson()
         {
             string path = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             if (Directory.Exists(path))
             {
                 DirectoryInfo root = new DirectoryInfo(path + "\\");
@@ -130,7 +118,7 @@ namespace SharpFrame.ParameterJson
         public static void DeleteJosn(string table)
         {
             string path = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             string destinationFile = path + "\\" + table + ".json";
             System.IO.File.Delete(destinationFile);
         }
@@ -145,7 +133,7 @@ namespace SharpFrame.ParameterJson
         public static bool ReadJson<T>(string table, ref T t) where T : class
         {
             string path = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             DirectoryInfo root = new DirectoryInfo(path + "\\");
             FileInfo[] files = root.GetFiles();
             if (Array.Exists(files, x => x.Name == table + ".json"))
@@ -163,7 +151,7 @@ namespace SharpFrame.ParameterJson
         public static ObservableCollection<T> ReadAllJson<T>(T t) where T : class
         {
             string path = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             DirectoryInfo root = new DirectoryInfo(path + "\\");
             FileInfo[] files = root.GetFiles();
             ObservableCollection<T> values = new ObservableCollection<T>();
@@ -191,7 +179,7 @@ namespace SharpFrame.ParameterJson
         {
             bool ret = false;
             string path = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             DirectoryInfo root = new DirectoryInfo(path + "\\");
             FileInfo[] files = root.GetFiles();
             if (Array.Exists(files, x => x.Name == table + ".json"))
@@ -216,12 +204,38 @@ namespace SharpFrame.ParameterJson
         public static void Set_NullJson<T>(T t) where T : class
         {
             string path = "";
-            path = System.Environment.CurrentDirectory + @"\SystemParameter";
+            path = System.Environment.CurrentDirectory + @"\Parameter";
             if (!Directory.Exists(path))
                 Directory.CreateDirectory(path);
             string destinationFile = path + @"\Base.json";
             string serializedResult = JToken.Parse(JsonConvert.SerializeObject(t)).ToString();
             File.WriteAllText(destinationFile, serializedResult, Encoding.UTF8);
+        }
+
+        /// <summary>
+        /// 获取系统参数的Value值
+        /// </summary>
+        /// <typeparam name="T">Value类型</typeparam>
+        /// <param name="system">系统参数项</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        public static T GetSystemValue<T>(SystemParameter system)
+        {
+            switch (system.ValueType.Name)
+            {
+                case "String":
+                    return (T)Convert.ChangeType(system.Value, typeof(T));
+                case "Boolean":
+                    return (T)Convert.ChangeType(system.Value, typeof(T));
+                case "Int32":
+                    return (T)Convert.ChangeType(system.Value, typeof(T));
+                case "Single":
+                    return (T)Convert.ChangeType(system.Value, typeof(T));
+                case "Double":
+                    return (T)Convert.ChangeType(system.Value, typeof(T));
+                default:
+                    throw new ArgumentException($"Unsupported type: {system.Name}");
+            }
         }
 
         public static ObservableCollection<T> ConvertOBse<T>(this List<T> source)

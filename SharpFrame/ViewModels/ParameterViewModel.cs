@@ -1,13 +1,14 @@
-﻿using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
-using SharpFrame.ParameterJson;
-using SharpFrame.Views.ToolViews;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
 using System.Windows.Forms;
+using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+using SharpFrame.Structure.Parameter;
+using SharpFrame.Views.ToolViews;
+using SystemParameter = SharpFrame.Structure.Parameter.SystemParameter;
 
 namespace SharpFrame.ViewModels
 {
@@ -49,6 +50,7 @@ namespace SharpFrame.ViewModels
                         SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                         PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
                     }
+                    aggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
                 }
                 else
                 {
@@ -69,7 +71,7 @@ namespace SharpFrame.ViewModels
             });
             aggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
             {
-
+                SetParameterValue(ParameterName);
             });
             ModelSwitching = new DelegateCommand(() =>
             {
@@ -96,6 +98,7 @@ namespace SharpFrame.ViewModels
                 }
                 parameter.PointLocationParameter_Obse = PointLocationArguments;
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
+                aggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
             });
             ParameterDelete = new DelegateCommand(() =>
@@ -209,7 +212,7 @@ namespace SharpFrame.ViewModels
 
         public void SetParameterValue(string value)
         {
-            string configFile = $"{Application.StartupPath}\\SystemParameter\\Parameter.config";
+            string configFile = $"{Application.StartupPath}\\Structure\\Parameter\\Parameter.config";
             ExeConfigurationFileMap configFileMap = new ExeConfigurationFileMap();
             configFileMap.ExeConfigFilename = configFile;
             Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
@@ -219,7 +222,7 @@ namespace SharpFrame.ViewModels
 
         public string GetParameterValue()
         {
-            string configFile = $"{Application.StartupPath}\\SystemParameter\\Parameter.config";
+            string configFile = $"{Application.StartupPath}\\Structure\\Parameter\\Parameter.config";
             ExeConfigurationFileMap configFileMap = new ExeConfigurationFileMap();
             configFileMap.ExeConfigFilename = configFile;
             Configuration config = ConfigurationManager.OpenMappedExeConfiguration(configFileMap, ConfigurationUserLevel.None);
@@ -370,209 +373,15 @@ namespace SharpFrame.ViewModels
     }
 
     /// <summary>
-    /// 程序参数
-    /// </summary>
-    public class Parameter : BindableBase
-    {
-        public Parameter()
-        {
-            SystemParameters_Obse = new ObservableCollection<SystemParameter>();
-            PointLocationParameter_Obse = new ObservableCollection<PointLocationParameter>();
-            TestParameter_Obse = new ObservableCollection<TestParameter>();
-        }
-
-        private ObservableCollection<SystemParameter> _systemparameters_obse;
-
-        public ObservableCollection<SystemParameter> SystemParameters_Obse
-        {
-            get { return _systemparameters_obse; }
-            set { _systemparameters_obse = value; RaisePropertyChanged(); }
-        }
-
-        private ObservableCollection<PointLocationParameter> _pointLocationparameter_obse;
-
-        public ObservableCollection<PointLocationParameter> PointLocationParameter_Obse
-        {
-            get { return _pointLocationparameter_obse; }
-            set { _pointLocationparameter_obse = value; RaisePropertyChanged(); }
-        }
-
-        private ObservableCollection<TestParameter> _testParameter_obse;
-
-        public ObservableCollection<TestParameter> TestParameter_Obse
-        {
-            get { return _testParameter_obse; }
-            set { _testParameter_obse = value; RaisePropertyChanged(); }
-        }
-    }
-
-    /// <summary>
-    /// 系统参数结构
-    /// </summary>
-    public class SystemParameter
-    {
-        public SystemParameter() { }
-
-        public SystemParameter(SystemParameter system)
-        {
-            if (system != null)
-            {
-                this.ID = system.ID;
-                this.Name = system.Name;
-                this.Value = system.Value;
-                this.ValueType = system.ValueType;
-                this.SelectedValue = system.SelectedValue;
-            }
-        }
-
-        public SystemParameter(int iD, string name, object value)
-        {
-            ID = iD;
-            Name = name;
-            Value = value;
-            ValueType = Value.GetType();
-            switch (ValueType.Name)
-            {
-                case "String":
-                    SelectedValue = 0; break;
-                case "Boolean":
-                    SelectedValue = 1; break;
-                case "Int32":
-                    SelectedValue = 2; break;
-                case "Single":
-                    SelectedValue = 3; break;
-                case "Double":
-                    SelectedValue = 4; break;
-            }
-        }
-
-        public int ID { get; set; }
-
-        public string Name { get; set; }
-
-        private object value;
-        private Type valueType;
-
-        public object Value
-        {
-            get { return value; }
-            set { this.value = value; }
-        }
-        public Type ValueType
-        {
-            get { return valueType; }
-            set
-            {
-                this.valueType = value;
-                switch (valueType.Name)
-                {
-                    case "String":
-                        SelectedValue = 0; break;
-                    case "Boolean":
-                        SelectedValue = 1; break;
-                    case "Int32":
-                        SelectedValue = 2; break;
-                    case "Single":
-                        SelectedValue = 3; break;
-                    case "Double":
-                        SelectedValue = 4; break;
-                }
-            }
-        }
-
-        public int SelectedValue { get; set; }
-    }
-
-    /// <summary>
-    /// 点位参数结构
-    /// </summary>
-    public class PointLocationParameter
-    {
-        public PointLocationParameter(PointLocationParameter system)
-        {
-            if (system != null)
-            {
-                this.ID = system.ID;
-                this.Name = system.Name;
-                this.Enable = system.Enable;
-                this.PointA = system.PointA;
-                this.PointB = system.PointB;
-                this.PointC = system.PointC;
-                this.PointD = system.PointD;
-                this.PointE = system.PointE;
-                this.PointF = system.PointF;
-            }
-        }
-
-        public PointLocationParameter() { }
-        public int ID { get; set; }
-
-        public string Name { get; set; }
-
-        public bool Enable { get; set; }
-
-        public double PointA { get; set; }
-
-        public double PointB { get; set; }
-
-        public double PointC { get; set; }
-
-        public double PointD { get; set; }
-
-        public double PointE { get; set; }
-
-        public double PointF { get; set; }
-    }
-
-    /// <summary>
-    /// 测试参数结构
-    /// </summary>
-    public class TestParameter
-    {
-        public TestParameter() { }
-
-        public TestParameter(TestParameter system)
-        {
-            if (system != null)
-            {
-                this.ID = system.ID;
-                this.Name = system.Name;
-                this.Value = system.Value;
-            }
-        }
-
-        public int ID { get; set; }
-
-        public string Name { get; set; }
-
-        private object value;
-        public object Value
-        {
-            get { return value; }
-            set
-            {
-                this.value = value;
-                ValueType = value.GetType();
-                ValueTypeName = ValueType.Name;
-            }
-        }
-
-        public string ValueTypeName { get; set; }
-
-        public Type ValueType { get; set; }
-    }
-
-
-    /// <summary>
     /// 系统参数添加行通知
     /// </summary>
     public class SystemParameterAddEvent : PubSubEvent<Add_SystemIns> { }
 
     public class Add_SystemIns
     {
-        public SystemParameter NewParameter { get; set; }
+        public Structure.Parameter.SystemParameter NewParameter { get; set; }
 
-        public SystemParameter InsertionParameter { get; set; }
+        public Structure.Parameter.SystemParameter InsertionParameter { get; set; }
     }
 
     /// <summary>
@@ -595,5 +404,8 @@ namespace SharpFrame.ViewModels
         public string InitialParameter { get; set; }
     }
 
-
+    /// <summary>
+    /// 参数更新通知
+    /// </summary>
+    public class ParameterUpdateEvent : PubSubEvent<Parameter> { }
 }

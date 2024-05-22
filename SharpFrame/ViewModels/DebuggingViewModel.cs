@@ -1,23 +1,15 @@
-﻿using Newtonsoft.Json;
-using Prism.Commands;
-using Prism.Events;
-using Prism.Mvvm;
-using Prism.Regions;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
+using Prism.Events;
+using Prism.Mvvm;
 
 namespace SharpFrame.ViewModels
 {
     public class DebuggingViewModel : BindableBase
     {
-        private readonly IEventAggregator eventAggregator;
+        private IEventAggregator eventAggregator;
 
         public DebuggingViewModel(IEventAggregator aggregator)
         {
@@ -31,7 +23,6 @@ namespace SharpFrame.ViewModels
 
             });
         }
-
         #region 轴数据
         //private MotionBase _thismotion;
 
@@ -181,51 +172,6 @@ namespace SharpFrame.ViewModels
             set { _estop_state = value; RaisePropertyChanged(); }
         }
         #endregion
-    }
-
-    public class AxisConfigurationFile
-    {
-        public static void Get_Local_Profile<T>(string table, ref T t) where T : class
-        {
-            DirectoryInfo root = new DirectoryInfo(System.Environment.CurrentDirectory + @"\Configuration\");
-            FileInfo[] files = root.GetFiles();
-            if (Array.Exists(files, x => x.Name == table + ".json"))
-            {
-                string destinationFile = System.Environment.CurrentDirectory + @"\Configuration\" + table + ".json";
-                string jsonStr = File.ReadAllText(destinationFile);
-                T deserializeResult = JsonConvert.DeserializeObject<T>(jsonStr);
-                t = deserializeResult;
-            }
-        }
-    }
-
-    public class Json_Deploy
-    {
-        public List<Input_Json> Input { get; set; } = new List<Input_Json>();
-        public List<Output_Json> Output { get; set; } = new List<Output_Json>();
-        public List<Axis_Json> Axis { get; set; } = new List<Axis_Json>();
-    }
-
-    public class Input_Json
-    {
-        public int ID { get; set; }
-        public string IO { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Output_Json
-    {
-        public int ID { get; set; }
-        public string IO { get; set; }
-        public string Name { get; set; }
-    }
-
-    public class Axis_Json
-    {
-        public int ID { get; set; }
-        public string Axis_Number { get; set; }
-        public string Axis_Name { get; set; }
-        public double Pulse_Equivalent { get; set; }
     }
 
     public class ColorToSolidColorBrushConverter : IValueConverter

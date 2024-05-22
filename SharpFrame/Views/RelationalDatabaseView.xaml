@@ -17,20 +17,20 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <StackPanel Margin="20,0,0,0" Grid.Row="0" Height="100" Orientation="Horizontal">
-                    <DatePicker Height="35" Width="120" Background="White" BorderBrush="Black" Foreground="Black" Language="zh-CN" FontSize="17">
+                    <DatePicker Height="35" Width="120" Background="White" BorderBrush="Black" Foreground="Black" Language="zh-CN" FontSize="17" SelectedDate="{Binding Time,Mode=TwoWay}">
                         <DatePicker.Resources>
                             <Style TargetType="DatePickerTextBox">
                                 <Setter Property="IsReadOnly" Value="True"/>
                             </Style>
                         </DatePicker.Resources>
                     </DatePicker>
-                    <TextBox Margin="15,0,0,0" x:Name="input_qr" Text="{Binding QR}" Width="250" Height="30" Foreground="Black" FontSize="14"/>
+                    <TextBox Margin="15,0,0,0" Text="{Binding QR}" Width="250" Height="30" Foreground="Black" FontSize="14"/>
                     <Button Margin="15,0,0,0" Width="140" Height="40" FontSize="16" Content="二维码查询"  Foreground="Black"/>
-                    <Button Margin="15,0,0,0" Width="100" Height="40" FontSize="16" Content="时间查询"  Foreground="Black"/>
+                    <Button Margin="15,0,0,0" Width="100" Height="40" FontSize="16" Content="时间查询"  Foreground="Black" Command="{Binding DatabaseTimeQuery}"/>
                     <Button Margin="15,0,0,0" Width="100" Height="40" Content="导出" Foreground="Black" Cursor="Hand"/>
                 </StackPanel>
                 <StackPanel Grid.Row="1" >
-                    <DataGrid ItemsSource="{Binding YourDataSource}" AutoGenerateColumns="True"/>
+                    <DataGrid ItemsSource="{Binding DatabaseView}" AutoGenerateColumns="True"/>
                 </StackPanel>
             </Grid>
         </Border>
