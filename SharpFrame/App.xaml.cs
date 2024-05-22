@@ -1,19 +1,11 @@
-﻿using Microsoft.Win32;
+﻿using System.Diagnostics;
+using System.Windows;
+using System.Windows.Forms;
 using Prism.DryIoc;
-using Prism.Events;
 using Prism.Ioc;
-using Prism.Modularity;
-using SharpFrame.Common;
 using SharpFrame.ViewModels;
 using SharpFrame.Views;
 using SharpFrame.Views.ToolViews;
-using System;
-using System.Diagnostics;
-using System.Net;
-using System.Runtime.Remoting.Lifetime;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Forms;
 
 namespace SharpFrame
 {
@@ -42,11 +34,8 @@ namespace SharpFrame
                 switch (x)
                 {
                     case "生产员":
-                        if (y == "666888")
-                        {
-                            base.OnInitialized();
-                            MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.ProductionStaff });
-                        }
+                        base.OnInitialized();
+                        MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.ProductionStaff });
                         break;
                     case "工程师":
                         if (y == "2024")
@@ -54,12 +43,22 @@ namespace SharpFrame
                             base.OnInitialized();
                             MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.Engineer });
                         }
+                        else
+                        {
+                            System.Windows.Forms.MessageBox.Show("输入密码错误", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
+                        }
                         break;
                     case "供应商":
                         if (y == "ksrhck")
                         {
                             base.OnInitialized();
                             MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.Supplier });
+                        }
+                        else
+                        {
+                            System.Windows.Forms.MessageBox.Show("输入密码错误", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return;
                         }
                         break;
                     default:
