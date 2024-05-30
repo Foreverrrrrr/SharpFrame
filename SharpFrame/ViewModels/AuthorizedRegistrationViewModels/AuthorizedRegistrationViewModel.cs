@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using System.Windows;
+using System.Windows.Forms;
 using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
@@ -9,6 +9,7 @@ namespace SharpFrame.ViewModels.AuthorizedRegistrationViewModels
 {
     public class AuthorizedRegistrationViewModel : BindableBase
     {
+        private int continuous = 0;
         private readonly IEventAggregator eventAggregator;
 
         public static ClientKeyMaker.ClientToken token;
@@ -19,7 +20,15 @@ namespace SharpFrame.ViewModels.AuthorizedRegistrationViewModels
             {
                 if (token != null)
                 {
-                    RegistrationCode = token.Client_Token_Create(256);
+                    if (RegistrationCode == null)
+                    {
+                        RegistrationCode = token.Client_Token_Create(256);
+                        Clipboard.SetText(RegistrationCode);
+                    }
+                    else
+                    {
+                        System.Windows.Forms.MessageBox.Show("已存在注册码，请勿重复生成", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             });
 
@@ -27,30 +36,42 @@ namespace SharpFrame.ViewModels.AuthorizedRegistrationViewModels
             {
                 if (token != null)
                 {
-                    if (Password != null)
+                    if (continuous < 3)
                     {
-                        try
+                        if (Password != null)
                         {
-                            bool t = token.PassWordCheck(Password);
-                            if (!t)
+                            try
                             {
-                                MessageBox.Show("授权码校验错误！");
+                                bool t = token.PassWordCheck(Password);
+                                if (!t)
+                                {
+                                    System.Windows.Forms.MessageBox.Show("授权码校验错误", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                                Password = null;
+                                RegistrationCode = null;
+                                AuthorizedRegistrationView currentWindow = System.Windows.Application.Current.Windows.OfType<AuthorizedRegistrationView>().SingleOrDefault(w => w.IsActive);
+                                currentWindow.Close();
                             }
-                            Password = null;
-                            RegistrationCode = null;
-                            AuthorizedRegistrationView currentWindow = System.Windows.Application.Current.Windows.OfType<AuthorizedRegistrationView>().SingleOrDefault(w => w.IsActive);
-                            currentWindow.Close();
+                            catch (System.Exception ex)
+                            {
+                                System.Windows.Forms.MessageBox.Show(ex.Message);
+                            }
                         }
-                        catch (System.Exception ex)
+                        else
                         {
-                            MessageBox.Show(ex.Message);
+                            System.Windows.Forms.MessageBox.Show("未输入授权密钥", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     else
                     {
-                        MessageBox.Show("未输入授权密钥！");
+                        System.Windows.Forms.MessageBox.Show("授权验证超过三次,授权自动退出", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Password = null;
+                        RegistrationCode = null;
+                        AuthorizedRegistrationView currentWindow = System.Windows.Application.Current.Windows.OfType<AuthorizedRegistrationView>().SingleOrDefault(w => w.IsActive);
+                        currentWindow.Close();
                     }
                 }
+                continuous++;
             });
         }
 
