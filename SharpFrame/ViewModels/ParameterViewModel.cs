@@ -1,13 +1,14 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Linq;
-using System.Windows.Forms;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Structure.Parameter;
 using SharpFrame.Views.ToolViews;
+using System;
+using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Linq;
+using System.Windows.Forms;
+using Parameter = SharpFrame.Structure.Parameter.Parameter;
 using SystemParameter = SharpFrame.Structure.Parameter.SystemParameter;
 
 namespace SharpFrame.ViewModels
@@ -41,6 +42,7 @@ namespace SharpFrame.ViewModels
                         ParameterIndexes = system_list.FindIndex(x => x == paramValue);
                         SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                         PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
+                        TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
                     }
                     else
                     {
@@ -49,6 +51,8 @@ namespace SharpFrame.ViewModels
                         ParameterIndexes = 0;
                         SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                         PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
+                        TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
+
                     }
                     aggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
                 }
@@ -82,6 +86,7 @@ namespace SharpFrame.ViewModels
                 ParameterJsonTool.ReadJson(ParameterName, ref systems);
                 SystemArguments = systems.SystemParameters_Obse;
                 PointLocationArguments = systems.PointLocationParameter_Obse;
+                TestParameterArguments = systems.TestParameter_Obse;
             });
             ParameterSave = new DelegateCommand(() =>
             {
@@ -97,6 +102,7 @@ namespace SharpFrame.ViewModels
                     }
                 }
                 parameter.PointLocationParameter_Obse = PointLocationArguments;
+                parameter.TestParameter_Obse = TestParameterArguments;
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 aggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
@@ -126,6 +132,7 @@ namespace SharpFrame.ViewModels
                 ParameterJsonTool.ReadJson(model.NewName, ref par);
                 SystemArguments = new ObservableCollection<SystemParameter>(par.SystemParameters_Obse.ToList());
                 PointLocationArguments = new ObservableCollection<PointLocationParameter>(par.PointLocationParameter_Obse.ToList());
+                TestParameterArguments = new ObservableCollection<TestParameter>(par.TestParameter_Obse.ToList());
             });
             SystemArguments_Add_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
@@ -177,6 +184,32 @@ namespace SharpFrame.ViewModels
                     PointLocationArguments = pointStructures;
                 }
             });
+            TestParameterArguments_Add_Line = new DelegateCommand<TestParameter>((checkdata) =>
+            {
+                if (checkdata != null)
+                {
+                    Test_AddView addView = new Test_AddView(aggregator, checkdata);
+                    addView.Show();
+                }
+            });
+            TestParameterArguments_Remove_Line = new DelegateCommand<TestParameter>((checkdata) =>
+            {
+                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                {
+                    TestParameterArguments.Remove(checkdata);
+                    ObservableCollection<TestParameter> pointStructures = new ObservableCollection<TestParameter>();
+                    int index = 0;
+                    foreach (TestParameter item in TestParameterArguments.Select(x => new TestParameter(x)))
+                    {
+                        item.ID = index;
+                        pointStructures.Add(item);
+                        index++;
+                    }
+                    TestParameterArguments = null;
+                    TestParameterArguments = pointStructures;
+                }
+            });
+
             aggregator.GetEvent<SystemParameterAddEvent>().Subscribe((t) =>
             {
                 var k = SystemArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
@@ -207,6 +240,21 @@ namespace SharpFrame.ViewModels
                 }
                 PointLocationArguments = null;
                 PointLocationArguments = pointStructures;
+            }, ThreadOption.UIThread);
+            aggregator.GetEvent<TestParameterAddEvent>().Subscribe((t) =>
+            {
+                var k = PointLocationArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
+                TestParameterArguments.Insert(k, t.NewParameter);
+                ObservableCollection<TestParameter> pointStructures = new ObservableCollection<TestParameter>();
+                int index = 0;
+                foreach (TestParameter item in TestParameterArguments.Select(x => new TestParameter(x)))
+                {
+                    item.ID = index;
+                    pointStructures.Add(item);
+                    index++;
+                }
+                TestParameterArguments = null;
+                TestParameterArguments = pointStructures;
             }, ThreadOption.UIThread);
         }
 
@@ -322,7 +370,25 @@ namespace SharpFrame.ViewModels
         #endregion
 
         #region 测试判定表
+        /// <summary>
+        /// 测试参数添加行请求
+        /// </summary>
+        public DelegateCommand<TestParameter> TestParameterArguments_Add_Line { get; set; }
 
+        /// <summary>
+        /// 测试参数移除行请求
+        /// </summary>
+        public DelegateCommand<TestParameter> TestParameterArguments_Remove_Line { get; set; }
+
+        private ObservableCollection<TestParameter> _testparameterarguments = new ObservableCollection<TestParameter>();
+        /// <summary>
+        /// 测试参数表
+        /// </summary>
+        public ObservableCollection<TestParameter> TestParameterArguments
+        {
+            get { return _testparameterarguments; }
+            set { _testparameterarguments = value; RaisePropertyChanged(); }
+        }
         #endregion
 
         private int _parameterindexes = 0;
@@ -395,6 +461,19 @@ namespace SharpFrame.ViewModels
 
         public PointLocationParameter InsertionParameter { get; set; }
     }
+
+    /// <summary>
+    /// 测试参数添加行通知
+    /// </summary>
+    public class TestParameterAddEvent : PubSubEvent<Add_Test> { }
+
+    public class Add_Test
+    {
+        public TestParameter NewParameter { get; set; }
+
+        public TestParameter InsertionParameter { get; set; }
+    }
+
 
     public class NewModelEvent : PubSubEvent<Add_Model> { }
 

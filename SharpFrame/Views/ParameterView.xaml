@@ -209,7 +209,7 @@
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="测试参数" Height="25" Width="85" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                        <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                        <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding TestParameterArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                             <DataGrid.CellStyle>
                                 <Style TargetType="DataGridCell">
                                     <Style.Triggers>
@@ -226,7 +226,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="20,5,0,0" Text="{Binding ID,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                <TextBlock Margin="25,5,0,0" Text="{Binding ID,Mode=TwoWay}" Foreground="Black"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -235,43 +235,31 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="10,0,0,0" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                <TextBox Margin="0,0,0,0" Text="{Binding Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="是否启用">
+                                <DataGridTemplateColumn  Header="类型">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <CheckBox Margin="30,0,0,0" IsChecked="{Binding Enable,UpdateSourceTrigger=PropertyChanged}" Background="#FF1587D0"/>
+                                                <ComboBox Width="80" Margin="0,5,0,0" SelectedIndex="{Binding SelectedValue,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black">
+                                                    <ComboBoxItem Content="String"/>
+                                                    <ComboBoxItem Content="Bool"/>
+                                                    <ComboBoxItem Content="Int"/>
+                                                    <ComboBoxItem Content="Float"/>
+                                                    <ComboBoxItem Content="Double"/>
+                                                </ComboBox>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="PointA">
+                                <DataGridTemplateColumn  Header="参数值">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="30,0,0,0" Text="{Binding PointA,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="PointB">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="30,0,0,0" Text="{Binding PointB,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="PointC">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="30,0,0,0" Text="{Binding PointC,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                <TextBox Width="150" Margin="20,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"  TextWrapping="Wrap" />
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -279,8 +267,8 @@
                             </DataGrid.Columns>
                             <DataGrid.ContextMenu>
                                 <ContextMenu>
-                                    <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                                    <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                    <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding TestParameterArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                    <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding TestParameterArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
                                 </ContextMenu>
                             </DataGrid.ContextMenu>
                         </DataGrid>

@@ -110,6 +110,7 @@ namespace SharpFrame.Common
                 }
             }
         }
+
         private void AsyncRead(IAsyncResult async)
         {
             try

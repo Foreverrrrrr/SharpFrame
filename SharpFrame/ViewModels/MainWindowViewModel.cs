@@ -72,6 +72,13 @@ namespace SharpFrame.ViewModels
             {
                 eventAggregator.GetEvent<LoginPermission>().Publish(t);
             });
+            aggregator.GetEvent<Loadingbar>().Subscribe((t) =>
+            {
+                if (t)
+                    LoadingBarState = true;
+                else
+                    LoadingBarState = false;
+            });
             Viewinitial();
         }
 
@@ -284,6 +291,10 @@ namespace SharpFrame.ViewModels
     /// 复位通知
     /// </summary>
     public class ResetInform : PubSubEvent { }
+    /// <summary>
+    /// 进度条动画通知
+    /// </summary>
+    public class Loadingbar : PubSubEvent<bool> { }
 
     public class Permission
     {

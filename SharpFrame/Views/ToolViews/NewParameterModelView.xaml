@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:SharpFrame.Views.ToolViews" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         mc:Ignorable="d"
-         Height="300" Width="600"  ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="{x:Null}">
+         Height="300" Width="600" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" AllowsTransparency="True" WindowStyle="None" Background="{x:Null}">
     <Grid>
         <Border Margin="5" CornerRadius="20" Background="White" BorderThickness="1" BorderBrush="#FFABABAB">
             <Grid Margin="7" >

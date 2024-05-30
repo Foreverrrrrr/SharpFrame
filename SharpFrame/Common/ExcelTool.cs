@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
@@ -74,7 +75,58 @@ namespace SharpFrame.Common
             }
         }
 
+        public static void WriteExcel<T>(string path, string excelname, ObservableCollection<T> data) where T : class
+        {
+            if (data != null && data.Count > 0)
+            {
+                if (Directory.Exists(path))
+                {
+                    string processName = "EXCEL";
+                    Process[] processes = Process.GetProcessesByName(processName);
+                    foreach (Process process in processes)
+                    {
+                        process.Kill();
+                    }
+                    using (ExcelPackage package = new ExcelPackage(new FileInfo(Path.Combine(path, excelname + ".xlsx"))))
+                    {
+                        ExcelWorksheet worksheet = package.Workbook.Worksheets.Count != 0 ? package.Workbook.Worksheets[1] : package.Workbook.Worksheets.Add("Sheet1");
 
+                        int rowCount = worksheet.Dimension != null ? worksheet.Dimension.End.Row : 0;
+
+                        if (rowCount == 0)
+                        {
+                            Type dataType = typeof(T);
+                            PropertyInfo[] properties = dataType.GetProperties();
+
+                            for (int i = 0; i < properties.Length; i++)
+                            {
+                                DescriptionAttribute descriptionAttribute = (DescriptionAttribute)properties[i].GetCustomAttribute(typeof(DescriptionAttribute));
+                                string propertyName = descriptionAttribute?.Description ?? properties[i].Name;
+                                worksheet.Cells[1, i + 1].Value = propertyName;
+                                worksheet.Cells[1, i + 1].Style.Font.Name = "微软雅黑";
+                            }
+
+                            rowCount++;
+                        }
+
+                        foreach (T item in data)
+                        {
+                            Type dataType = typeof(T);
+                            PropertyInfo[] properties = dataType.GetProperties();
+
+                            for (int i = 0; i < properties.Length; i++)
+                            {
+                                worksheet.Cells[rowCount + 1, i + 1].Value = properties[i].GetValue(item)?.ToString();
+                            }
+
+                            rowCount++;
+                        }
+
+                        package.Save();
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 文件定时删除

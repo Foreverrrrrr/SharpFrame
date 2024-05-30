@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
 
 namespace SharpFrame.Structure.Parameter
 {
@@ -37,5 +39,35 @@ namespace SharpFrame.Structure.Parameter
             get { return _testParameter_obse; }
             set { _testParameter_obse = value; }
         }
+
+        /// <summary>
+        /// 参数查询
+        /// </summary>
+        /// <typeparam name="T">参数泛类</typeparam>
+        /// <param name="collection">参数集合</param>
+        /// <param name="propertyValue">参数项名称</param>
+        /// <param name="propertyName">属性名称</param>
+        /// <returns></returns>
+        public static T ParameterQuery<T>(ObservableCollection<T> collection, string propertyValue, string propertyName = "Name")
+        {
+            if (collection != null && collection.Count > 0)
+            {
+                PropertyInfo property = typeof(T).GetProperty(propertyName);
+                if (property != null)
+                {
+                    // 查找集合中第一个具有指定属性值的对象
+                    var result = collection.FirstOrDefault(item =>
+                    {
+                        var value = property.GetValue(item);
+                        return value != null && value.ToString() == propertyValue;
+                    });
+
+                    if (result != null)
+                        return result;
+                }
+            }
+            throw new System.ArgumentException($"不存在名称为“{propertyValue}”的项");
+        }
+
     }
 }
