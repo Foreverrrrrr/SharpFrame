@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Prism.Commands;
+using Prism.Events;
+using Prism.Mvvm;
+using System;
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
-using Prism.Events;
-using Prism.Mvvm;
 
 namespace SharpFrame.ViewModels
 {
@@ -22,7 +23,14 @@ namespace SharpFrame.ViewModels
             {
 
             });
+            OutButton = new DelegateCommand<string>((x) =>
+            {
+
+            });
         }
+
+        public DelegateCommand<string> OutButton { set; get; }
+
         #region 轴数据
         //private MotionBase _thismotion;
 

@@ -52,7 +52,6 @@ namespace SharpFrame.ViewModels
                         SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                         PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
                         TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
-
                     }
                     aggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
                 }
@@ -87,6 +86,7 @@ namespace SharpFrame.ViewModels
                 SystemArguments = systems.SystemParameters_Obse;
                 PointLocationArguments = systems.PointLocationParameter_Obse;
                 TestParameterArguments = systems.TestParameter_Obse;
+                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"切换参数型号“{ParameterName}”" });
             });
             ParameterSave = new DelegateCommand(() =>
             {
@@ -98,6 +98,7 @@ namespace SharpFrame.ViewModels
                     if (!bool_ret)
                     {
                         MessageBox.Show($"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”" });
                         return;
                     }
                 }
@@ -105,6 +106,7 @@ namespace SharpFrame.ViewModels
                 parameter.TestParameter_Obse = TestParameterArguments;
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 aggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
+                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
             });
             ParameterDelete = new DelegateCommand(() =>

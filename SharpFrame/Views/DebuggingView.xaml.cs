@@ -1,10 +1,10 @@
-﻿using System;
+﻿using SharpFrame.Structure.Debugging;
+using SharpFrame.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
-using SharpFrame.Structure.Debugging;
-using SharpFrame.ViewModels;
 
 namespace SharpFrame.Views
 {
@@ -64,6 +64,26 @@ namespace SharpFrame.Views
                 TextBlock textBlock2 = new TextBlock() { Text = deploy.Input[i].Name, Width = 60, FontSize = 12, Foreground = Brushes.Black, TextWrapping = TextWrapping.Wrap };
                 stackPanel1.Children.Add(textBlock2);
                 Input_Wp.Children.Add(stackPanel1);
+            }
+            for (int i = 0; i < deploy.Output.Count; i++)
+            {
+                StackPanel stackPanel2 = new StackPanel();
+                stackPanel2.Margin = new Thickness(10, 5, 0, 0);
+                Button button = new Button() { Style = (Style)FindResource("MaterialDesignFloatingActionLightButton"), BorderBrush = null, Name = $"Output{i}" };
+                Binding binding = new Binding($"OutputColor[{i}]");
+                binding.Converter = new ColorToSolidColorBrushConverter();
+                binding.Source = model;
+                button.SetBinding(Button.BackgroundProperty, binding);
+                button.IsTabStop = false;
+                //button.Click += Set_OutPut;
+                button.CommandParameter = i.ToString();
+                button.SetBinding(Button.CommandProperty, new System.Windows.Data.Binding("OutButton"));
+                stackPanel2.Children.Add(button);
+                TextBlock textBlock1 = new TextBlock() { Text = deploy.Output[i].IO, FontSize = 12, Foreground = Brushes.Black, TextWrapping = TextWrapping.Wrap, };
+                stackPanel2.Children.Add(textBlock1);
+                TextBlock textBlock2 = new TextBlock() { Text = deploy.Output[i].Name, Width = 60, FontSize = 12, Foreground = Brushes.Black, TextWrapping = TextWrapping.Wrap };
+                stackPanel2.Children.Add(textBlock2);
+                Output_Wp.Children.Add(stackPanel2);
             }
         }
 

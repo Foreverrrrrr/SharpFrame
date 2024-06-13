@@ -1,6 +1,7 @@
-﻿using System;
-using log4net;
+﻿using log4net;
 using log4net.Config;
+using SharpFrame.ViewModels;
+using System;
 
 [assembly: XmlConfigurator(ConfigFile = @"Log4Net\\log4net.config", Watch = true)]
 
@@ -28,6 +29,19 @@ namespace SharpFrame.log4Net
             if (log.IsInfoEnabled)
             {
                 log.Info(message);
+            }
+        }
+
+        /// <summary>
+        /// 普通日志
+        /// </summary>
+        /// <param name="message">日志内容</param>
+        public static void Info(MainLogStructure message)
+        {
+            ILog log = LogManager.GetLogger("Info");
+            if (log.IsInfoEnabled)
+            {
+                log.Info(message.Value);
             }
         }
 

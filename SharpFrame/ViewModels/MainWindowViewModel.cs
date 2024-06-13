@@ -1,12 +1,12 @@
-﻿using System;
-using System.Windows;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using SharpFrame.log4Net;
 using SharpFrame.Logic.Base;
 using SharpFrame.Views;
+using System;
+using System.Windows;
 using static SharpFrame.Logic.Base.Thread_Auto_Base;
 
 namespace SharpFrame.ViewModels
@@ -47,6 +47,15 @@ namespace SharpFrame.ViewModels
             this.eventAggregator = aggregator;
             PageLoadFinish = new DelegateCommand(() =>
             {
+                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = "程序加载完成" });
+                Thread_Auto_Base.NewClass_RunEvent += (t, s) =>
+                {
+                    aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
+                };
+                Thread_Auto_Base.DataConfigurationEvent += ((t, s) =>
+                {
+                    aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
+                });
                 aggregator.GetEvent<PageLoadEvent>().Publish();
                 Thread_Auto_Base.NewClass();
                 Stop_State = true;

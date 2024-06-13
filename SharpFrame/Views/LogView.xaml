@@ -5,23 +5,76 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SharpFrame.Views"
              mc:Ignorable="d" 
+             xmlns:prism="http://prismlibrary.com/" 
+             prism:ViewModelLocator.AutoWireViewModel="True"
              Width="1770" Height="900" Background="White">
-    <UserControl.Resources>
-        <local:ConVerter x:Key="Converter"/>
-    </UserControl.Resources>
-    <Grid>         
-        <DataGrid  AutoGenerateColumns="True"  Height="700" ColumnWidth="*" ItemsSource="{Binding ObservableObj}" HorizontalContentAlignment="Center" Focusable="False" CanUserReorderColumns="False" VerticalAlignment="Top" Margin="20,20,20,0" MinColumnWidth="10">
-            <DataGrid.CellStyle>
-                <Style TargetType="DataGridCell">
-                    <Setter Property="Background" Value="{Binding Path=状态, Converter={StaticResource Converter}}"/>
-                </Style>
-            </DataGrid.CellStyle>
-            <DataGrid.RowStyle>
-                <!-- 重写行样式：禁止交互 -->
-                <Style TargetType="DataGridRow">
-                    <Setter Property="IsHitTestVisible" Value="False"/>
-                </Style>
-            </DataGrid.RowStyle>
-        </DataGrid>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="0" Text="全局日志" FontSize="18" Foreground="Black" HorizontalAlignment="Center" />
+                    <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="16"  BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding MainLog,IsAsync=True}"  CanUserAddRows="False" SelectionMode="Single">
+                        <DataGrid.CellStyle>
+                            <Style TargetType="DataGridCell">
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="BorderThickness" Value="0"/>
+                                        <Setter Property="Background" Value="#FFCECCCC"/>
+                                        <Setter Property="Foreground" Value="#FF060606"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DataGrid.CellStyle>
+                        <DataGrid.Columns >
+                            <DataGridTemplateColumn Header="时间">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Width="200" Margin="10,5,0,0" Text="{Binding Time,Mode=TwoWay}" Foreground="Black"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn Header="日志等级">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Width="50" Margin="20,5,0,0" Text="{Binding Level,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTemplateColumn  Header="日志内容">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBox Width="500" Margin="10,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"  TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </Border>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+      
     </Grid>
 </UserControl>

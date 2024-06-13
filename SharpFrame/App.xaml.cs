@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using System.Windows;
-using System.Windows.Forms;
-using Prism.DryIoc;
+﻿using Prism.DryIoc;
 using Prism.Ioc;
 using SharpFrame.ViewModels;
 using SharpFrame.Views;
 using SharpFrame.Views.ToolViews;
+using System.Diagnostics;
+using System.Windows;
+using System.Windows.Forms;
 
 namespace SharpFrame
 {
@@ -128,6 +128,7 @@ namespace SharpFrame
             containerRegistry.RegisterForNavigation<System_AddView>();
             containerRegistry.RegisterForNavigation<DebuggingView>();
             containerRegistry.RegisterForNavigation<RelationalDatabaseView>();
+            containerRegistry.RegisterForNavigation<LogView>();
         }
     }
 }

@@ -55,19 +55,17 @@ namespace SharpFrame.Structure.Parameter
                 PropertyInfo property = typeof(T).GetProperty(propertyName);
                 if (property != null)
                 {
-                    // 查找集合中第一个具有指定属性值的对象
+                    //查找集合中第一个具有指定属性值的对象
                     var result = collection.FirstOrDefault(item =>
                     {
                         var value = property.GetValue(item);
                         return value != null && value.ToString() == propertyValue;
                     });
-
                     if (result != null)
                         return result;
                 }
             }
             throw new System.ArgumentException($"不存在名称为“{propertyValue}”的项");
         }
-
     }
 }

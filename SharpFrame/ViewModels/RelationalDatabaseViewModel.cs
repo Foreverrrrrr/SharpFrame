@@ -34,6 +34,7 @@ namespace SharpFrame.ViewModels
                 var t = SQL_Server.SpecialQuery<Data>("NewTable", Time.Date, Time.AddDays(1).Date);
                 DatabaseView = ParameterJsonTool.ConvertOBse(t);
                 aggregator.GetEvent<Loadingbar>().Publish(false);
+                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"查询：{data.Time}数据库内容" });
             });
             Export = new DelegateCommand<object>((obj) =>
             {
@@ -45,7 +46,9 @@ namespace SharpFrame.ViewModels
                     dialog.Description = "请选择文件路径";
                     if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
-                        ExcelTool.WriteExcel(dialog.SelectedPath, DateTime.Now.ToString("yyyyMMddHHmmss"), data);
+                        var filename = DateTime.Now.ToString("yyyyMMddHHmmss");
+                        aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"导出数据库查询数据到“{dialog.SelectedPath}”文件夹，文件名称“{filename}.xlsx”" });
+                        ExcelTool.WriteExcel(dialog.SelectedPath, filename, data);
                     }
                     else
                     {
@@ -81,7 +84,6 @@ namespace SharpFrame.ViewModels
             get { return _databaseview; }
             set { _databaseview = value; RaisePropertyChanged(); }
         }
-
     }
 
     public class Data

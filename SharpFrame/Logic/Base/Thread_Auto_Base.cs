@@ -10,7 +10,7 @@ namespace SharpFrame.Logic.Base
 {
     public abstract class Thread_Auto_Base
     {
-        public static event Action<DateTime> NewClass_RunEvent;
+        public static event Action<DateTime, string> NewClass_RunEvent;
 
         public static event Action<DateTime, string> DataConfigurationEvent;
 
@@ -22,8 +22,14 @@ namespace SharpFrame.Logic.Base
 
         public static System.Collections.Generic.List<ProductionThreadBase> Auto_Th { get; private set; } = new System.Collections.Generic.List<ProductionThreadBase>();
 
+        /// <summary>
+        /// 暂停
+        /// </summary>
         public abstract ManualResetEvent Interrupt { get; set; }
 
+        /// <summary>
+        /// 日志接口
+        /// </summary>
         public abstract event Action<DateTime, string> LogEvent;
 
         public enum Send_Variable
@@ -49,8 +55,9 @@ namespace SharpFrame.Logic.Base
                     if (t.Length > 0)
                         Thread_Configuration(derivedType.Name, method, instance, spintime);
                 }
+                NewClass_RunEvent?.Invoke(DateTime.Now, derivedType.FullName + "中自动运行线程启动");
             }
-            NewClass_RunEvent?.Invoke(DateTime.Now);
+
         }
 
         private static void Thread_Configuration(string class_na, MethodInfo method, object class_new, int spintime)
@@ -127,6 +134,11 @@ namespace SharpFrame.Logic.Base
                 }
         }
 
+        /// <summary>
+        /// 信号机枚举配置
+        /// </summary>
+        /// <param name="enum">枚举类型</param>
+        /// <exception cref="Exception"></exception>
         protected static void DataStructureConfiguration(Type @enum)
         {
             if (@enum.IsEnum)
@@ -209,7 +221,7 @@ namespace SharpFrame.Logic.Base
             {
                 lock (_lock)
                 {
-                    DataConfigurationEvent?.Invoke(DateTime.Now, $"设置“{enumTypeName}”中“{input.ToString()}”信号状态为“{state}”）");
+                    DataConfigurationEvent?.Invoke(DateTime.Now, $"设置“{enumTypeName}”中“{input.ToString()}”信号状态为“{state}”");
                     DataPool[t.EnumKey] = state;
                 }
             }
@@ -231,13 +243,33 @@ namespace SharpFrame.Logic.Base
             return result;
         }
 
+        /// <summary>
+        /// 初始化
+        /// </summary>
+        /// <param name="thread"></param>
         public abstract void Initialize(object thread);
 
+        /// <summary>
+        /// 自动运行
+        /// </summary>
+        /// <param name="thread"></param>
         [ProductionThreadBase]
         protected abstract void Main(Thread_Auto_Base thread);
 
+        /// <summary>
+        /// 线程中断重置回调
+        /// </summary>
+        /// <param name="class_na">线程类名</param>
+        /// <param name="thread">Thread_Auto_Base结构</param>
+        /// <param name="ex">异常事件</param>
         protected abstract void ThreadRestartEvent(string class_na, Thread_Auto_Base thread, ThreadAbortException ex);
 
+        /// <summary>
+        /// 线程异常
+        /// </summary>
+        /// <param name="class_na"></param>
+        /// <param name="thread"></param>
+        /// <param name="exception"></param>
         protected abstract void ThreadError(string class_na, Thread_Auto_Base thread, Exception exception);
     }
 }
