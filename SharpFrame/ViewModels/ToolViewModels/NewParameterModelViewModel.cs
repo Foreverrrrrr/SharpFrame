@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.ToolViews;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SharpFrame.ViewModels.ToolViewModels
 {
@@ -20,7 +20,6 @@ namespace SharpFrame.ViewModels.ToolViewModels
                 OptionalParametersList.Add(new ComboxList() { ID = i, Name = parameterslist[i].ToString() });
             }
             OptionalParametersList.Add(new ComboxList() { ID = OptionalParametersList.Count - 1, Name = "Null" });
-
             Close = new DelegateCommand(() =>
             {
                 NewParameterModelView currentWindow = System.Windows.Application.Current.Windows.OfType<NewParameterModelView>().SingleOrDefault(w => w.IsActive);

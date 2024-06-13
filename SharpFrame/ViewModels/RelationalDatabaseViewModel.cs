@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
 using SharpFrame.Common;
 using SharpFrame.Structure.Parameter;
+using System;
+using System.Collections.ObjectModel;
 
 namespace SharpFrame.ViewModels
 {
@@ -20,7 +20,7 @@ namespace SharpFrame.ViewModels
             this.aggregator = eventaggregator;
             eventaggregator.GetEvent<ParameterUpdateEvent>().Subscribe((t) =>
             {
-                SQL_Server.ConnectionString_Default = ParameterJsonTool.GetSystemValue<string>(t.SystemParameters_Obse[1]);
+                SQL_Server.ConnectionString_Default = ParameterJsonTool.GetSystemValue<string>(Parameter.ParameterQuery(t.SystemParameters_Obse, "数据库连接字符串"));
 
             }, ThreadOption.BackgroundThread);
             DatabaseTimeQuery = new DelegateCommand(() =>
