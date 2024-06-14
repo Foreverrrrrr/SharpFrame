@@ -1,6 +1,6 @@
-﻿using System.Windows;
-using Prism.Events;
+﻿using Prism.Events;
 using SharpFrame.ViewModels.ToolViewModels;
+using System.Windows;
 
 namespace SharpFrame.Views.ToolViews
 {

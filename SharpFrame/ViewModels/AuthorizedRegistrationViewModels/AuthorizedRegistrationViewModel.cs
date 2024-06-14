@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Windows.Forms;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.AuthorizedRegistrationViews;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace SharpFrame.ViewModels.AuthorizedRegistrationViewModels
 {

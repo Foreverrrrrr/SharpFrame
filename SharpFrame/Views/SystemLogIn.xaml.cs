@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SharpFrame.ViewModels;
+using System;
 using System.Windows;
 using System.Windows.Controls;
-using SharpFrame.ViewModels;
 
 namespace SharpFrame.Views
 {

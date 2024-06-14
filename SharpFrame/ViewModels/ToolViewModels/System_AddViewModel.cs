@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Windows.Forms;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.ToolViews;
+using System.Linq;
+using System.Windows.Forms;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace SharpFrame.ViewModels.ToolViewModels

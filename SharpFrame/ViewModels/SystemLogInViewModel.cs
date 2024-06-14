@@ -1,8 +1,8 @@
-﻿using System;
-using Prism.Commands;
+﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.AuthorizedRegistrationViews;
+using System;
 
 namespace SharpFrame.ViewModels
 {

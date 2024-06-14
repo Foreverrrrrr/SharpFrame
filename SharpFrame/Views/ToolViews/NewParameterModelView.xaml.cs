@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Windows;
-using Prism.Events;
+﻿using Prism.Events;
 using SharpFrame.ViewModels.ToolViewModels;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace SharpFrame.Views.ToolViews
 {
