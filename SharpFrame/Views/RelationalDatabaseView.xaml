@@ -30,7 +30,7 @@
                     <Button Margin="15,0,0,0" Width="100" Height="40" Content="导出" Foreground="Black" Command="{Binding Export}"  CommandParameter="{Binding DatabaseView}"/>
                 </StackPanel>
                 <Grid Margin="20" Grid.Row="1">
-                    <DataGrid x:Name="datagrid" ItemsSource="{Binding DatabaseView}" AutoGenerateColumns="True" IsReadOnly="True" FontSize="14"/>
+                    <DataGrid x:Name="datagrid" ItemsSource="{Binding DatabaseView}" AutoGenerateColumns="True" IsReadOnly="True" FontSize="15"/>
                 </Grid>
             </Grid>
         </Border>

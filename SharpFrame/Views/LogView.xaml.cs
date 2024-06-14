@@ -1,7 +1,4 @@
-﻿using System;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Media;
+﻿using System.Windows.Controls;
 
 namespace SharpFrame.Views
 {
@@ -15,29 +12,4 @@ namespace SharpFrame.Views
             InitializeComponent();
         }
     }
-
-    public class ConVerter : IValueConverter
-    {
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            if (value.ToString() == "Error")
-            {
-                return Brushes.Red;
-            }
-            else if (value.ToString() == "Normal")
-            {
-                return Brushes.LawnGreen;
-            }
-            else
-            {
-                return Brushes.White;
-            }
-        }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
 }
