@@ -1,0 +1,83 @@
+﻿{
+  "SystemParameters_Obse": [
+    {
+      "ID": 0,
+      "Name": "0",
+      "Value": 0.211,
+      "ValueType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 3
+    },
+    {
+      "ID": 1,
+      "Name": "数据库连接字符串",
+      "Value": "Data Source=DESKTOP-VB96UD7;Initial Catalog=Test;Persist Security Info=True;User ID=sa;Password=Forever",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    },
+    {
+      "ID": 2,
+      "Name": "2",
+      "Value": "dsadas",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    }
+  ],
+  "PointLocationParameter_Obse": [
+    {
+      "ID": 0,
+      "Name": "安全点",
+      "Enable": true,
+      "PointA": 0.0,
+      "PointB": 0.0,
+      "PointC": 0.0,
+      "PointD": 0.0,
+      "PointE": 0.0,
+      "PointF": 0.0
+    },
+    {
+      "ID": 1,
+      "Name": "P1",
+      "Enable": false,
+      "PointA": 0.0,
+      "PointB": 0.0,
+      "PointC": 0.0,
+      "PointD": 0.0,
+      "PointE": 0.0,
+      "PointF": 0.0
+    },
+    {
+      "ID": 2,
+      "Name": "P2",
+      "Enable": true,
+      "PointA": 0.0,
+      "PointB": 0.0,
+      "PointC": 0.0,
+      "PointD": 0.0,
+      "PointE": 0.0,
+      "PointF": 0.0
+    }
+  ],
+  "TestParameter_Obse": [
+    {
+      "ID": 0,
+      "Name": "0",
+      "Value": 0.211,
+      "ValueType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 3
+    },
+    {
+      "ID": 1,
+      "Name": "1",
+      "Value": 0.333,
+      "ValueType": "System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 4
+    },
+    {
+      "ID": 2,
+      "Name": "2",
+      "Value": "sasda",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    }
+  ]
+}

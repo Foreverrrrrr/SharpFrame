@@ -57,7 +57,6 @@ namespace SharpFrame.Logic.Base
                 }
                 NewClass_RunEvent?.Invoke(DateTime.Now, derivedType.FullName + "中自动运行线程启动");
             }
-
         }
 
         private static void Thread_Configuration(string class_na, MethodInfo method, object class_new, int spintime)
