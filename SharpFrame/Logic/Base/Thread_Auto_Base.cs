@@ -10,14 +10,26 @@ namespace SharpFrame.Logic.Base
 {
     public abstract class Thread_Auto_Base
     {
+        /// <summary>
+        /// 流程线程创建事件
+        /// </summary>
         public static event Action<DateTime, string> NewClass_RunEvent;
 
+        /// <summary>
+        /// 全局状态机日志事件
+        /// </summary>
         public static event Action<DateTime, string> DataConfigurationEvent;
 
         private static object _lock = new object();
 
+        /// <summary>
+        /// 全局状态机机枚举队列
+        /// </summary>
         private static List<DataConfigurationBase> DataEnum = new List<DataConfigurationBase>();
 
+        /// <summary>
+        /// 全局状态机数据池
+        /// </summary>
         private static bool[] DataPool = new bool[65535];
 
         public static System.Collections.Generic.List<ProductionThreadBase> Auto_Th { get; private set; } = new System.Collections.Generic.List<ProductionThreadBase>();
@@ -289,7 +301,7 @@ namespace SharpFrame.Logic.Base
         /// <summary>
         /// 自动运行
         /// </summary>
-        /// <param name="thread"></param>
+        /// <param name="thread">线程对象</param>
         [ProductionThreadBase]
         protected abstract void Main(Thread_Auto_Base thread);
 
@@ -297,16 +309,16 @@ namespace SharpFrame.Logic.Base
         /// 线程中断重置回调
         /// </summary>
         /// <param name="class_na">线程类名</param>
-        /// <param name="thread">Thread_Auto_Base结构</param>
-        /// <param name="ex">异常事件</param>
+        /// <param name="thread">线程对象</param>
+        /// <param name="ex">异常</param>
         protected abstract void ThreadRestartEvent(string class_na, Thread_Auto_Base thread, ThreadAbortException ex);
 
         /// <summary>
         /// 线程异常
         /// </summary>
-        /// <param name="class_na"></param>
-        /// <param name="thread"></param>
-        /// <param name="exception"></param>
+        /// <param name="class_na">流程类名称</param>
+        /// <param name="thread">线程对象</param>
+        /// <param name="exception">异常</param>
         protected abstract void ThreadError(string class_na, Thread_Auto_Base thread, Exception exception);
     }
 }
