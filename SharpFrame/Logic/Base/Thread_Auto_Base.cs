@@ -39,6 +39,10 @@ namespace SharpFrame.Logic.Base
 
         public Thread_Auto_Base() { }
 
+        /// <summary>
+        /// 流程初始化
+        /// </summary>
+        /// <param name="spintime">线程循环休眠时间</param>
         public static void NewClass(int spintime = 50)
         {
             DataStructureConfiguration(typeof(Send_Variable));
@@ -102,6 +106,9 @@ namespace SharpFrame.Logic.Base
             Auto_Th.Add(threadBase);
         }
 
+        /// <summary>
+        /// 全部流程线程销毁
+        /// </summary>
         public static void Thraead_Dispose()
         {
             if (Auto_Th != null)
@@ -119,6 +126,10 @@ namespace SharpFrame.Logic.Base
                 }
         }
 
+        /// <summary>
+        /// 指定流程线程销毁
+        /// </summary>
+        /// <param name="Thread_Name">线程名称</param>
         public static void Thraead_Dispose(string Thread_Name)
         {
             if (Auto_Th != null)
@@ -170,6 +181,13 @@ namespace SharpFrame.Logic.Base
             }
         }
 
+        /// <summary>
+        /// 等待全局状态机
+        /// </summary>
+        /// <typeparam name="TEnum">状态机枚举</typeparam>
+        /// <param name="input">枚举项</param>
+        /// <param name="state">等待状态值</param>
+        /// <param name="time">超时时间</param>
         public static void AwaitEnum<TEnum>(TEnum input, bool state, int time = 0) where TEnum : Enum
         {
             Type enumType = typeof(TEnum);
@@ -190,6 +208,14 @@ namespace SharpFrame.Logic.Base
             }
         }
 
+        /// <summary>
+        /// 等待全局状态机
+        /// </summary>
+        /// <typeparam name="TEnum">状态机枚举</typeparam>
+        /// <param name="input">枚举项</param>
+        /// <param name="state">等待状态值</param>
+        /// <param name="manual">外部状态标志</param>
+        /// <param name="time">超时时间</param>
         public static void AwaitEnum<TEnum>(TEnum input, bool state, ManualResetEvent manual, int time = 0) where TEnum : Enum
         {
             Type enumType = typeof(TEnum);
@@ -211,6 +237,12 @@ namespace SharpFrame.Logic.Base
             }
         }
 
+        /// <summary>
+        /// 设置全局状态机
+        /// </summary>
+        /// <typeparam name="TEnum">状态机枚举</typeparam>
+        /// <param name="input">枚举项</param>
+        /// <param name="state">设置状态</param>
         public static void SetEnum<TEnum>(TEnum input, bool state) where TEnum : Enum
         {
             Type enumType = typeof(TEnum);
@@ -226,6 +258,12 @@ namespace SharpFrame.Logic.Base
             }
         }
 
+        /// <summary>
+        /// 获取全局状态机
+        /// </summary>
+        /// <typeparam name="TEnum">状态机枚举</typeparam>
+        /// <param name="input">枚举项</param>
+        /// <returns>枚举标签状态</returns>
         public static bool GetEnumValue<TEnum>(TEnum input) where TEnum : Enum
         {
             bool result = false;
