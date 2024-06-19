@@ -14,8 +14,11 @@ namespace SharpFrame.ViewModels.ToolViewModels
 
         private Structure.Parameter.SystemParameter this_checkdata;
 
-        public System_AddViewModel(IEventAggregator aggregator, Structure.Parameter.SystemParameter checkdata)
+        private string filtrationmodel;
+
+        public System_AddViewModel(IEventAggregator aggregator, Structure.Parameter.SystemParameter checkdata, string filtrationmodel)
         {
+            this.filtrationmodel = filtrationmodel;
             this.eventAggregator = aggregator;
             this.this_checkdata = checkdata;
             Close = new DelegateCommand(() =>
@@ -35,7 +38,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = input_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -49,7 +52,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = bool_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -63,7 +66,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = int_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -77,7 +80,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = float_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -91,7 +94,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = double_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<SystemParameterAddEvent>().Publish(new Add_SystemIns() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {

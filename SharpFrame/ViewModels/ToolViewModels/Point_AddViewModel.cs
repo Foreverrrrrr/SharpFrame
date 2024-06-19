@@ -10,10 +10,11 @@ namespace SharpFrame.ViewModels.ToolViewModels
     public class Point_AddViewModel : BindableBase
     {
         IEventAggregator aggregator;
-
+        private string filtrationmodel;
         private Structure.Parameter.PointLocationParameter this_checkdata;
-        public Point_AddViewModel(IEventAggregator aggregator, Structure.Parameter.PointLocationParameter system)
+        public Point_AddViewModel(IEventAggregator aggregator, Structure.Parameter.PointLocationParameter system, string filtrationmodel)
         {
+            this.filtrationmodel = filtrationmodel;
             this.aggregator = aggregator;
             this.this_checkdata = system;
             PointDefaultArguments.Add(new Structure.Parameter.PointLocationParameter() { Name = "Null" });
@@ -28,7 +29,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                 if (PointDefaultArguments.Count > 0)
                 {
                     Structure.Parameter.PointLocationParameter pointLocations = PointDefaultArguments[0];
-                    aggregator.GetEvent<PointLocationParameterAddEvent>().Publish(new Add_PointLocationIns() { InsertionParameter = this_checkdata, NewParameter = pointLocations });
+                    aggregator.GetEvent<PointLocationParameterAddEvent>().Publish(new Add_PointLocationIns() { InsertionParameter = this_checkdata, NewParameter = pointLocations, FiltrationModel = filtrationmodel });
                 }
                 currentWindow.Close();
             });

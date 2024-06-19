@@ -9,10 +9,10 @@ namespace SharpFrame.Views.ToolViews
     /// </summary>
     public partial class Point_AddView : Window
     {
-        public Point_AddView(IEventAggregator aggregator, Structure.Parameter.PointLocationParameter system)
+        public Point_AddView(IEventAggregator aggregator, Structure.Parameter.PointLocationParameter system, string filtrationmodel)
         {
             InitializeComponent();
-            this.DataContext = new Point_AddViewModel(aggregator, system);
+            this.DataContext = new Point_AddViewModel(aggregator, system, filtrationmodel);
 
         }
     }

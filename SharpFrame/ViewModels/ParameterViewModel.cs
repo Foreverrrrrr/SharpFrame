@@ -22,7 +22,7 @@ namespace SharpFrame.ViewModels
             aggregator = eventaggregator;
             aggregator.GetEvent<LoginPermission>().Subscribe((type) =>
             {
-                if (type.type == PermissionType.Supplier)
+                if (type.type == PermissionType.Supplier || type.type == PermissionType.Engineer)
                     IsVisible = true;
             });
             aggregator.GetEvent<PageLoadEvent>().Subscribe(() =>
@@ -142,7 +142,7 @@ namespace SharpFrame.ViewModels
             {
                 if (checkdata != null)
                 {
-                    System_AddView system = new System_AddView(aggregator, checkdata);
+                    System_AddView system = new System_AddView(aggregator, checkdata, "former");
                     system.Show();
                 }
             });
@@ -167,7 +167,7 @@ namespace SharpFrame.ViewModels
             {
                 if (checkdata != null)
                 {
-                    Point_AddView addView = new Point_AddView(aggregator, checkdata);
+                    Point_AddView addView = new Point_AddView(aggregator, checkdata, "former");
                     addView.Show();
                 }
             });
@@ -192,7 +192,7 @@ namespace SharpFrame.ViewModels
             {
                 if (checkdata != null)
                 {
-                    Test_AddView addView = new Test_AddView(aggregator, checkdata);
+                    Test_AddView addView = new Test_AddView(aggregator, checkdata, "former");
                     addView.Show();
                 }
             });
@@ -228,7 +228,7 @@ namespace SharpFrame.ViewModels
                 }
                 SystemArguments = null;
                 SystemArguments = systemStructures;
-            }, ThreadOption.UIThread);
+            }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
 
             aggregator.GetEvent<PointLocationParameterAddEvent>().Subscribe((t) =>
             {
@@ -244,7 +244,7 @@ namespace SharpFrame.ViewModels
                 }
                 PointLocationArguments = null;
                 PointLocationArguments = pointStructures;
-            }, ThreadOption.UIThread);
+            }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
             aggregator.GetEvent<TestParameterAddEvent>().Subscribe((t) =>
             {
                 var k = PointLocationArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
@@ -259,7 +259,12 @@ namespace SharpFrame.ViewModels
                 }
                 TestParameterArguments = null;
                 TestParameterArguments = pointStructures;
-            }, ThreadOption.UIThread);
+            }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
+            ParameterGgeneration = new DelegateCommand(() =>
+            {
+                ParameterInitializationView initializationView = new ParameterInitializationView(aggregator);
+                initializationView.Show();
+            });
         }
 
         public void SetParameterValue(string value)
@@ -320,6 +325,7 @@ namespace SharpFrame.ViewModels
             }
 
         }
+        public DelegateCommand ParameterGgeneration { get; set; }
 
         /// <summary>
         /// 新建参数
@@ -458,6 +464,8 @@ namespace SharpFrame.ViewModels
 
     public class Add_SystemIns
     {
+        public string FiltrationModel { get; set; }
+
         public Structure.Parameter.SystemParameter NewParameter { get; set; }
 
         public Structure.Parameter.SystemParameter InsertionParameter { get; set; }
@@ -470,6 +478,8 @@ namespace SharpFrame.ViewModels
 
     public class Add_PointLocationIns
     {
+        public string FiltrationModel { get; set; }
+
         public PointLocationParameter NewParameter { get; set; }
 
         public PointLocationParameter InsertionParameter { get; set; }
@@ -482,11 +492,12 @@ namespace SharpFrame.ViewModels
 
     public class Add_Test
     {
+        public string FiltrationModel { get; set; }
+
         public TestParameter NewParameter { get; set; }
 
         public TestParameter InsertionParameter { get; set; }
     }
-
 
     public class NewModelEvent : PubSubEvent<Add_Model> { }
 

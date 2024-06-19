@@ -137,6 +137,7 @@
     <Compile Include="ViewModels\RelationalDatabaseViewModel.cs" />
     <Compile Include="ViewModels\SystemLogInViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\NewParameterModelViewModel.cs" />
+    <Compile Include="ViewModels\ToolViewModels\ParameterInitializationViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\Point_AddViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\System_AddViewModel.cs" />
     <Compile Include="ViewModels\ToolViewModels\Test_AddViewModel.cs" />
@@ -164,6 +165,9 @@
     </Compile>
     <Compile Include="Views\ToolViews\NewParameterModelView.xaml.cs">
       <DependentUpon>NewParameterModelView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ToolViews\ParameterInitializationView.xaml.cs">
+      <DependentUpon>ParameterInitializationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ToolViews\Point_AddView.xaml.cs">
       <DependentUpon>Point_AddView.xaml</DependentUpon>
@@ -220,6 +224,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ToolViews\NewParameterModelView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ToolViews\ParameterInitializationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

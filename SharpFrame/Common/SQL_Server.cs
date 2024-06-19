@@ -19,9 +19,6 @@ namespace SharpFrame.Common
 
         private static Hashtable parmCache = Hashtable.Synchronized(new Hashtable());
 
-
-
-
         public static void WriteError(int id, string str, bool state)
         {
             string s = "";

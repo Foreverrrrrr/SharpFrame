@@ -10,7 +10,6 @@ namespace SharpFrame.Structure.Parameter
 {
     public static class ParameterJsonTool
     {
-
         /// <summary>
         /// 测试测试保存文件夹
         /// </summary>
@@ -20,6 +19,14 @@ namespace SharpFrame.Structure.Parameter
         /// 数据测试保存文件夹
         /// </summary>
         public static string DataJsonFolder { get; set; } = "Data";
+
+        /// <summary>
+        /// 默认参数生成
+        /// </summary>
+        public static void NewDefaultParameters()
+        {
+
+        }
 
         /// <summary>
         /// 创建Json格式参数
@@ -58,7 +65,6 @@ namespace SharpFrame.Structure.Parameter
                 System.IO.File.Copy(sourceFile, destinationFile, isrewrite);
             }
         }
-
 
         /// <summary>
         /// 修改Json参数名称

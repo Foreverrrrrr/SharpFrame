@@ -10,11 +10,12 @@ namespace SharpFrame.ViewModels.ToolViewModels
     public class Test_AddViewModel : BindableBase
     {
         private readonly IEventAggregator eventAggregator;
-
+        private string filtrationmodel;
         private Structure.Parameter.TestParameter this_checkdata;
 
-        public Test_AddViewModel(IEventAggregator aggregator, Structure.Parameter.TestParameter testParameter)
+        public Test_AddViewModel(IEventAggregator aggregator, Structure.Parameter.TestParameter testParameter, string filtrationmodel)
         {
+            this.filtrationmodel = filtrationmodel;
             this.eventAggregator = aggregator;
             this.this_checkdata = testParameter;
             Close = new DelegateCommand(() =>
@@ -34,7 +35,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = input_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -48,7 +49,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = bool_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -62,7 +63,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = int_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -76,7 +77,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = float_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {
@@ -90,7 +91,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
                         {
                             structure.Value = double_value;
                             structure.ValueType = structure.Value.GetType();
-                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata });
+                            aggregator.GetEvent<TestParameterAddEvent>().Publish(new Add_Test() { NewParameter = structure, InsertionParameter = this_checkdata, FiltrationModel = filtrationmodel });
                         }
                         else
                         {

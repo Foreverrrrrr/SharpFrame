@@ -10,10 +10,10 @@ namespace SharpFrame.Views.ToolViews
     /// </summary>
     public partial class Test_AddView : Window
     {
-        public Test_AddView(IEventAggregator aggregator, TestParameter test)
+        public Test_AddView(IEventAggregator aggregator, TestParameter test, string filtrationmodel)
         {
             InitializeComponent();
-            this.DataContext = new Test_AddViewModel(aggregator, test);
+            this.DataContext = new Test_AddViewModel(aggregator, test, filtrationmodel);
         }
     }
 }
