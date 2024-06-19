@@ -3,6 +3,7 @@ using Prism.Events;
 using Prism.Mvvm;
 using SharpFrame.Views.AuthorizedRegistrationViews;
 using System;
+using System.Linq;
 
 namespace SharpFrame.ViewModels
 {
@@ -18,7 +19,8 @@ namespace SharpFrame.ViewModels
         {
             Login_button = new DelegateCommand(() =>
             {
-                LogInLoad?.Invoke(Username, PassWord);
+                string reversedString = new string(PassWord.Reverse().ToArray());
+                LogInLoad?.Invoke(Username, reversedString);
             });
             Close = new DelegateCommand(() =>
             {

@@ -28,6 +28,9 @@
                 <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="型号添加" FontSize="16" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding NewModel}"/>
                 <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="保存" Width="100" FontSize="16" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding ParameterSave}"/>
                 <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="删除" Width="100" FontSize="16" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding ParameterDelete}"/>
+                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="参数生成" Width="100" FontSize="16" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding ParameterDelete}" Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <Button Margin="10" Style="{StaticResource MaterialDesignRaisedLightButton}" Content="轴、IO配置生成" Width="150" FontSize="16" Background="#FF259CDA" BorderBrush="{x:Null}" Command="{Binding ParameterDelete}"  Visibility="{Binding IsVisible, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1">

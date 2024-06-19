@@ -145,7 +145,7 @@
                 <StackPanel Grid.Row="2" Orientation="Horizontal" Width="190" VerticalAlignment="Center">
                     <materialDesign:PackIcon Kind="Key" Height="30" Width="30" Margin="0,3,10,0"/>
                     <PasswordBox x:Name="PasswordBox" FontSize="20" Width="130" CaretBrush="Black"
-                     local:PasswordBoxHelper.Password="{Binding PassWord, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" BorderBrush="Black" />
+                     local:PasswordBoxHelper.Password="{Binding PassWord, UpdateSourceTrigger=PropertyChanged}" BorderBrush="Black" />
                 </StackPanel>
                 <StackPanel Margin="0,30,0,0" Grid.Row="3" Orientation="Horizontal" Width="230" VerticalAlignment="Center" Cursor="">
                     <Button Style="{StaticResource MaterialDesignRaisedLightButton}" BorderBrush="{x:Null}" Background="#FF3C3C3C" Height="45" Width="230" FontSize="23" Foreground="White" Command="{Binding Login_button}">

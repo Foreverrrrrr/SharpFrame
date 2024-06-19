@@ -22,7 +22,8 @@ namespace SharpFrame.ViewModels
             aggregator = eventaggregator;
             aggregator.GetEvent<LoginPermission>().Subscribe((type) =>
             {
-
+                if (type.type == PermissionType.Supplier)
+                    IsVisible = true;
             });
             aggregator.GetEvent<PageLoadEvent>().Subscribe(() =>
             {
@@ -57,18 +58,19 @@ namespace SharpFrame.ViewModels
                 }
                 else
                 {
-                    Parameter parameter = new Parameter();
-                    parameter.SystemParameters_Obse.Add(new SystemParameter(0, "0", 0.211f));
-                    parameter.SystemParameters_Obse.Add(new SystemParameter(1, "1", 131.00));
-                    parameter.SystemParameters_Obse.Add(new SystemParameter(2, "2", "dsadas"));
-                    parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 0, Name = "安全点", Enable = true });
-                    parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 1, Name = "P1", Enable = true });
-                    parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 2, Name = "P2", Enable = true });
-                    parameter.TestParameter_Obse.Add(new TestParameter() { ID = 0, Name = "0", Value = 0.211f });
-                    parameter.TestParameter_Obse.Add(new TestParameter() { ID = 1, Name = "1", Value = 0.333 });
-                    parameter.TestParameter_Obse.Add(new TestParameter() { ID = 2, Name = "2", Value = "sasda" });
-                    ParameterJsonTool.Set_NullJson(parameter);
-                    ParameterJsonTool.NewJosn(DateTime.Now.ToString("yyyy_MM_dd"));
+                    //Parameter parameter = new Parameter();
+                    //parameter.SystemParameters_Obse.Add(new SystemParameter(0, "0", 0.211f));
+                    //parameter.SystemParameters_Obse.Add(new SystemParameter(1, "1", 131.00));
+                    //parameter.SystemParameters_Obse.Add(new SystemParameter(2, "2", "dsadas"));
+                    //parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 0, Name = "安全点", Enable = true });
+                    //parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 1, Name = "P1", Enable = true });
+                    //parameter.PointLocationParameter_Obse.Add(new PointLocationParameter() { ID = 2, Name = "P2", Enable = true });
+                    //parameter.TestParameter_Obse.Add(new TestParameter() { ID = 0, Name = "0", Value = 0.211f });
+                    //parameter.TestParameter_Obse.Add(new TestParameter() { ID = 1, Name = "1", Value = 0.333 });
+                    //parameter.TestParameter_Obse.Add(new TestParameter() { ID = 2, Name = "2", Value = "sasda" });
+                    //ParameterJsonTool.Set_NullJson(parameter);
+                    //ParameterJsonTool.NewJosn(DateTime.Now.ToString("yyyy_MM_dd"));
+                    //throw new FileNotFoundException($"{System.Environment.CurrentDirectory + @"\Parameter"}下参数配置文件不存在");
                 }
                 system_list = ParameterJsonTool.GetJson();
             });
@@ -432,6 +434,15 @@ namespace SharpFrame.ViewModels
         /// 当前参数名称
         /// </summary>
         public string ParameterName { get; set; }
+
+        private bool _isvisible;
+
+        public bool IsVisible
+        {
+            get { return _isvisible; }
+            set { _isvisible = value; RaisePropertyChanged(); }
+        }
+
     }
 
     public struct ComboxList
