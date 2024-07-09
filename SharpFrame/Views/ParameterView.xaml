@@ -91,6 +91,16 @@
                                                         <ComboBoxItem Content="Int"/>
                                                         <ComboBoxItem Content="Float"/>
                                                         <ComboBoxItem Content="Double"/>
+                                                        <i:Interaction.Triggers>
+                                                            <i:EventTrigger EventName="SelectionChanged">
+                                                                <prism:InvokeCommandAction Command="{Binding ComboBoxChanged}">
+                                                                    <!-- 传递当前行数据作为 CommandParameter -->
+                                                                    <prism:InvokeCommandAction.CommandParameter>
+                                                                        <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ComboBox}" />
+                                                                    </prism:InvokeCommandAction.CommandParameter>
+                                                                </prism:InvokeCommandAction>
+                                                            </i:EventTrigger>
+                                                        </i:Interaction.Triggers>
                                                     </ComboBox>
                                                 </StackPanel>
                                             </DataTemplate>
@@ -252,6 +262,16 @@
                                                     <ComboBoxItem Content="Int"/>
                                                     <ComboBoxItem Content="Float"/>
                                                     <ComboBoxItem Content="Double"/>
+                                                    <i:Interaction.Triggers>
+                                                        <i:EventTrigger EventName="SelectionChanged">
+                                                            <prism:InvokeCommandAction Command="{Binding ComboBoxChanged}">
+                                                                <!-- 传递当前行数据作为 CommandParameter -->
+                                                                <prism:InvokeCommandAction.CommandParameter>
+                                                                    <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ComboBox}" />
+                                                                </prism:InvokeCommandAction.CommandParameter>
+                                                            </prism:InvokeCommandAction>
+                                                        </i:EventTrigger>
+                                                    </i:Interaction.Triggers>
                                                 </ComboBox>
                                             </StackPanel>
                                         </DataTemplate>

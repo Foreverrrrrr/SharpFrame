@@ -127,6 +127,7 @@
     <Compile Include="Structure\Debugging\Output_Json.cs" />
     <Compile Include="Structure\Parameter\Parameter.cs" />
     <Compile Include="Structure\Parameter\ParameterJsonTool.cs" />
+    <Compile Include="Structure\Parameter\ParameterTypeBase.cs" />
     <Compile Include="Structure\Parameter\PointLocationParameter.cs" />
     <Compile Include="Structure\Parameter\SystemParameter.cs" />
     <Compile Include="Structure\Parameter\TestParameter.cs" />

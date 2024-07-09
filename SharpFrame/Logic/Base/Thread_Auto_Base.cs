@@ -110,7 +110,7 @@ namespace SharpFrame.Logic.Base
                             return;
                         }
                     }
-                }),
+                })
             };
             threadBase.New_Thread.Name = class_na + "." + threadBase.Thread_Name;
             threadBase.New_Thread.IsBackground = true;

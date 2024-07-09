@@ -44,6 +44,7 @@ namespace SharpFrame.ViewModels
                         SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                         PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
                         TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
+
                     }
                     else
                     {
@@ -53,6 +54,24 @@ namespace SharpFrame.ViewModels
                         SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                         PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
                         TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
+                        TestComboBox_DropDownClosed_Evt += ((row) =>
+                        {
+                            var bool_ret = TypeAndValueCheck(row);
+                            if (!bool_ret.Item3)
+                            {
+                                MessageBox.Show($"修改测试参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                            }
+                        });
+                        SystemComboBox_DropDownClosed_Evt += ((row) =>
+                        {
+                            var bool_ret = TypeAndValueCheck(row);
+                            if (!bool_ret.Item3)
+                            {
+                                MessageBox.Show($"修改系统参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                            }
+                        });
                     }
                     aggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
                 }
@@ -97,15 +116,26 @@ namespace SharpFrame.ViewModels
                 foreach (var item in parameter.SystemParameters_Obse)
                 {
                     var bool_ret = TypeAndValueCheck(item);
-                    if (!bool_ret)
+                    if (!bool_ret.Item3)
                     {
-                        MessageBox.Show($"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"保存系统参数错误\r\n“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”" });
                         return;
                     }
                 }
                 parameter.PointLocationParameter_Obse = PointLocationArguments;
+
                 parameter.TestParameter_Obse = TestParameterArguments;
+                foreach (var item in parameter.TestParameter_Obse)
+                {
+                    var bool_ret = TypeAndValueCheck(item);
+                    if (!bool_ret.Item3)
+                    {
+                        MessageBox.Show($"保存测试参数错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                        return;
+                    }
+                }
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 aggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
                 aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
@@ -286,45 +316,51 @@ namespace SharpFrame.ViewModels
             return config.AppSettings.Settings["ParameterName"].Value;
         }
 
-        public static bool TypeAndValueCheck(SystemParameter TypeModel)
+        public static (string, string, bool) TypeAndValueCheck(ParameterTypeBase TypeModel)
         {
             string input_value = Convert.ToString(TypeModel.Value);
             switch (TypeModel.SelectedValue)
             {
                 case 0:
                     if (input_value != "Null" || input_value != "" || input_value != null)
-                        return true;
+                        return ("String", input_value, true);
                     else
-                        return false;
+                        return ("String", input_value, false);
                 case 1:
                     bool bool_value = false;
                     if (bool.TryParse(input_value, out bool_value))
-                        return true;
+                        return ("Bool", input_value, true);
                     else
-                        return false;
+                        return ("Bool", input_value, false);
                 case 2:
                     int int_value = 0;
                     if (int.TryParse(input_value, out int_value))
-                        return true;
+                        return ("Int", input_value, true);
                     else
-                        return false;
+                        return ("Int", input_value, false);
                 case 3:
                     float float_value = 0f;
                     if (float.TryParse(input_value, out float_value))
-                        return true;
+                        return ("Float", input_value, true);
                     else
-                        return false;
+                        return ("Float", input_value, false);
                 case 4:
                     double double_value = 0d;
                     if (double.TryParse(input_value, out double_value))
-                        return true;
+                        return ("Double", input_value, true);
                     else
-                        return false;
+                        return ("Double", input_value, false);
                 default:
-                    return false;
+                    return ("未知", input_value, false);
             }
 
         }
+
+
+        public event Action<SystemParameter> SystemComboBox_DropDownClosed_Evt;
+
+        public event Action<TestParameter> TestComboBox_DropDownClosed_Evt;
+
         public DelegateCommand ParameterGgeneration { get; set; }
 
         /// <summary>
@@ -351,7 +387,19 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<SystemParameter> SystemArguments
         {
             get { return _systemarguments; }
-            set { _systemarguments = value; RaisePropertyChanged(); }
+            set
+            {
+                _systemarguments = value;
+                foreach (var item in _systemarguments)
+                {
+                    item.ComboBoxChanged = new DelegateCommand<object>((rowdata) =>
+                    {
+                        SystemParameter parameter = rowdata as SystemParameter;
+                        SystemComboBox_DropDownClosed_Evt?.Invoke(parameter);
+                    });
+                }
+                RaisePropertyChanged();
+            }
         }
 
         #endregion
@@ -397,7 +445,19 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<TestParameter> TestParameterArguments
         {
             get { return _testparameterarguments; }
-            set { _testparameterarguments = value; RaisePropertyChanged(); }
+            set
+            {
+                _testparameterarguments = value;
+                foreach (var item in _testparameterarguments)
+                {
+                    item.ComboBoxChanged = new DelegateCommand<object>((rowdata) =>
+                    {
+                        TestParameter parameter = rowdata as TestParameter;
+                        TestComboBox_DropDownClosed_Evt?.Invoke(parameter);
+                    });
+                }
+                RaisePropertyChanged();
+            }
         }
         #endregion
 

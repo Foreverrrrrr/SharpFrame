@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Prism.Commands;
+using System;
 
 namespace SharpFrame.Structure.Parameter
 {
     /// <summary>
     /// 系统参数结构
     /// </summary>
-    public class SystemParameter
+    public class SystemParameter : ParameterTypeBase
     {
         public SystemParameter() { }
 
@@ -49,12 +50,12 @@ namespace SharpFrame.Structure.Parameter
         private object value;
         private Type valueType;
 
-        public object Value
+        public override object Value
         {
             get { return value; }
             set { this.value = value; }
         }
-        public Type ValueType
+        public override Type ValueType
         {
             get { return valueType; }
             set
@@ -76,6 +77,11 @@ namespace SharpFrame.Structure.Parameter
             }
         }
 
-        public int SelectedValue { get; set; }
+        public override int SelectedValue { get; set; }
+
+        /// <summary>
+        /// 参数类型变更
+        /// </summary>
+        public DelegateCommand<object> ComboBoxChanged { get; set; }
     }
 }
