@@ -1,4 +1,5 @@
-﻿using Prism.Commands;
+﻿using Newtonsoft.Json;
+using Prism.Commands;
 using System;
 
 namespace SharpFrame.Structure.Parameter
@@ -82,6 +83,7 @@ namespace SharpFrame.Structure.Parameter
         /// <summary>
         /// 参数类型变更
         /// </summary>
+        [JsonIgnore]//跳过序列化、反序列化
         public DelegateCommand<object> ComboBoxChanged { get; set; }
     }
 }

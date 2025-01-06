@@ -268,22 +268,14 @@
     <None Include="Log4Net\log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Parameter\131.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Parameter\2024_06_13.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Parameter\Base.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Parameter\131.json" />
+    <None Include="Parameter\2024_06_13.json" />
+    <None Include="Parameter\Base.json" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EmbeddedResource Include="Structure\Parameter\Parameter.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Structure\Parameter\Parameter.config" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ClientKeyMaker">

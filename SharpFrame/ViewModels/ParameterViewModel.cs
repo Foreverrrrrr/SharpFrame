@@ -54,25 +54,26 @@ namespace SharpFrame.ViewModels
                         SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
                         PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
                         TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
-                        TestComboBox_DropDownClosed_Evt += ((row) =>
-                        {
-                            var bool_ret = TypeAndValueCheck(row);
-                            if (!bool_ret.Item3)
-                            {
-                                MessageBox.Show($"修改测试参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
-                            }
-                        });
-                        SystemComboBox_DropDownClosed_Evt += ((row) =>
-                        {
-                            var bool_ret = TypeAndValueCheck(row);
-                            if (!bool_ret.Item3)
-                            {
-                                MessageBox.Show($"修改系统参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
-                            }
-                        });
+
                     }
+                    TestComboBox_DropDownClosed_Evt += ((row) =>
+                    {
+                        var bool_ret = TypeAndValueCheck(row);
+                        if (!bool_ret.Item3)
+                        {
+                            MessageBox.Show($"修改测试参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                        }
+                    });
+                    SystemComboBox_DropDownClosed_Evt += ((row) =>
+                    {
+                        var bool_ret = TypeAndValueCheck(row);
+                        if (!bool_ret.Item3)
+                        {
+                            MessageBox.Show($"修改系统参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                        }
+                    });
                     aggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
                 }
                 else
@@ -122,6 +123,25 @@ namespace SharpFrame.ViewModels
                         aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”" });
                         return;
                     }
+                    else
+                    {
+                        object value = item.Value;
+                        switch (item.SelectedValue)
+                        {
+                            case 0:
+                                value = item.Value.ToString(); break;
+                            case 1:
+                                value = Convert.ToBoolean(item.Value); break;
+                            case 2:
+                                value = Convert.ToInt32(item.Value); break;
+                            case 3:
+                                value = Convert.ToSingle(item.Value); break;
+                            case 4:
+                                value = Convert.ToDouble(item.Value); break;
+                        }
+                        item.Value = value;
+                        item.ValueType = item.Value.GetType();
+                    }
                 }
                 parameter.PointLocationParameter_Obse = PointLocationArguments;
 
@@ -134,6 +154,25 @@ namespace SharpFrame.ViewModels
                         MessageBox.Show($"保存测试参数错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
                         return;
+                    }
+                    else
+                    {
+                        object value = item.Value;
+                        switch (item.SelectedValue)
+                        {
+                            case 0:
+                                value = item.Value.ToString(); break;
+                            case 1:
+                                value = Convert.ToBoolean(item.Value); break;
+                            case 2:
+                                value = Convert.ToInt32(item.Value); break;
+                            case 3:
+                                value = Convert.ToSingle(item.Value); break;
+                            case 4:
+                                value = Convert.ToDouble(item.Value); break;
+                        }
+                        item.Value = value;
+                        item.ValueType = item.Value.GetType();
                     }
                 }
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
