@@ -155,6 +155,7 @@
     <Compile Include="Views\NotificationViews\NotificationPopupView.xaml.cs">
       <DependentUpon>NotificationPopupView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\OpenVision.cs" />
     <Compile Include="Views\ParameterView.xaml.cs">
       <DependentUpon>ParameterView.xaml</DependentUpon>
     </Compile>
@@ -179,9 +180,20 @@
     <Compile Include="Views\ToolViews\Test_AddView.xaml.cs">
       <DependentUpon>Test_AddView.xaml</DependentUpon>
     </Compile>
-    <Page Include="Themes\Generic.xaml">
+    <Compile Include="Views\WorkOrderConfigurationView.xaml.cs">
+      <DependentUpon>WorkOrderConfigurationView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="AxisManualStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\AxisManualStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\PictureEditorStyle.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\AuthorizedRegistrationViews\AuthorizedRegistrationView.xaml">
       <SubType>Designer</SubType>
@@ -241,6 +253,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\ToolViews\Test_AddView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\WorkOrderConfigurationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

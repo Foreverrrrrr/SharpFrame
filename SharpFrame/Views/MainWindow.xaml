@@ -74,6 +74,8 @@
                         <StackPanel>
                             <Button Command="{Binding VisionSwitching}" CommandParameter="HomeView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" Content="主页面" Foreground="Black" FontWeight="Bold" FontSize="16"/>
                             <Button Command="{Binding VisionSwitching}" CommandParameter="ParameterView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" Content="参数配置" Foreground="Black" FontWeight="Bold" FontSize="16"/>
+
+                            <Button Command="{Binding VisionSwitching}" CommandParameter="WorkOrderConfigurationView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" Content="工单配置" Foreground="Black" FontWeight="Bold" FontSize="16"/>
                             <Button Command="{Binding VisionSwitching}" CommandParameter="DebuggingView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" Content="调试" Foreground="Black" FontWeight="Bold" FontSize="16"/>
                             <Button Command="{Binding VisionSwitching}" CommandParameter="RelationalDatabaseView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" Content="数据库" Foreground="Black" FontWeight="Bold" FontSize="16"/>
                             <Button Command="{Binding VisionSwitching}" CommandParameter="ProduceInfoView" Margin="0,30,0,0" Width="100" Height="70" Style="{StaticResource MaterialDesignFlatLightButton}" Content="生产数据" Foreground="Black" FontWeight="Bold" FontSize="16"/>

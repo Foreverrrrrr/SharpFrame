@@ -50,7 +50,7 @@ namespace SharpFrame
                         }
                         break;
                     case "供应商":
-                        if (y == "ksrhck")
+                        if (y == "2025")
                         {
                             base.OnInitialized();
                             MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.Supplier });

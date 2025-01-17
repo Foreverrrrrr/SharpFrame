@@ -97,7 +97,7 @@ namespace SharpFrame.ViewModels
         private void Viewinitial()
         {
             regionManager.RegisterViewWithRegion("MainRegion", typeof(ParameterView));
-            regionManager.RegisterViewWithRegion("MainRegion", typeof(LogView));
+            regionManager.RegisterViewWithRegion("MainRegion", typeof(WorkOrderConfigurationView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(DebuggingView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(RelationalDatabaseView));
         }

@@ -11,16 +11,17 @@ namespace SharpFrame.ViewModels
     {
         public static event Action<string, string> LogInLoad;
 
-        public DelegateCommand Login_button { get; set; }
+        public DelegateCommand<string> Login_button { get; set; }
 
         public DelegateCommand Close { get; set; }
 
         public SystemLogInViewModel(IEventAggregator aggregators)
         {
-            Login_button = new DelegateCommand(() =>
+            Login_button = new DelegateCommand<string>((x) =>
             {
-                string reversedString = new string(PassWord.Reverse().ToArray());
-                LogInLoad?.Invoke(Username, reversedString);
+                PassWord = x;
+                //string reversedString = new string(PassWord.Reverse().ToArray());
+                LogInLoad?.Invoke(Username, PassWord);
             });
             Close = new DelegateCommand(() =>
             {

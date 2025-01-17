@@ -400,6 +400,9 @@ namespace SharpFrame.ViewModels
 
         public event Action<TestParameter> TestComboBox_DropDownClosed_Evt;
 
+        /// <summary>
+        /// 新参数生成
+        /// </summary>
         public DelegateCommand ParameterGgeneration { get; set; }
 
         /// <summary>
@@ -541,7 +544,9 @@ namespace SharpFrame.ViewModels
         public string ParameterName { get; set; }
 
         private bool _isvisible;
-
+        /// <summary>
+        /// 控件权限
+        /// </summary>
         public bool IsVisible
         {
             get { return _isvisible; }
