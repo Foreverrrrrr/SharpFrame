@@ -56,7 +56,7 @@ namespace SharpFrame.ViewModels
                 {
                     aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
                 });
-                aggregator.GetEvent<PageLoadEvent>().Publish();
+                aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
                 Thread_Auto_Base.NewClass();
                 Stop_State = true;
             });
@@ -97,7 +97,6 @@ namespace SharpFrame.ViewModels
         private void Viewinitial()
         {
             regionManager.RegisterViewWithRegion("MainRegion", typeof(ParameterView));
-            regionManager.RegisterViewWithRegion("MainRegion", typeof(WorkOrderConfigurationView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(DebuggingView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(RelationalDatabaseView));
         }
@@ -273,9 +272,9 @@ namespace SharpFrame.ViewModels
     }
 
     /// <summary>
-    /// 页面初始化完成通知
+    /// 页面初始化完成通知 object[]初始化对象
     /// </summary>
-    public class PageLoadEvent : PubSubEvent { }
+    public class PageLoadEvent : PubSubEvent<object[]> { }
     /// <summary>
     /// 应用程序关闭通知
     /// </summary>

@@ -38,20 +38,211 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <Grid Grid.Column="0" Grid.Row="0">
-                <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
-                    <Grid>
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0" Background="#FFECECEC">
+                    <TextBlock Grid.Row="0" Text="程序流程图" Height="25" FontSize="18" Foreground="Black" FontWeight="Bold" HorizontalAlignment="Center"/>
+                </Border>
+                <Border Grid.Row="1" Background="#FFADF100" BorderBrush="Black" CornerRadius="10">
+                    <local:FlowChart FlowChartNodes="{Binding Nodes}"
+                                     Connectors="{Binding Connectors}"
+                                     Constraints="{Binding Constraints}"
+                                     ViewPortChangedCommand="{Binding ViewPortChangedCommand}" 
+                                     ItemDoubleTappedCommand="{Binding ItemDoubleTappedCommand}" 
+                                     ItemDeletedCommand="{Binding ItemDeletedCommand}" 
+                                     InitializationCompleteCommand="{Binding InitializationCompleteCommand}" Foreground="Black"/>
+                </Border>
+            </Grid>
+            <Grid Grid.Column="1">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid Grid.Row="0">
+                    <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
+                        <Grid>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="25"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Text="系统参数" Height="25" FontSize="18" Foreground="Black" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="13" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding SystemArguments,IsAsync=True}" ColumnWidth="*"  CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                                    <DataGrid.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Style.Triggers>
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="BorderThickness" Value="0"/>
+                                                    <Setter Property="Background" Value="#FFCECCCC"/>
+                                                    <Setter Property="Foreground" Value="#FF060606"/>
+                                                </Trigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DataGrid.CellStyle>
+                                    <DataGrid.Columns >
+                                        <DataGridTemplateColumn Header="序号">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBlock Margin="25,5,0,0" Text="{Binding ID,Mode=TwoWay}" Foreground="Black"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn Header="名称">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBox Margin="0,0,0,0" Text="{Binding Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn  Header="类型">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <ComboBox Width="80" Margin="0,5,0,0" SelectedIndex="{Binding SelectedValue,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black">
+                                                            <ComboBoxItem Content="String"/>
+                                                            <ComboBoxItem Content="Bool"/>
+                                                            <ComboBoxItem Content="Int"/>
+                                                            <ComboBoxItem Content="Float"/>
+                                                            <ComboBoxItem Content="Double"/>
+                                                            <i:Interaction.Triggers>
+                                                                <i:EventTrigger EventName="SelectionChanged">
+                                                                    <prism:InvokeCommandAction Command="{Binding ComboBoxChanged}">
+                                                                        <!-- 传递当前行数据作为 CommandParameter -->
+                                                                        <prism:InvokeCommandAction.CommandParameter>
+                                                                            <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ComboBox}" />
+                                                                        </prism:InvokeCommandAction.CommandParameter>
+                                                                    </prism:InvokeCommandAction>
+                                                                </i:EventTrigger>
+                                                            </i:Interaction.Triggers>
+                                                        </ComboBox>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                        <DataGridTemplateColumn  Header="参数值">
+                                            <DataGridTemplateColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <TextBox Width="150" Margin="20,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"  TextWrapping="Wrap" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </DataGridTemplateColumn.CellTemplate>
+                                        </DataGridTemplateColumn>
+                                    </DataGrid.Columns>
+                                    <DataGrid.ContextMenu>
+                                        <ContextMenu>
+                                            <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding SystemArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                            <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding SystemArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                        </ContextMenu>
+                                    </DataGrid.ContextMenu>
+                                </DataGrid>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid Grid.Row="1">
+                    <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="25"/>
+                                <RowDefinition Height="360"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Text="点位表" Height="25" FontSize="18" Foreground="Black" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="13" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                                <DataGrid.CellStyle>
+                                    <Style TargetType="DataGridCell">
+                                        <Style.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Setter Property="Background" Value="#FFCECCCC"/>
+                                                <Setter Property="Foreground" Value="#FF060606"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DataGrid.CellStyle>
+                                <DataGrid.Columns >
+                                    <DataGridTemplateColumn Header="序号">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Margin="20,5,0,0" Text="{Binding ID,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn Header="名称">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBox Margin="10,0,0,0" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn  Header="是否启用">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <CheckBox Margin="30,0,0,0" IsChecked="{Binding Enable,UpdateSourceTrigger=PropertyChanged}" Background="#FF1587D0"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn  Header="PointA">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBox Margin="30,0,0,0" Text="{Binding PointA,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn  Header="PointB">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBox Margin="30,0,0,0" Text="{Binding PointB,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                    <DataGridTemplateColumn  Header="PointC">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBox Margin="30,0,0,0" Text="{Binding PointC,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                                <DataGrid.ContextMenu>
+                                    <ContextMenu>
+                                        <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                        <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                    </ContextMenu>
+                                </DataGrid.ContextMenu>
+                            </DataGrid>
+                        </Grid>
+                    </Border>
+                </Grid>
+                <Grid Grid.Row="2">
+                    <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="25"/>
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
-                            <TextBlock Grid.Row="0" Text="系统参数" Height="25" Width="90" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                            <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding SystemArguments,IsAsync=True}" ColumnWidth="*"  CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                            <TextBlock Grid.Row="0" Text="测试参数" Height="25" FontSize="18" Foreground="Black" FontWeight="Bold" HorizontalAlignment="Center"/>
+                            <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="13" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding TestParameterArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                                 <DataGrid.CellStyle>
                                     <Style TargetType="DataGridCell">
                                         <Style.Triggers>
@@ -119,184 +310,14 @@
                                 </DataGrid.Columns>
                                 <DataGrid.ContextMenu>
                                     <ContextMenu>
-                                        <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding SystemArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                                        <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding SystemArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                        <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding TestParameterArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
+                                        <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding TestParameterArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
                                     </ContextMenu>
                                 </DataGrid.ContextMenu>
                             </DataGrid>
                         </Grid>
-                    </Grid>
-                </Border>
-            </Grid>
-            <Grid Grid.Column="1" Grid.Row="0">
-                <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="360"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="点位表" Height="25" Width="70" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                        <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="BorderThickness" Value="0"/>
-                                            <Setter Property="Background" Value="#FFCECCCC"/>
-                                            <Setter Property="Foreground" Value="#FF060606"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.CellStyle>
-                            <DataGrid.Columns >
-                                <DataGridTemplateColumn Header="序号">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="20,5,0,0" Text="{Binding ID,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="名称">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="10,0,0,0" Text="{Binding Name,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="是否启用">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <CheckBox Margin="30,0,0,0" IsChecked="{Binding Enable,UpdateSourceTrigger=PropertyChanged}" Background="#FF1587D0"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="PointA">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="30,0,0,0" Text="{Binding PointA,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="PointB">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="30,0,0,0" Text="{Binding PointB,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="PointC">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="30,0,0,0" Text="{Binding PointC,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                                    <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding PointLocationArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                        </DataGrid>
-                    </Grid>
-                </Border>
-            </Grid>
-            <Grid Grid.Column="0" Grid.Row="1">
-                <Border Margin="5" CornerRadius="20" Background="#FFECECEC">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="25"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0" Text="测试参数" Height="25" Width="85" FontSize="21" Foreground="Black" FontWeight="Bold"/>
-                        <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="15" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding TestParameterArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
-                            <DataGrid.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Style.Triggers>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="BorderThickness" Value="0"/>
-                                            <Setter Property="Background" Value="#FFCECCCC"/>
-                                            <Setter Property="Foreground" Value="#FF060606"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.CellStyle>
-                            <DataGrid.Columns >
-                                <DataGridTemplateColumn Header="序号">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Margin="25,5,0,0" Text="{Binding ID,Mode=TwoWay}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn Header="名称">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Margin="0,0,0,0" Text="{Binding Name,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="类型">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <ComboBox Width="80" Margin="0,5,0,0" SelectedIndex="{Binding SelectedValue,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black">
-                                                    <ComboBoxItem Content="String"/>
-                                                    <ComboBoxItem Content="Bool"/>
-                                                    <ComboBoxItem Content="Int"/>
-                                                    <ComboBoxItem Content="Float"/>
-                                                    <ComboBoxItem Content="Double"/>
-                                                    <i:Interaction.Triggers>
-                                                        <i:EventTrigger EventName="SelectionChanged">
-                                                            <prism:InvokeCommandAction Command="{Binding ComboBoxChanged}">
-                                                                <!-- 传递当前行数据作为 CommandParameter -->
-                                                                <prism:InvokeCommandAction.CommandParameter>
-                                                                    <Binding Path="DataContext" RelativeSource="{RelativeSource AncestorType=ComboBox}" />
-                                                                </prism:InvokeCommandAction.CommandParameter>
-                                                            </prism:InvokeCommandAction>
-                                                        </i:EventTrigger>
-                                                    </i:Interaction.Triggers>
-                                                </ComboBox>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                                <DataGridTemplateColumn  Header="参数值">
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBox Width="150" Margin="20,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"  TextWrapping="Wrap" />
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                            <DataGrid.ContextMenu>
-                                <ContextMenu>
-                                    <MenuItem Header="添加行" Background="#FF313030" Foreground="White" Command="{Binding TestParameterArguments_Add_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                                    <MenuItem Header="移除行" Background="#FF313030" Foreground="White" Command="{Binding TestParameterArguments_Remove_Line}" CommandParameter="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=PlacementTarget.SelectedItem}"/>
-                                </ContextMenu>
-                            </DataGrid.ContextMenu>
-                        </DataGrid>
-                    </Grid>
-                </Border>
+                    </Border>
+                </Grid>
             </Grid>
         </Grid>
     </Grid>

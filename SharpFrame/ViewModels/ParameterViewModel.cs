@@ -1,13 +1,21 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using SharpFrame.Flow_of_Execution;
 using SharpFrame.Structure.Parameter;
+using SharpFrame.Views;
 using SharpFrame.Views.ToolViews;
+using Syncfusion.UI.Xaml.Diagram;
+using Syncfusion.UI.Xaml.Diagram.Controls;
+using Syncfusion.UI.Xaml.Diagram.Serializer;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Web.UI.WebControls;
 using System.Windows.Forms;
+using System.Windows.Input;
 using Parameter = SharpFrame.Structure.Parameter.Parameter;
 using SystemParameter = SharpFrame.Structure.Parameter.SystemParameter;
 
@@ -25,7 +33,7 @@ namespace SharpFrame.ViewModels
                 if (type.type == PermissionType.Supplier || type.type == PermissionType.Engineer)
                     IsVisible = true;
             });
-            aggregator.GetEvent<PageLoadEvent>().Subscribe(() =>
+            aggregator.GetEvent<PageLoadEvent>().Subscribe((classobj) =>
             {
                 var system_list = ParameterJsonTool.GetJson();
                 if (system_list.Count > 0)
@@ -37,24 +45,29 @@ namespace SharpFrame.ViewModels
                     string paramValue = GetParameterValue();
                     Parameter systems = new Parameter();
                     if (paramValue != "Null")
-                    {
                         ParameterName = paramValue;
-                        ParameterJsonTool.ReadJson(paramValue, ref systems);
-                        ParameterIndexes = system_list.FindIndex(x => x == paramValue);
-                        SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
-                        PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
-                        TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
-
-                    }
                     else
-                    {
                         ParameterName = system_list[0];
-                        ParameterJsonTool.ReadJson(ParameterName, ref systems);
-                        ParameterIndexes = 0;
-                        SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
-                        PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
-                        TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
-
+                    ParameterJsonTool.ReadJson(ParameterName, ref systems);
+                    ParameterIndexes = system_list.FindIndex(x => x == ParameterName);
+                    SystemArguments = new ObservableCollection<SystemParameter>(systems.SystemParameters_Obse.ToList());
+                    PointLocationArguments = new ObservableCollection<PointLocationParameter>(systems.PointLocationParameter_Obse.ToList());
+                    TestParameterArguments = new ObservableCollection<TestParameter>(systems.TestParameter_Obse.ToList());
+                    FlowGraphArguments = new FlowGraphParameter(systems.FlowGraph_Obse);
+                    for (int i = 0; i < Nodes.Count; i++)
+                    {
+                        var quor = FlowGraphArguments.NodesOffset.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
+                        Nodes[i].OffsetX = quor.OffsetX;
+                        Nodes[i].OffsetY = quor.OffsetY;
+                    }
+                    for (int i = 0; i < FlowGraphArguments.Connectors.Count; i++)
+                    {
+                        FlowChart.CreateConnectors(Connectors, Nodes,
+                            FlowGraphArguments.Connectors[i].SourceID,
+                            FlowGraphArguments.Connectors[i].TargetID,
+                            FlowGraphArguments.Connectors[i].SourcePortID,
+                            FlowGraphArguments.Connectors[i].TargetPortID
+                            );
                     }
                     TestComboBox_DropDownClosed_Evt += ((row) =>
                     {
@@ -90,7 +103,6 @@ namespace SharpFrame.ViewModels
                     //parameter.TestParameter_Obse.Add(new TestParameter() { ID = 2, Name = "2", Value = "sasda" });
                     //ParameterJsonTool.Set_NullJson(parameter);
                     //ParameterJsonTool.NewJosn(DateTime.Now.ToString("yyyy_MM_dd"));
-                    //throw new FileNotFoundException($"{System.Environment.CurrentDirectory + @"\Parameter"}下参数配置文件不存在");
                 }
                 system_list = ParameterJsonTool.GetJson();
             });
@@ -108,6 +120,23 @@ namespace SharpFrame.ViewModels
                 SystemArguments = systems.SystemParameters_Obse;
                 PointLocationArguments = systems.PointLocationParameter_Obse;
                 TestParameterArguments = systems.TestParameter_Obse;
+                FlowGraphArguments = new FlowGraphParameter(systems.FlowGraph_Obse);
+                for (int i = 0; i < Nodes.Count; i++)
+                {
+                    var quor = FlowGraphArguments.NodesOffset.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
+                    Nodes[i].OffsetX = quor.OffsetX;
+                    Nodes[i].OffsetY = quor.OffsetY;
+                }
+                Connectors.Clear();
+                for (int i = 0; i < FlowGraphArguments.Connectors.Count; i++)
+                {
+                    FlowChart.CreateConnectors(Connectors, Nodes,
+                        FlowGraphArguments.Connectors[i].SourceID,
+                        FlowGraphArguments.Connectors[i].TargetID,
+                        FlowGraphArguments.Connectors[i].SourcePortID,
+                        FlowGraphArguments.Connectors[i].TargetPortID
+                        );
+                }
                 aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"切换参数型号“{ParameterName}”" });
             });
             ParameterSave = new DelegateCommand(() =>
@@ -144,7 +173,6 @@ namespace SharpFrame.ViewModels
                     }
                 }
                 parameter.PointLocationParameter_Obse = PointLocationArguments;
-
                 parameter.TestParameter_Obse = TestParameterArguments;
                 foreach (var item in parameter.TestParameter_Obse)
                 {
@@ -175,6 +203,8 @@ namespace SharpFrame.ViewModels
                         item.ValueType = item.Value.GetType();
                     }
                 }
+                parameter.FlowGraph_Obse = FlowGraphPath.ConnectortoFlowGraphParameter(Nodes, Connectors);
+
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 aggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
                 aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
@@ -282,7 +312,6 @@ namespace SharpFrame.ViewModels
                     TestParameterArguments = pointStructures;
                 }
             });
-
             aggregator.GetEvent<SystemParameterAddEvent>().Subscribe((t) =>
             {
                 var k = SystemArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
@@ -298,7 +327,6 @@ namespace SharpFrame.ViewModels
                 SystemArguments = null;
                 SystemArguments = systemStructures;
             }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
-
             aggregator.GetEvent<PointLocationParameterAddEvent>().Subscribe((t) =>
             {
                 var k = PointLocationArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
@@ -334,8 +362,83 @@ namespace SharpFrame.ViewModels
                 ParameterInitializationView initializationView = new ParameterInitializationView(aggregator);
                 initializationView.Show();
             });
-        }
+            InitializationCompleteCommand = new DelegateCommand(() =>
+            {
+                Constraints = (GraphConstraints.Default | GraphConstraints.Routing | GraphConstraints.Bridging) & ~GraphConstraints.ContextMenu;
+                FlowGraphPath graph = new FlowGraphPath();
+                RoutingNodeViewModel start = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_mark", 100, 100, "启动", "#FF00FF08");
+                RoutingNodeViewModel marking = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "marking", 100, 200, "打标", "#FF00FCFA");
+                RoutingNodeViewModel front_calibration = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "front_calibration", 300, 100, "前流道视觉标定", "#5BA5F0");
+                RoutingNodeViewModel front_mark = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "front_mark", 300, 200, "前流道Mark点区域", "#5BA5F0");
+                RoutingNodeViewModel front_runner_feed = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "front_runner_feed", 300, 300, "前流道进料模式", new List<string>() { "左进", "右进" }, "#5BA5F0");
+                RoutingNodeViewModel front_runner_discharge = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "front_runner_discharge", 300, 400, "前流道出料模式", new List<string>() { "左出", "右出" }, "#5BA5F0");
+                RoutingNodeViewModel behind_calibration = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_calibration", 500, 100, "后流道视觉标定", "#D5535D");
+                RoutingNodeViewModel behind_mark = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_mark", 500, 200, "后流道Mark点区域", "#D5535D");
+                RoutingNodeViewModel behind_runner_feed = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "behind_runner_feed", 500, 300, "后流道进料模式", new List<string>() { "左进", "右进" }, "#D5535D");
+                RoutingNodeViewModel behind_runner_discharge = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "behind_runner_discharge", 500, 400, "后流道出料模式", new List<string>() { "左出", "右出" }, "#D5535D");
+                foreach (var item in Nodes)
+                {
+                    FlowChart.CreateNodePort(item, FlowChart.PortDirection.left);
+                    FlowChart.CreateNodePort(item, FlowChart.PortDirection.right);
+                    FlowChart.CreateNodePort(item, FlowChart.PortDirection.up);
+                    FlowChart.CreateNodePort(item, FlowChart.PortDirection.down);
+                }
+                ItemDoubleTappedCommand = new DelegateCommand<object>((parameter) =>
+                {
+                    ItemDoubleTappedEventArgs routing = parameter as ItemDoubleTappedEventArgs;
+                    RoutingNodeViewModel eventArgs = routing.Item as RoutingNodeViewModel;
+                    if (eventArgs != null)
+                    {
 
+
+                    }
+                });
+                ConnectorEditingCommand = new DelegateCommand<object>((obj) =>
+                {
+                    var args = obj as ConnectorEditingEventArgs;
+                    var t = args.Item as ConnectorViewModel;
+                    List<IGroupable> deleteableObjects = new List<IGroupable>
+                    {
+                      t
+                    };
+                    if (args.DragState == DragState.Completed)
+                    {
+                        if (args.ControlPointType == ControlPointType.TargetPoint || args.ControlPointType == ControlPointType.SourcePoint)
+                        {
+                            var Source = t.SourceNode as RoutingNodeViewModel;
+                            var Target = t.TargetNode as RoutingNodeViewModel;
+                            if (Source != null && Target != null)
+                            {
+                                graph.AddEdge(Source.ID.ToString(), Target.ID.ToString());
+                                Connectors[Connectors.IndexOf(t)].Constraints = (ConnectorConstraints.Default | ConnectorConstraints.Bridging) & ~ConnectorConstraints.SourceDraggable & ~ConnectorConstraints.TargetDraggable;
+                            }
+                            else
+                            {
+                                if (Source != null && Target != null)
+                                    graph.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
+                                FlowChart.Delete(deleteableObjects);
+                            }
+                        }
+                    }
+                });
+                ItemDeletedCommand = new DelegateCommand<object>((obj) =>
+                {
+                    var args = obj as ItemDeletedEventArgs;
+                    if (args.Item is IConnector)
+                    {
+                        var t = args.Item as ConnectorViewModel;
+                        var Source = t.SourceNode as RoutingNodeViewModel;
+                        var Target = t.TargetNode as RoutingNodeViewModel;
+                        if (Source != null && Target != null)
+                            graph.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
+                    }
+                });
+            });
+        }
+        public void Log(FlowNode obj)
+        {
+            Console.WriteLine(obj.Name.ToString());
+        }
         public void SetParameterValue(string value)
         {
             string configFile = $"{Application.StartupPath}\\Structure\\Parameter\\Parameter.config";
@@ -500,6 +603,95 @@ namespace SharpFrame.ViewModels
                 }
                 RaisePropertyChanged();
             }
+        }
+        #endregion
+
+        #region 流程图
+
+        private ObservableCollection<RoutingNodeViewModel> mNodes = new ObservableCollection<RoutingNodeViewModel>();
+        /// <summary>
+        /// 流程图节点集合
+        /// </summary>
+        public ObservableCollection<RoutingNodeViewModel> Nodes
+        {
+            get { return mNodes; }
+            set { mNodes = value; RaisePropertyChanged(); }
+        }
+
+        private ObservableCollection<ConnectorViewModel> mConnectors = new ObservableCollection<ConnectorViewModel>();
+        /// <summary>
+        /// 流程图连接器集合
+        /// </summary>
+        public ObservableCollection<ConnectorViewModel> Connectors
+        {
+            get { return mConnectors; }
+            set { mConnectors = value; RaisePropertyChanged(); }
+        }
+
+        private GraphConstraints mConstraints;
+
+        public GraphConstraints Constraints
+        {
+            get { return mConstraints; }
+            set { SetProperty(ref mConstraints, value); }
+        }
+
+        private ICommand mViewPortChangedCommand;
+
+        public ICommand ViewPortChangedCommand
+        {
+            get { return mViewPortChangedCommand; }
+            set { SetProperty(ref mViewPortChangedCommand, value); }
+        }
+
+        private ICommand mItemDoubleTappedCommand;
+        /// <summary>
+        /// 流程图节点双击命令
+        /// </summary>
+        public ICommand ItemDoubleTappedCommand
+        {
+            get { return mItemDoubleTappedCommand; }
+            set { SetProperty(ref mItemDoubleTappedCommand, value); }
+        }
+
+        private ICommand mConnectorEditingCommand;
+        /// <summary>
+        /// 流程图连接器连接动作命令
+        /// </summary>
+        public ICommand ConnectorEditingCommand
+        {
+            get { return mConnectorEditingCommand; }
+            set { SetProperty(ref mConnectorEditingCommand, value); }
+        }
+
+        private ICommand mItemDeletedCommand;
+        /// <summary>
+        /// 流程图连接器删除命令
+        /// </summary>
+        public ICommand ItemDeletedCommand
+        {
+            get { return mItemDeletedCommand; }
+            set { SetProperty(ref mItemDeletedCommand, value); }
+        }
+
+        private ICommand mInitializationcompleteCommand;
+        /// <summary>
+        /// 流程图初始化完成命令
+        /// </summary>
+        public ICommand InitializationCompleteCommand
+        {
+            get { return mInitializationcompleteCommand; }
+            set { SetProperty(ref mInitializationcompleteCommand, value); }
+        }
+
+        private FlowGraphParameter _flowgrapharguments = new FlowGraphParameter();
+        /// <summary>
+        /// 流程图连接器
+        /// </summary>
+        public FlowGraphParameter FlowGraphArguments
+        {
+            get { return _flowgrapharguments; }
+            set { _flowgrapharguments = value; }
         }
         #endregion
 

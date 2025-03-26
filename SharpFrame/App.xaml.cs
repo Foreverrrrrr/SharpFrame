@@ -76,6 +76,7 @@ namespace SharpFrame
 
         private void Permission_Check()
         {
+            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzgwNTQyMEAzMjM5MmUzMDJlMzAzYjMyMzkzYmhGTE1JZ2NlRlRtbG50bnllZ040L0pqMnN2am5qVkgva3RoRGhmS0xXQUU9");
             ClientKeyMaker.ClientToken clientToken = new ClientKeyMaker.ClientToken();
             clientToken.LoginEvent += ((b, t1, t2) =>
             {

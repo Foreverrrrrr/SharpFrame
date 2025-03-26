@@ -19,7 +19,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
             {
                 OptionalParametersList.Add(new ComboxList() { ID = i, Name = parameterslist[i].ToString() });
             }
-            OptionalParametersList.Add(new ComboxList() { ID = OptionalParametersList.Count - 1, Name = "Null" });
+            OptionalParametersList.Add(new ComboxList() { ID = OptionalParametersList.Count - 1, Name = "Base" });
             Close = new DelegateCommand(() =>
             {
                 NewParameterModelView currentWindow = System.Windows.Application.Current.Windows.OfType<NewParameterModelView>().SingleOrDefault(w => w.IsActive);

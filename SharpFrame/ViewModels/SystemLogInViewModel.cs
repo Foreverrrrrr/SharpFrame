@@ -19,8 +19,6 @@ namespace SharpFrame.ViewModels
         {
             Login_button = new DelegateCommand<string>((x) =>
             {
-                PassWord = x;
-                //string reversedString = new string(PassWord.Reverse().ToArray());
                 LogInLoad?.Invoke(Username, PassWord);
             });
             Close = new DelegateCommand(() =>

@@ -15,7 +15,7 @@ namespace SharpFrame.ViewModels
         public DebuggingViewModel(IEventAggregator aggregator)
         {
             this.eventAggregator = aggregator;
-            aggregator.GetEvent<PageLoadEvent>().Subscribe(() =>
+            aggregator.GetEvent<PageLoadEvent>().Subscribe((classobj) =>
             {
 
             });

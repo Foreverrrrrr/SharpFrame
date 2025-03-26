@@ -1,4 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using SharpFrame.Structure.Debugging;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
@@ -14,10 +16,13 @@ namespace SharpFrame.Structure.Parameter
             SystemParameters_Obse = new ObservableCollection<SystemParameter>();
             PointLocationParameter_Obse = new ObservableCollection<PointLocationParameter>();
             TestParameter_Obse = new ObservableCollection<TestParameter>();
+            FlowGraph_Obse = new FlowGraphParameter();
         }
 
         private ObservableCollection<SystemParameter> _systemparameters_obse;
-
+        /// <summary>
+        /// 系统参数
+        /// </summary>
         public ObservableCollection<SystemParameter> SystemParameters_Obse
         {
             get { return _systemparameters_obse; }
@@ -25,7 +30,9 @@ namespace SharpFrame.Structure.Parameter
         }
 
         private ObservableCollection<PointLocationParameter> _pointLocationparameter_obse;
-
+        /// <summary>
+        /// 点位表参数
+        /// </summary>
         public ObservableCollection<PointLocationParameter> PointLocationParameter_Obse
         {
             get { return _pointLocationparameter_obse; }
@@ -33,11 +40,23 @@ namespace SharpFrame.Structure.Parameter
         }
 
         private ObservableCollection<TestParameter> _testParameter_obse;
-
+        /// <summary>
+        /// 测试参数
+        /// </summary>
         public ObservableCollection<TestParameter> TestParameter_Obse
         {
             get { return _testParameter_obse; }
             set { _testParameter_obse = value; }
+        }
+
+        private FlowGraphParameter flowGraph_obse;
+        /// <summary>
+        /// 流程图连接路径参数
+        /// </summary>
+        public FlowGraphParameter FlowGraph_Obse
+        {
+            get { return flowGraph_obse; }
+            set { flowGraph_obse = value; }
         }
 
         /// <summary>
