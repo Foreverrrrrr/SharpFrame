@@ -116,6 +116,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Common\AsyncSharpTcpClient.cs" />
+    <Compile Include="Common\AsyncSharpTcpServer.cs" />
     <Compile Include="Common\Cloud_Client.cs" />
     <Compile Include="Common\ExcelTool.cs" />
     <Compile Include="Common\Geometry.cs" />
