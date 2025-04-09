@@ -344,7 +344,7 @@ namespace SharpFrame.ViewModels
             }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
             aggregator.GetEvent<TestParameterAddEvent>().Subscribe((t) =>
             {
-                var k = PointLocationArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
+                var k = TestParameterArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
                 TestParameterArguments.Insert(k, t.NewParameter);
                 ObservableCollection<TestParameter> pointStructures = new ObservableCollection<TestParameter>();
                 int index = 0;
@@ -535,13 +535,16 @@ namespace SharpFrame.ViewModels
             set
             {
                 _systemarguments = value;
-                foreach (var item in _systemarguments)
+                if (_systemarguments != null)
                 {
-                    item.ComboBoxChanged = new DelegateCommand<object>((rowdata) =>
+                    foreach (var item in _systemarguments)
                     {
-                        SystemParameter parameter = rowdata as SystemParameter;
-                        SystemComboBox_DropDownClosed_Evt?.Invoke(parameter);
-                    });
+                        item.ComboBoxChanged = new DelegateCommand<object>((rowdata) =>
+                        {
+                            SystemParameter parameter = rowdata as SystemParameter;
+                            SystemComboBox_DropDownClosed_Evt?.Invoke(parameter);
+                        });
+                    }
                 }
                 RaisePropertyChanged();
             }
@@ -593,13 +596,16 @@ namespace SharpFrame.ViewModels
             set
             {
                 _testparameterarguments = value;
-                foreach (var item in _testparameterarguments)
+                if (_testparameterarguments != null)
                 {
-                    item.ComboBoxChanged = new DelegateCommand<object>((rowdata) =>
+                    foreach (var item in _testparameterarguments)
                     {
-                        TestParameter parameter = rowdata as TestParameter;
-                        TestComboBox_DropDownClosed_Evt?.Invoke(parameter);
-                    });
+                        item.ComboBoxChanged = new DelegateCommand<object>((rowdata) =>
+                        {
+                            TestParameter parameter = rowdata as TestParameter;
+                            TestComboBox_DropDownClosed_Evt?.Invoke(parameter);
+                        });
+                    }
                 }
                 RaisePropertyChanged();
             }

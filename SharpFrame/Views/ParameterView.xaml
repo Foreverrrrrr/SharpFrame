@@ -14,7 +14,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="60"/>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
+            <RowDefinition Height="30"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <StackPanel Orientation="Horizontal">
@@ -153,7 +153,7 @@
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="25"/>
-                                <RowDefinition Height="360"/>
+                                <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="点位表" Height="25" FontSize="18" Foreground="Black" FontWeight="Bold" HorizontalAlignment="Center"/>
                             <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="13" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding PointLocationArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">

@@ -72,7 +72,7 @@ namespace SharpFrame.Common
             return imageSource;
         }
 
-        public static FileInfo[] Get_CalibrationPicture(string calibration_picture_path)
+        private static FileInfo[] Get_CalibrationPicture(string calibration_picture_path)
         {
             FileInfo[] imageFiles = new FileInfo[0];
             if (Directory.Exists(calibration_picture_path))
@@ -91,6 +91,8 @@ namespace SharpFrame.Common
         }
 
 
+
+
         /// <summary>
         /// 相机棋盘格标定
         /// </summary>
@@ -100,9 +102,17 @@ namespace SharpFrame.Common
         /// <param name="imagewidth">图片宽度像素</param>
         /// <param name="imageheigth">图片高度像素</param>
         /// <param name="pixelsize">像素/mm</param>
-        /// <returns>重投影误差，相机内参矩阵，畸变系数向量</returns>
-        /// <exception cref="Exception"></exception>
-        public static Matrix_returns Calibration_Matrix(string calibration_picture_path, int angular_point_width, int angular_point_height, int imagewidth, int imageheigth, float pixelsize)
+        /// <param name="cameramatrix">相机内参矩阵</param>
+        /// <returns>返回一个 Matrix_returns 类型的对象，该对象包含了相机标定的相关结果：
+        /// <list type="bullet">
+        ///     <item><description>Reprojection：重投影误差，标定精度。</description></item>
+        ///     <item><description>CameraMatrix：输入的相机内参矩阵。</description></item>
+        ///     <item><description>DistCoeffs：包含 8 个元素的双精度数组，表示相机的畸变系数，用于描述相机成像过程中产生的畸变情况。</description></item>
+        ///     <item><description>Pixel：通过对所有标定图片进行处理后计算得到的平均像素尺寸（单位：mm/像素），是根据棋盘格角点间距和图像上的角点距离计算得出的。</description></item>
+        /// </list>
+        /// 如果在标定过程中没有成功检测到任何棋盘格角点（即 imagePoints.Count 为 0），则会抛出一个 "角点查找失败！" 的异常。</returns>
+        /// <exception cref="Exception">当角点查找失败时（即没有在任何一张标定图片中找到棋盘格角点），会抛出此异常，异常信息为 "角点查找失败！"</exception>
+        public static Matrix_returns Calibration_Matrix(string calibration_picture_path, int angular_point_width, int angular_point_height, int imagewidth, int imageheigth, float pixelsize, double[,] cameramatrix)
         {
             Matrix_returns returns = new Matrix_returns();
             var imagefile = Get_CalibrationPicture(calibration_picture_path);
@@ -148,18 +158,12 @@ namespace SharpFrame.Common
             var object_point = ConvertToList(objectPoints);
             if (imagePoints.Count > 0)
             {
-                double[,] cameraMatrix = new double[3, 3]
-                {
-                 { 9580.83, 0, imagewidth/2 },
-                 { 0, 9580.83, imageheigth/2 },
-                 { 0, 0, 1 }
-                };
                 double[] distCoeffs = new double[8]; // 完整形式
                 Vec3d[] rvecs;
                 Vec3d[] tvecs;
-                var Reprojection = Cv2.CalibrateCamera(object_point, image_angular_point, new OpenCvSharp.Size(imagewidth, imageheigth), cameraMatrix, distCoeffs, out rvecs, out tvecs);
+                var Reprojection = Cv2.CalibrateCamera(object_point, image_angular_point, new OpenCvSharp.Size(imagewidth, imageheigth), cameramatrix, distCoeffs, out rvecs, out tvecs);
                 returns.Reprojection = Reprojection;
-                returns.CameraMatrix = cameraMatrix;
+                returns.CameraMatrix = cameramatrix;
                 returns.DistCoeffs = distCoeffs;
                 double pixel = 0;
                 for (int i = 0; i < imagefile.Length; i++)
@@ -168,7 +172,7 @@ namespace SharpFrame.Common
                     {
                         using (Mat resulimg = new Mat())
                         {
-                            var camera = ConvertToMat(cameraMatrix);
+                            var camera = ConvertToMat(cameramatrix);
                             var dist = ConvertToMat(distCoeffs);
                             Cv2.Undistort(imagetest, resulimg, camera, dist);//畸变矫正
                             using (Mat gratimg = new Mat())
@@ -199,6 +203,38 @@ namespace SharpFrame.Common
             {
                 throw new Exception("角点查找失败！");
             }
+        }
+
+        /// <summary>
+        /// 相机内参矩阵计算
+        /// </summary>
+        /// <param name="focal_length">镜头焦距mm</param>
+        /// <param name="pixel_size_width">相机像元尺寸x mm</param>
+        /// <param name="pixel_size_heigth">相机像元尺寸y mm</param>
+        /// <param name="imagewidth">图像尺寸w</param>
+        /// <param name="imageheigth">图像尺寸h</param>
+        /// <returns>返回一个 3x3 的二维数组，表示计算得到的相机内参矩阵。矩阵的形式为：
+        /// <code>
+        /// [
+        ///     [fx, 0, imagewidth/2],
+        ///     [0, fy, imageheigth/2],
+        ///     [0, 0, 1]
+        /// ]
+        /// </code>
+        /// 其中，fx 和 fy 分别是根据输入参数计算得到的相机在 x 轴和 y 轴方向上的焦距，
+        /// imagewidth/2 和 imageheigth/2 分别是基于图像宽度和高度计算得到的主点在 x 和 y 方向上的坐标。
+        /// </returns>
+        public static double[,] Camera_Intrinsic_Matrix(int focal_length, double pixel_size_width, double pixel_size_heigth, int imagewidth, int imageheigth)
+        {
+            double fx = focal_length / pixel_size_width;
+            double fy = focal_length / pixel_size_heigth;
+            double[,] cameraMatrix = new double[3, 3]
+                {
+                 { fx, 0, imagewidth/2 },
+                 { 0, fy, imageheigth/2 },
+                 { 0, 0, 1 }
+                };
+            return cameraMatrix;
         }
 
         private static Point3f[][] ConvertToList(List<List<Point3f>> objectPoints)
