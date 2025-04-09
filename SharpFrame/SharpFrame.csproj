@@ -120,6 +120,7 @@
     <Compile Include="Common\ExcelTool.cs" />
     <Compile Include="Common\Geometry.cs" />
     <Compile Include="Common\Haikang.cs" />
+    <Compile Include="Common\OpencvHandle.cs" />
     <Compile Include="Common\SQL_Server.cs" />
     <Compile Include="Flow of Execution\FlowGraphPath.cs" />
     <Compile Include="Flow of Execution\FlowNode.cs" />
@@ -324,6 +325,12 @@
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>13.0.3</Version>
+    </PackageReference>
+    <PackageReference Include="OpenCvSharp4.Extensions">
+      <Version>4.10.0.20241108</Version>
+    </PackageReference>
+    <PackageReference Include="OpenCvSharp4.Windows">
+      <Version>4.10.0.20241108</Version>
     </PackageReference>
     <PackageReference Include="Prism.DryIoc" Version="8.0.0.1909" />
     <PackageReference Include="Syncfusion.SfDiagram.WPF">
