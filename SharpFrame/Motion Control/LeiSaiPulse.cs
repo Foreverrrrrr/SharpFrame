@@ -1465,12 +1465,12 @@ namespace MotionClass
                     for (int i = 0; i < 16; i++)
                     {
                         IO_Input[i + 16] = (ipt[0] & (1 << i)) == 0 ? !LevelSignal : LevelSignal;
-                }
+                    }
                     LTDMC.nmc_read_inport(Card_Number[card], 2, 0, ref ipt[1]);
                     for (int i = 0; i < 32; i++)
                     {
                         IO_Input[i + 32] = (ipt[1] & (1 << i)) == 0 ? !LevelSignal : LevelSignal;
-            }
+                    }
                     LTDMC.nmc_read_inport(Card_Number[card], 2, 1, ref ipt[2]);
                     for (int i = 0; i < 16; i++)
                     {
@@ -1504,7 +1504,7 @@ namespace MotionClass
                     for (int i = 0; i < 16; i++)
                     {
                         IO_Output[i + 16] = (ipt[0] & (1 << i)) == 0 ? !LevelSignal : LevelSignal;
-                }
+                    }
                     LTDMC.nmc_read_outport(Card_Number[card], 2, 0, ref ipt[1]);
                     for (int i = 0; i < 32; i++)
                     {
@@ -2950,8 +2950,8 @@ namespace MotionClass
                     {
                         if (indexes >= 0 && indexes < 16)
                         {
-                        CardErrorMessage(LTDMC.dmc_write_outbit(Card_Number[card], indexes, Convert.ToUInt16(!value)));
-                    }
+                            CardErrorMessage(LTDMC.dmc_write_outbit(Card_Number[card], indexes, Convert.ToUInt16(!value)));
+                        }
                         else if (indexes >= 16 && indexes < 32)
                         {
                             LTDMC.nmc_write_outbit(Card_Number[card], 1, (ushort)(indexes - 16), Convert.ToUInt16(!value));
@@ -3089,8 +3089,8 @@ namespace MotionClass
                             CardLogEvent(DateTime.Now, false, $"关闭CAN扩展通讯!");
                         else
                             throw new Exception("未查找到板卡!");
-            }
-        }
+                    }
+                }
             }
         }
 
@@ -3218,7 +3218,7 @@ namespace MotionClass
         {
             Special_io = new bool[IO_Input.Length];
             for (int i = 0; i < IO_Input.Length; i++)
-        {
+            {
                 Special_io[i] = IO_Input[i];
             }
             Task.Run(() =>
@@ -3401,7 +3401,7 @@ namespace MotionClass
 
         public override void AwaitIOinput_Enum(ushort card, InPuts indexes_enm, bool waitvalue, int timeout = 0)
         {
-           if (IsOpenCard)
+            if (IsOpenCard)
             {
                 ushort indexes = Convert.ToUInt16(indexes_enm);
                 if (IO_Input != null)

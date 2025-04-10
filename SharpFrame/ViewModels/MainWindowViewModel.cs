@@ -2,6 +2,7 @@
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using SharpFrame.Common;
 using SharpFrame.log4Net;
 using SharpFrame.Logic.Base;
 using SharpFrame.Views;
@@ -59,6 +60,8 @@ namespace SharpFrame.ViewModels
                 aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
                 Thread_Auto_Base.NewClass();
                 Stop_State = true;
+                InfoStructure info = new InfoStructure();
+                ProductionInformation.ReadProductionInfo(ref info);
             });
             VisionSwitching = new DelegateCommand<string>((ManagerName) =>
             {
@@ -99,6 +102,7 @@ namespace SharpFrame.ViewModels
             regionManager.RegisterViewWithRegion("MainRegion", typeof(ParameterView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(DebuggingView));
             regionManager.RegisterViewWithRegion("MainRegion", typeof(RelationalDatabaseView));
+            regionManager.RegisterViewWithRegion("MainRegion", typeof(LogView));
         }
 
         #region 启动按钮

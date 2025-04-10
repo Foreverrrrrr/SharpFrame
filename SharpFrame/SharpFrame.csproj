@@ -94,10 +94,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\x64\Debug\MvCameraControl.Net.dll</HintPath>
     </Reference>
-    <Reference Include="SQLiteHelper, Version=1.0.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\x64\Debug\Motion Control\dll\SQLiteHelper.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -128,7 +124,9 @@
     <Compile Include="Common\Geometry.cs" />
     <Compile Include="Common\Haikang.cs" />
     <Compile Include="Common\OpencvHandle.cs" />
+    <Compile Include="Common\ProductionInformation.cs" />
     <Compile Include="Common\SQL_Server.cs" />
+    <Compile Include="Common\SQL_Sqlite.cs" />
     <Compile Include="Flow of Execution\FlowGraphPath.cs" />
     <Compile Include="Flow of Execution\FlowNode.cs" />
     <Compile Include="Flow of Execution\RoutingNodeViewModel.cs" />
@@ -140,6 +138,7 @@
     <Compile Include="Motion Control\APS168x64.cs" />
     <Compile Include="Motion Control\APS_Define.cs" />
     <Compile Include="Motion Control\Dmc1000.cs" />
+    <Compile Include="Motion Control\ErrorQuery.cs" />
     <Compile Include="Motion Control\IControlBaseInterface.cs" />
     <Compile Include="Motion Control\LeiSaiEtherCAT.cs" />
     <Compile Include="Motion Control\LeiSaiPulse.cs" />
@@ -372,6 +371,9 @@
     <PackageReference Include="Syncfusion.SfDiagram.WPF">
       <Version>29.1.35</Version>
     </PackageReference>
+    <PackageReference Include="System.Data.SQLite">
+      <Version>1.0.119</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.8">
@@ -405,9 +407,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Motion Control\dll\SQLiteHelper.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

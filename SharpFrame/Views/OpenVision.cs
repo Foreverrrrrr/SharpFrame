@@ -46,11 +46,11 @@ namespace SharpFrame.Views
     ///     <MyNamespace:OpenVision/>
     ///
     /// </summary>
-    public class OpenVision : Control
+    public class OpenVision : Control, IDisposable
     {
         private Canvas ImageCanvas;
         private Rectangle SelectionRectangle;
-        private static BitmapSource originalImage;
+        // private BitmapSource originalImage;
         private Point startPoint;
         private bool isSelecting;
         private TransformGroup transformGroup = new TransformGroup();
@@ -99,14 +99,14 @@ namespace SharpFrame.Views
         /// <param name="e"></param>
         private void MouseRDown(object sender, MouseButtonEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || originalImage == null)
+            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
                 return;
             if (isSelecting)
                 return;
             double controlWidth = ImageCanvas.ActualWidth;
             double controlHeight = ImageCanvas.ActualHeight;
-            double imageWidth = originalImage.PixelWidth;
-            double imageHeight = originalImage.PixelHeight;
+            double imageWidth = ((BitmapSource)Image).PixelWidth;
+            double imageHeight = ((BitmapSource)Image).PixelHeight;
             double scaleX = controlWidth / imageWidth;
             double scaleY = controlHeight / imageHeight;
             double scale = Math.Min(scaleX, scaleY);
@@ -136,7 +136,7 @@ namespace SharpFrame.Views
         /// <param name="e"></param>
         private void Mouse_Wheel(object sender, MouseWheelEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || originalImage == null)
+            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
                 return;
             if (isSelecting)
                 return;
@@ -178,7 +178,7 @@ namespace SharpFrame.Views
         /// <param name="e"></param>
         private void Mouse_Move(object sender, MouseEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || originalImage == null)
+            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
                 return;
             if (isSelecting)
             {
@@ -208,16 +208,16 @@ namespace SharpFrame.Views
             Point mousePosition = e.GetPosition(ImageCanvas);
 
             // 计算图像的缩放因子
-            double scaleX = (double)originalImage.PixelWidth / ImageCanvas.ActualWidth;
-            double scaleY = (double)originalImage.PixelHeight / ImageCanvas.ActualHeight;
+            double scaleX = (double)((BitmapSource)Image).PixelWidth / ImageCanvas.ActualWidth;
+            double scaleY = (double)((BitmapSource)Image).PixelHeight / ImageCanvas.ActualHeight;
 
             // 根据缩放因子转换鼠标坐标
             int pixelx = (int)(mousePosition.X * scaleX);
             int pixely = (int)(mousePosition.Y * scaleY);
-            if (pixelx >= 0 && pixelx < originalImage.PixelWidth && pixely >= 0 && pixely < originalImage.PixelHeight)
+            if (pixelx >= 0 && pixelx < ((BitmapSource)Image).PixelWidth && pixely >= 0 && pixely < ((BitmapSource)Image).PixelHeight)
             {
                 byte[] pixelData = new byte[4];
-                originalImage.CopyPixels(new Int32Rect(pixelx, pixely, 1, 1), pixelData, 4, 0);
+                ((BitmapSource)Image).CopyPixels(new Int32Rect(pixelx, pixely, 1, 1), pixelData, 4, 0);
                 byte blue = pixelData[0];
                 byte green = pixelData[1];
                 byte red = pixelData[2];
@@ -250,7 +250,7 @@ namespace SharpFrame.Views
         /// <param name="e"></param>
         private void MouseLUp(object sender, MouseButtonEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || originalImage == null)
+            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
                 return;
             if (isSelecting)
             {
@@ -268,12 +268,12 @@ namespace SharpFrame.Views
                     int cropHeight = (int)Math.Round(rectEnd.Y - rectStart.Y);
                     cropX = Math.Max(cropX, 0);
                     cropY = Math.Max(cropY, 0);
-                    cropWidth = Math.Min(cropWidth, originalImage.PixelWidth - cropX);
-                    cropHeight = Math.Min(cropHeight, originalImage.PixelHeight - cropY);
+                    cropWidth = Math.Min(cropWidth, ((BitmapSource)Image).PixelWidth - cropX);
+                    cropHeight = Math.Min(cropHeight, ((BitmapSource)Image).PixelHeight - cropY);
                     if (cropWidth > 0 && cropHeight > 0)
                     {
                         Int32Rect cropRect = new Int32Rect(cropX, cropY, cropWidth, cropHeight);
-                        CroppedBitmap croppedBitmap = new CroppedBitmap(originalImage, cropRect);
+                        CroppedBitmap croppedBitmap = new CroppedBitmap(((BitmapSource)Image), cropRect);
                         ROI roi = new ROI()
                         {
                             X = cropX,
@@ -297,7 +297,7 @@ namespace SharpFrame.Views
         private void MouseLDown(object sender, MouseButtonEventArgs e)
         {
 
-            if (ImageCanvas == null || SelectionRectangle == null || originalImage == null)
+            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
                 return;
             startPoint = e.GetPosition(ImageCanvas);
             isSelecting = true;
@@ -392,7 +392,21 @@ namespace SharpFrame.Views
         private static void OnImageChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             var openVision = (OpenVision)d;
-            originalImage = (BitmapSource)e.NewValue;
+            ImageSource newImageSource = e.NewValue as ImageSource;
+            if (newImageSource == null)
+            {
+                return;
+            }
+
+            if (e.OldValue is ImageSource oldImageSource)
+            {
+                if (oldImageSource is IDisposable disposable)
+                {
+                    disposable.Dispose();
+                }
+                oldImageSource = null; // 断开引用
+            }
+            openVision.MouseRDown(null, null);
         }
 
         /// <summary>
@@ -401,7 +415,31 @@ namespace SharpFrame.Views
         public ImageSource Image
         {
             get { return (ImageSource)GetValue(OpenVisionImage); }
-            set { SetValue(OpenVisionImage, value); }
+            set { SetValue(OpenVisionImage, value); ; }
+        }
+
+        public void Dispose()
+        {
+            if (ImageCanvas != null)
+            {
+                ImageCanvas.MouseLeftButtonDown -= MouseLDown;
+                ImageCanvas.MouseLeftButtonUp -= MouseLUp;
+                ImageCanvas.MouseMove -= Mouse_Move;
+                ImageCanvas.MouseWheel -= Mouse_Wheel;
+                ImageCanvas.MouseRightButtonDown -= MouseRDown;
+                ImageCanvas.MouseRightButtonUp -= MouseRUp;
+                ImageCanvas = null;
+            }
+            if (SelectionRectangle != null)
+            {
+                SelectionRectangle = null;
+            }
+            transformGroup.Children.Clear();
+            transformGroup = null;
+            scaleTransform = null;
+            translateTransform = null;
+            Image = null;
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -433,13 +471,19 @@ namespace SharpFrame.Views
 
     #region 鼠标截取功能路由事件
 
-    public class ROI
+    public class ROI : IDisposable
     {
         public int X { get; set; }
         public int Y { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
         public CroppedBitmap RoiBitmap { get; set; }
+
+        public void Dispose()
+        {
+            RoiBitmap = null;
+            GC.SuppressFinalize(this);
+        }
     }
 
     public class RoutedEventArgs<ROI> : RoutedEventArgs

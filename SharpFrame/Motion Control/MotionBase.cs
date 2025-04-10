@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SharpFrame.Motion_Control;
+using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -501,6 +502,7 @@ namespace MotionClass
                 string data = "";
                 if (returnPattern)
                 {
+                    ErrorQuery.Query(CardBrand, Convert.ToInt32(type));
                     //data = SQLHelper.Readdata(CardBrand, Convert.ToInt32(type));
                 }
                 if (CardErrorMessageEvent != null)
