@@ -12,7 +12,7 @@ namespace SharpFrame.ViewModels.AuthorizedRegistrationViewModels
         private int continuous = 0;
         private readonly IEventAggregator eventAggregator;
 
-        public static ClientKeyMaker.ClientToken token;
+        public static ClientKeyMakerNet.ClientToken token;
         public AuthorizedRegistrationViewModel(IEventAggregator aggregator)
         {
             this.eventAggregator = aggregator;

@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 
-namespace AsyncSharpTCP
+namespace SharpFrame.Common
 {
     /// <summary>
     /// TCP\ip服务器

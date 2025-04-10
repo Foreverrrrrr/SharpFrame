@@ -20,7 +20,7 @@ namespace SharpFrame.ViewModels
             this.aggregator = eventaggregator;
             eventaggregator.GetEvent<ParameterUpdateEvent>().Subscribe((t) =>
             {
-                SQL_Server.ConnectionString_Default = ParameterJsonTool.GetSystemValue<string>(Parameter.ParameterQuery(t.SystemParameters_Obse, "数据库连接字符串"));
+                //SQL_Server.ConnectionString_Default = ParameterJsonTool.GetSystemValue<string>(Parameter.ParameterQuery(t.SystemParameters_Obse, "数据库连接字符串"));
 
             }, ThreadOption.BackgroundThread);
             DatabaseTimeQuery = new DelegateCommand(() =>
@@ -30,9 +30,9 @@ namespace SharpFrame.ViewModels
                 data.Time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 data.result = "pass";
                 data.value = "312";
-                SQL_Server.Write(data, "NewTable");
-                var t = SQL_Server.SpecialQuery<Data>("NewTable", Time.Date, Time.AddDays(1).Date);
-                DatabaseView = ParameterJsonTool.ConvertOBse(t);
+                //SQL_Server.Write(data, "NewTable");
+                //var t = SQL_Server.SpecialQuery<Data>("NewTable", Time.Date, Time.AddDays(1).Date);
+                // DatabaseView = ParameterJsonTool.ConvertOBse(t);
                 aggregator.GetEvent<Loadingbar>().Publish(false);
                 aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"查询：{data.Time}数据库内容" });
             });

@@ -66,13 +66,17 @@ namespace SharpFrame.Common
             }
             finally
             {
-                // 释放 Bitmap 的句柄
-                DeleteObject(hBitmap);
+                if (hBitmap != IntPtr.Zero)
+                {
+                    DeleteObject(hBitmap);
+                }
+                // 释放 Bitmap 资源
+                bitmap.Dispose();
             }
             return imageSource;
         }
 
-        private static FileInfo[] Get_CalibrationPicture(string calibration_picture_path)
+        public static FileInfo[] Get_CalibrationPicture(string calibration_picture_path)
         {
             FileInfo[] imageFiles = new FileInfo[0];
             if (Directory.Exists(calibration_picture_path))
@@ -87,16 +91,13 @@ namespace SharpFrame.Common
             {
                 throw new Exception($"{calibration_picture_path}文件夹不存在");
             }
-
         }
-
-
-
 
         /// <summary>
         /// 相机棋盘格标定
         /// </summary>
         /// <param name="calibration_picture_path">标定图片文件夹路径</param>
+        /// <param name="cornersubPixpath">角点图片保存文件夹路径</param>
         /// <param name="angular_point_width">棋盘格横向角点数</param>
         /// <param name="angular_point_height">棋盘格竖向角点数</param>
         /// <param name="imagewidth">图片宽度像素</param>
@@ -112,7 +113,7 @@ namespace SharpFrame.Common
         /// </list>
         /// 如果在标定过程中没有成功检测到任何棋盘格角点（即 imagePoints.Count 为 0），则会抛出一个 "角点查找失败！" 的异常。</returns>
         /// <exception cref="Exception">当角点查找失败时（即没有在任何一张标定图片中找到棋盘格角点），会抛出此异常，异常信息为 "角点查找失败！"</exception>
-        public static Matrix_returns Calibration_Matrix(string calibration_picture_path, int angular_point_width, int angular_point_height, int imagewidth, int imageheigth, float pixelsize, double[,] cameramatrix)
+        public static Matrix_returns Calibration_Matrix(string calibration_picture_path, string cornersubPixpath, int angular_point_width, int angular_point_height, int imagewidth, int imageheigth, float pixelsize, double[,] cameramatrix)
         {
             Matrix_returns returns = new Matrix_returns();
             var imagefile = Get_CalibrationPicture(calibration_picture_path);
@@ -149,7 +150,7 @@ namespace SharpFrame.Common
                             //将对应的世界坐标系中的点添加到 objectPoints 列表中
                             objectPoints.Add(new List<Point3f>(obj));
                             Cv2.DrawChessboardCorners(img, new OpenCvSharp.Size(angular_point_width, angular_point_height), corners, true);
-                            //Cv2.ImWrite(i.ToString() + ".bmp", img);
+                            Cv2.ImWrite(cornersubPixpath + @"\" + i.ToString() + ".bmp", img);
                         }
                     }
                 }
