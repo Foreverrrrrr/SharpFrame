@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using SharpFrame.Flow_of_Execution;
 using SharpFrame.Structure.Parameter;
 using SharpFrame.Views;
@@ -23,17 +24,18 @@ namespace SharpFrame.ViewModels
 {
     public class ParameterViewModel : BindableBase
     {
-        IEventAggregator aggregator;
-
-        public ParameterViewModel(IEventAggregator eventaggregator)
+        private IEventAggregator eventAggregator;
+        private IDialogService dialogService;
+        public ParameterViewModel(IEventAggregator eventaggregator, IDialogService dialog)
         {
-            aggregator = eventaggregator;
-            aggregator.GetEvent<LoginPermission>().Subscribe((type) =>
+            this.eventAggregator = eventaggregator;
+            this.dialogService = dialog;
+            eventAggregator.GetEvent<LoginPermission>().Subscribe((type) =>
             {
                 if (type.type == PermissionType.Supplier || type.type == PermissionType.Engineer)
                     IsVisible = true;
             });
-            aggregator.GetEvent<PageLoadEvent>().Subscribe((classobj) =>
+            eventAggregator.GetEvent<PageLoadEvent>().Subscribe((classobj) =>
             {
                 var system_list = ParameterJsonTool.GetJson();
                 if (system_list.Count > 0)
@@ -75,7 +77,7 @@ namespace SharpFrame.ViewModels
                         if (!bool_ret.Item3)
                         {
                             MessageBox.Show($"修改测试参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                            eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
                         }
                     });
                     SystemComboBox_DropDownClosed_Evt += ((row) =>
@@ -84,10 +86,10 @@ namespace SharpFrame.ViewModels
                         if (!bool_ret.Item3)
                         {
                             MessageBox.Show($"修改系统参数类型错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                            aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                            eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
                         }
                     });
-                    aggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
+                    eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
                 }
                 else
                 {
@@ -106,7 +108,7 @@ namespace SharpFrame.ViewModels
                 }
                 system_list = ParameterJsonTool.GetJson();
             });
-            aggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
+            eventAggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
             {
                 SetParameterValue(ParameterName);
             });
@@ -137,7 +139,7 @@ namespace SharpFrame.ViewModels
                         FlowGraphArguments.Connectors[i].TargetPortID
                         );
                 }
-                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"切换参数型号“{ParameterName}”" });
+                eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"切换参数型号“{ParameterName}”" });
             });
             ParameterSave = new DelegateCommand(() =>
             {
@@ -149,7 +151,7 @@ namespace SharpFrame.ViewModels
                     if (!bool_ret.Item3)
                     {
                         MessageBox.Show($"保存系统参数错误\r\n“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”" });
+                        eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"保存失败\r\n参数名称“{item.Name}”中值“{item.Value}”无法转换为类型“{item.ValueType.Name}”" });
                         return;
                     }
                     else
@@ -180,7 +182,7 @@ namespace SharpFrame.ViewModels
                     if (!bool_ret.Item3)
                     {
                         MessageBox.Show($"保存测试参数错误\r\n“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
+                        eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "异常", Value = $"修改参数类型错误，“{bool_ret.Item2}”无法转换为“{bool_ret.Item1}”类型" });
                         return;
                     }
                     else
@@ -206,8 +208,8 @@ namespace SharpFrame.ViewModels
                 parameter.FlowGraph_Obse = FlowGraphPath.ConnectortoFlowGraphParameter(Nodes, Connectors);
 
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
-                aggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
-                aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
+                eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
+                eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
             });
             ParameterDelete = new DelegateCommand(() =>
@@ -217,10 +219,10 @@ namespace SharpFrame.ViewModels
             NewModel = new DelegateCommand(() =>
             {
                 var parameter_list = ParameterJsonTool.GetJson();
-                NewParameterModelView modelView = new NewParameterModelView(aggregator, parameter_list);
+                NewParameterModelView modelView = new NewParameterModelView(eventAggregator, parameter_list);
                 modelView.Show();
             });
-            aggregator.GetEvent<NewModelEvent>().Subscribe((model) =>
+            eventAggregator.GetEvent<NewModelEvent>().Subscribe((model) =>
             {
                 Parameter par = new Parameter();
                 ParameterJsonTool.NewJosn(model.NewName, model.InitialParameter);
@@ -241,13 +243,13 @@ namespace SharpFrame.ViewModels
             {
                 if (checkdata != null)
                 {
-                    System_AddView system = new System_AddView(aggregator, checkdata, "former");
+                    System_AddView system = new System_AddView(eventAggregator, checkdata, "former");
                     system.Show();
                 }
             });
             SystemArguments_Remove_Line = new DelegateCommand<SystemParameter>((checkdata) =>
             {
-                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.OK)
                 {
                     SystemArguments.Remove(checkdata);
                     ObservableCollection<SystemParameter> systemStructures = new ObservableCollection<SystemParameter>();
@@ -266,13 +268,13 @@ namespace SharpFrame.ViewModels
             {
                 if (checkdata != null)
                 {
-                    Point_AddView addView = new Point_AddView(aggregator, checkdata, "former");
+                    Point_AddView addView = new Point_AddView(eventAggregator, checkdata, "former");
                     addView.Show();
                 }
             });
             PointLocationArguments_Remove_Line = new DelegateCommand<PointLocationParameter>((checkdata) =>
             {
-                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.OK)
                 {
                     PointLocationArguments.Remove(checkdata);
                     ObservableCollection<PointLocationParameter> pointStructures = new ObservableCollection<PointLocationParameter>();
@@ -291,13 +293,13 @@ namespace SharpFrame.ViewModels
             {
                 if (checkdata != null)
                 {
-                    Test_AddView addView = new Test_AddView(aggregator, checkdata, "former");
+                    Test_AddView addView = new Test_AddView(eventAggregator, checkdata, "former");
                     addView.Show();
                 }
             });
             TestParameterArguments_Remove_Line = new DelegateCommand<TestParameter>((checkdata) =>
             {
-                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.OK)
+                if (MessageBox.Show($"是否移除名称：{checkdata.Name}的项？", "提示", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.OK)
                 {
                     TestParameterArguments.Remove(checkdata);
                     ObservableCollection<TestParameter> pointStructures = new ObservableCollection<TestParameter>();
@@ -312,7 +314,7 @@ namespace SharpFrame.ViewModels
                     TestParameterArguments = pointStructures;
                 }
             });
-            aggregator.GetEvent<SystemParameterAddEvent>().Subscribe((t) =>
+            eventAggregator.GetEvent<SystemParameterAddEvent>().Subscribe((t) =>
             {
                 var k = SystemArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
                 SystemArguments.Insert(k, t.NewParameter);
@@ -327,7 +329,7 @@ namespace SharpFrame.ViewModels
                 SystemArguments = null;
                 SystemArguments = systemStructures;
             }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
-            aggregator.GetEvent<PointLocationParameterAddEvent>().Subscribe((t) =>
+            eventAggregator.GetEvent<PointLocationParameterAddEvent>().Subscribe((t) =>
             {
                 var k = PointLocationArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
                 PointLocationArguments.Insert(k, t.NewParameter);
@@ -342,7 +344,7 @@ namespace SharpFrame.ViewModels
                 PointLocationArguments = null;
                 PointLocationArguments = pointStructures;
             }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
-            aggregator.GetEvent<TestParameterAddEvent>().Subscribe((t) =>
+            eventAggregator.GetEvent<TestParameterAddEvent>().Subscribe((t) =>
             {
                 var k = TestParameterArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
                 TestParameterArguments.Insert(k, t.NewParameter);
@@ -359,7 +361,7 @@ namespace SharpFrame.ViewModels
             }, ThreadOption.UIThread, false, (filtration) => filtration.FiltrationModel == "former");
             ParameterGgeneration = new DelegateCommand(() =>
             {
-                ParameterInitializationView initializationView = new ParameterInitializationView(aggregator);
+                ParameterInitializationView initializationView = new ParameterInitializationView(eventAggregator);
                 initializationView.Show();
             });
             InitializationCompleteCommand = new DelegateCommand(() =>

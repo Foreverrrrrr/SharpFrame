@@ -1,6 +1,7 @@
 ﻿using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
+using Prism.Services.Dialogs;
 using System;
 using System.Globalization;
 using System.Windows.Data;
@@ -11,10 +12,11 @@ namespace SharpFrame.ViewModels
     public class DebuggingViewModel : BindableBase
     {
         private IEventAggregator eventAggregator;
-
-        public DebuggingViewModel(IEventAggregator aggregator)
+        private IDialogService dialogService;
+        public DebuggingViewModel(IEventAggregator aggregator, IDialogService dialog)
         {
             this.eventAggregator = aggregator;
+            this.dialogService = dialog;
             aggregator.GetEvent<PageLoadEvent>().Subscribe((classobj) =>
             {
 
