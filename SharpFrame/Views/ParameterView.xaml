@@ -242,7 +242,7 @@
                                 <RowDefinition Height="*"/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" Text="测试参数" Height="25" FontSize="18" Foreground="Black" FontWeight="Bold" HorizontalAlignment="Center"/>
-                            <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="13" ScrollViewer.CanContentScroll="True" BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding TestParameterArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
+                            <DataGrid Grid.Row="1" ScrollViewer.CanContentScroll="False" MinWidth="850" Margin="0,0,0,25" FontSize="13"  BorderBrush="#1F000000" AutoGenerateColumns="False" ItemsSource="{Binding TestParameterArguments,IsAsync=True}" ColumnWidth="*" CanUserAddRows="False" SelectionMode="Single" HorizontalAlignment="Left">
                                 <DataGrid.CellStyle>
                                     <Style TargetType="DataGridCell">
                                         <Style.Triggers>
@@ -302,7 +302,7 @@
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
                                                 <StackPanel Orientation="Horizontal">
-                                                    <TextBox Width="150" Margin="20,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"  TextWrapping="Wrap" />
+                                                    <TextBox Width="150" Margin="20,0,0,0" Text="{Binding Value,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="Black"  TextWrapping="NoWrap" />
                                                 </StackPanel>
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>

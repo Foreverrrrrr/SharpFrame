@@ -1,7 +1,7 @@
- Software Description
+### Software Description
 
 I. Software Overview
-This software is a cutting - edge solution meticulously crafted for industrial automation host computers. By harnessing the power of WPF (Windows Presentation Foundation), Prism, and MaterialDesignThemesUI frameworks, it effectively surmounts the intricate software architecture challenges commonly encountered in the industrial automation domain.
+This software is a cutting - edge solution meticulously crafted for industrial automation host computers. By harnessing the power of WPF (Windows Presentation Foundation), Prism, and MaterialDesignThemesUI frameworks, it effectively surmounts the intricate software architecture challenges commonly encountered in the industrial automation domain. 
 
 The WPF framework endows the software with a highly scalable and data - bound user interface architecture, enabling seamless integration of multimedia elements and vector graphics. Prism, on the other hand, provides a modular and composite application architecture. It leverages design patterns such as the Model - View - ViewModel (MVVM) pattern, which enhances separation of concerns, making the codebase more maintainable and testable. The MaterialDesignThemesUI framework contributes to a modern and intuitive user experience, adhering to Material Design principles. Through the synergistic integration of these frameworks, the software not only offers robust functionality but also presents a sleek, user - centric interface.
 
@@ -11,10 +11,18 @@ II. Application Areas
 3. Product Process Management: In product process management, the software implements a workflow - based architecture. It models the entire production process as a series of interconnected workflows, each with well - defined states and transitions. This architecture enables real - time tracking and control of every stage, from raw material procurement to finished product delivery. It also incorporates event - driven programming concepts to handle dynamic changes in the production process, such as equipment failures or order changes. Through process optimization algorithms, it can streamline the production process, enhance productivity, and reduce operational costs.
 4. Automated Performance Testing: The automated performance testing module of the software utilizes a test - driven development (TDD) inspired architecture. It defines a set of test cases based on performance metrics and system requirements. These test cases are then executed in an automated manner, with the software collecting and analyzing performance data in real - time. The software uses a distributed testing architecture to parallelize test execution, reducing testing time. By comparing the test results against predefined benchmarks, it can quickly identify potential performance bottlenecks and provide actionable insights for equipment optimization and system upgrades.
 
-II. Logical Process Handling
-The software features a rule - based logical process handling architecture. It defines a set of business rules using a domain - specific language (DSL). These rules govern the flow of data and actions within the software. The rule engine, based on forward - chaining or backward - chaining inference algorithms, processes these rules in a sequential or parallel manner, depending on the nature of the logical process.
+III. Logical Process Handling
+The software features a rule - based logical process handling architecture. It defines a set of business rules using a domain - specific language (DSL). These rules govern the flow of data and actions within the software. The rule engine, based on forward - chaining or backward - chaining inference algorithms, processes these rules in a sequential or parallel manner, depending on the nature of the logical process. 
 
 The software also employs a state machine architecture for handling complex conditional logic. Each state in the state machine represents a specific phase of the logical process, and transitions between states are triggered by predefined events. This architecture provides a clear and modular way to design and manage logical processes. Through the use of visual programming tools, users can easily design, modify, and debug these logical processes without delving into the intricacies of code implementation.
 
-#### IV. Copyright Statement
-Copyright © 2024 Mr. Xu YiFan. All rights reserved. Without the explicit written permission of the copyrigh
+IV. Copyright Statement
+Copyright © 2024 Mr. Xu YiFan. All rights reserved. Without the explicit written permission of the copyright holder, this software shall not be copied, modified, distributed, or used for commercial purposes.
+
+V. Disclaimer of Liability
+Mr. Xu YiFan shall not be liable for any losses or damages resulting from the use of this software. Users shall bear their own risks when using this software and ensure compliance with relevant laws, regulations, and industry standards.
+
+VI. Feedback and Support
+If you encounter any problems or have suggestions for improvement during the use of this software, please contact us through the following means:
+Email: awalkingonthecloud@gmail.com
+We will wholeheartedly provide you with assistance and support, and jointly promote the continuous improvement and development of the software. 
