@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2024 Foreverrrrrr
+Copyright (c) 2024 Mr. Xu YiFan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -19,3 +19,11 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+This software for industrial automation's upper computer addresses architecture challenges by leveraging the WPF, Prism, and MaterialDesignThemesUI frameworks. It is primarily designed for motion control, vision applications, product process management, and performance test automation. The software features detailed method constructs for handling logical flows.
+
+Contact for Feedback
+Should you encounter any bugs or wish to offer improvement suggestions, please reach out to Mr. Xu YiFan at awalkingonthecloud@gmail.com.
+
+Software Updates
+Software updates may be provided by Mr. Xu YiFan at his discretion. To obtain the latest version and associated release notes, please visit [Website URL if applicable] or check for in - app update notifications.
