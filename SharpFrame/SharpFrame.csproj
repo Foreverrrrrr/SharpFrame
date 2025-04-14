@@ -55,8 +55,6 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <PlatformTarget>x64</PlatformTarget>
-    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -134,16 +132,16 @@
     <Folder Include="Views\PrismDialog\" />
   </ItemGroup>
   <ItemGroup>
-    <None Update="Motion Control\dll\ADCNCx64.dll">
+    <None Include="Motion Control\dll\ADCNCx64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Motion Control\dll\APS168.dll">
+    <None Include="Motion Control\dll\APS168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Motion Control\dll\LTDMC.dll">
+    <None Include="Motion Control\dll\LTDMC.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Motion Control\dll\MCDLL_NET.dll">
+    <None Include="Motion Control\dll\MCDLL_NET.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Motion Control\dll\x64\SQLite.Interop.dll">
