@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFramework>net8.0-windows10.0.22000.0</TargetFramework>
     <OutputType>WinExe</OutputType>
     <LangVersion>8.0</LangVersion>
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -55,10 +55,10 @@
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <Optimize>False</Optimize>
+    <IsPublishable>False</IsPublishable>
+    <PlatformTarget>x64</PlatformTarget>
+    <StartupObject>SharpFrame.App</StartupObject>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <None Update="Log4Net\log4net.config">
@@ -110,7 +110,9 @@
       <Version>29.1.35</Version>
     </PackageReference>
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
+    <PackageReference Include="System.Data.SQLite">
+      <Version>1.0.119</Version>
+    </PackageReference>
     <PackageReference Include="System.Management" Version="9.0.4" />
   </ItemGroup>
   <ItemGroup>
@@ -132,28 +134,22 @@
     <Folder Include="Views\PrismDialog\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Motion Control\dll\ADCNCx64.dll">
+    <None Update="Motion Control\dll\ADCNCx64.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Motion Control\dll\APS168.dll">
+    <None Update="Motion Control\dll\APS168.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Motion Control\dll\LTDMC.dll">
+    <None Update="Motion Control\dll\LTDMC.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Motion Control\dll\MCDLL_NET.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Motion Control\dll\x64\SQLite.Interop.dll">
+    <None Update="Motion Control\dll\MCDLL_NET.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Motion Control\LeiSaiPulse_1000B.cs" />
-    <Compile Remove="ViewModels\LoadViewModels\LoadSkinViewModel.cs" />
-    <Compile Remove="Views\LoadViews\LoadSkinView.xaml.cs" />
     <Page Remove="Views\ColorModel.xaml" />
-    <Page Remove="Views\LoadViews\LoadSkinView.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MvCameraControl.Net">

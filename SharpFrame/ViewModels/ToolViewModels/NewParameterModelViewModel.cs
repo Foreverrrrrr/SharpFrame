@@ -45,7 +45,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public string NewName
         {
             get { return _newname; }
-            set { _newname = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _newname, value); }
         }
 
         private int _optionalparametersindexes = 0;
@@ -55,7 +55,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public int OptionalParametersIndexes
         {
             get { return _optionalparametersindexes; }
-            set { _optionalparametersindexes = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _optionalparametersindexes, value); }
         }
 
         private ObservableCollection<ComboxList> _optionalparameterslist = new ObservableCollection<ComboxList>();
@@ -65,7 +65,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<ComboxList> OptionalParametersList
         {
             get { return _optionalparameterslist; }
-            set { _optionalparameterslist = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _optionalparameterslist, value); }
         }
     }
 }

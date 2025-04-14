@@ -475,7 +475,8 @@ namespace MotionClass
             AutoReadEvent.Reset();
             foreach (var item in Read_ThreadPool)
             {
-                item.Abort();
+                item.Interrupt();
+                item.Join();
             }
             IsOpenCard = false;
             Thread.Sleep(100);

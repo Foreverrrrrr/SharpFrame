@@ -10,8 +10,9 @@
                 <materialDesign:CustomColorTheme BaseTheme="Light" PrimaryColor="#FF0477F7" SecondaryColor="#FF000000"/>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml"/>
                 <ResourceDictionary Source="/AxisManualStyle.xaml"/>
-                <ResourceDictionary Source="/PictureEditorStyle.xaml"/>
                 <ResourceDictionary Source="/FlowChartStyle.xaml"/>
+                <ResourceDictionary Source="/PictureEditorStyle.xaml"/>
+                <ResourceDictionary Source="/GenericNotificationStyle.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

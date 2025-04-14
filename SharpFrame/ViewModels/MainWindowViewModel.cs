@@ -1,11 +1,16 @@
-﻿using Prism.Commands;
+﻿using MotionClass;
+using Prism.Commands;
 using Prism.Events;
 using Prism.Mvvm;
 using Prism.Regions;
+using SharpFrame.Common;
 using SharpFrame.log4Net;
 using SharpFrame.Logic.Base;
 using SharpFrame.Views;
+using SharpFrame.Views.SharpStyle;
 using System;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using static SharpFrame.Logic.Base.Thread_Auto_Base;
 
@@ -48,7 +53,7 @@ namespace SharpFrame.ViewModels
             PageLoadFinish = new DelegateCommand(() =>
             {
                 aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = "程序加载完成" });
-                Thread_Auto_Base.NewClass_RunEvent += (t, s) =>
+                Thread_Auto_Base.NewClass_RunEvent += (t, s, ob) =>
                 {
                     aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
                 };
@@ -56,12 +61,47 @@ namespace SharpFrame.ViewModels
                 {
                     aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
                 });
-                aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
                 Thread_Auto_Base.NewClass();
                 Stop_State = true;
+                InfoStructure info = new InfoStructure();
+                ProductionInformation.ReadProductionInfo(ref info);
+                MotionBase motionBase = MotionBase.GetClassType(MotionBase.CardName.LeiSaiPulse);
+                motionBase.OpenCard();
+                aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
             });
+            aggregator.GetEvent<Notification>().Subscribe((t) =>
+            {
+                NotificationModel model = null;
+                switch (t.Type)
+                {
+                    case Notification.InfoType.Info:
+                        model = new NotificationInfoModel() { ID = IsNotice.Count, Message = t.Message, MessageTime = t.MessageTime };
+                        break;
+                    case Notification.InfoType.Warning:
+                        model = new NotificationWarningModel() { ID = IsNotice.Count, Message = t.Message, MessageTime = t.MessageTime };
+                        break;
+                    case Notification.InfoType.Error:
+                        model = new NotificationErrorModel()
+                        {
+                            ID = IsNotice.Count,
+                            Message = t.Message,
+                            MessageTime = t.MessageTime,
+                        };
+                        model.Delete = new DelegateCommand<object>((obj) =>
+                        {
+                            var rmove = IsNotice.Where(x => x.ID == Convert.ToInt32(obj)).First();
+                            IsNotice.Remove(rmove);
+                        });
+                        break;
+                    case Notification.InfoType.Fatal:
+                        model = new NotificationFatalModel() { ID = IsNotice.Count, Message = t.Message, MessageTime = t.MessageTime };
+                        break;
+                }
+                IsNotice.Insert(IsNotice.Count, model);
+            }, ThreadOption.UIThread);
             VisionSwitching = new DelegateCommand<string>((ManagerName) =>
             {
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Error, Message = ManagerName });
                 try
                 {
                     regionManager.Regions["MainRegion"].RequestNavigate(ManagerName);
@@ -88,6 +128,20 @@ namespace SharpFrame.ViewModels
                 else
                     LoadingBarState = false;
             });
+            IsNotice.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (var item in e.NewItems)
+                    {
+                        if (item is NotificationModel timedItem)
+                        {
+                            timedItem.AutoRemoveRequested += (sender, args) =>
+                                Application.Current.Dispatcher.Invoke(() => IsNotice.Remove((NotificationModel)item));
+                        }
+                    }
+                }
+            };
             Viewinitial();
         }
 
@@ -233,7 +287,7 @@ namespace SharpFrame.ViewModels
         public string Title
         {
             get { return _title; }
-            set { _title = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _title, value); }
         }
 
         private bool _loadingbarstate = false;
@@ -243,7 +297,7 @@ namespace SharpFrame.ViewModels
         public bool LoadingBarState
         {
             get { return _loadingbarstate; }
-            set { _loadingbarstate = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _loadingbarstate, value); }
         }
 
         private string _system_state;
@@ -251,7 +305,17 @@ namespace SharpFrame.ViewModels
         public string SystemState
         {
             get { return _system_state; }
-            set { _system_state = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _system_state, value); }
+        }
+
+        private ObservableCollection<NotificationModel> _isNotice = new ObservableCollection<NotificationModel>();
+        /// <summary>
+        /// 悬浮弹窗集合
+        /// </summary>
+        public ObservableCollection<NotificationModel> IsNotice
+        {
+            get { return _isNotice; }
+            set { SetProperty(ref _isNotice, value); }
         }
 
         #region 获取显示器分辨率
@@ -259,7 +323,7 @@ namespace SharpFrame.ViewModels
         public double Height
         {
             get { return _height; }
-            set { _height = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _height, value); }
         }
 
         private double _width = SystemParameters.PrimaryScreenWidth + 10;
@@ -267,7 +331,7 @@ namespace SharpFrame.ViewModels
         public double Width
         {
             get { return _width; }
-            set { _width = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _width, value); }
         }
         #endregion
     }

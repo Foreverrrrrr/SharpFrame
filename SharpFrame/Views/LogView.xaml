@@ -25,7 +25,7 @@
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
                     <TextBlock Grid.Row="0" Text="全局日志" FontSize="18" Foreground="Black" HorizontalAlignment="Center" />
-                    <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="16"  BorderBrush="#1F000000"  AutoGenerateColumns="False" ItemsSource="{Binding MainLog,IsAsync=True}"  CanUserAddRows="False" SelectionMode="Single">
+                    <DataGrid Grid.Row="1" Margin="0,0,0,25" FontSize="16"  BorderBrush="#1F000000"  ItemsSource="{Binding MainLog,IsAsync=True}"  CanUserAddRows="False" SelectionMode="Single">
                         <DataGrid.CellStyle>
                             <Style TargetType="DataGridCell">
                                 <Style.Triggers>

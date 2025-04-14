@@ -159,9 +159,9 @@ namespace SharpFrame.Structure.Parameter
             string serializedResult = JToken.Parse(JsonConvert.SerializeObject(t)).ToString();
             return serializedResult;
         }
-        public static void ToObj<T>(string str, ref T t)
+        public static void ToObj<T>(object str, ref T t)
         {
-            T deserializeResult = JsonConvert.DeserializeObject<T>(str);
+            T deserializeResult = JsonConvert.DeserializeObject<T>(str.ToString());
             t = deserializeResult;
         }
 

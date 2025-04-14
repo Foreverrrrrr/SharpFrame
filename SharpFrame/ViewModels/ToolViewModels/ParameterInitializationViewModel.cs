@@ -191,7 +191,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<Structure.Parameter.SystemParameter> SystemArguments
         {
             get { return _systemarguments; }
-            set { _systemarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _systemarguments, value); }
         }
         #endregion
 
@@ -214,7 +214,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<PointLocationParameter> PointLocationArguments
         {
             get { return _pointlocationarguments; }
-            set { _pointlocationarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _pointlocationarguments, value); }
         }
         #endregion
 
@@ -236,7 +236,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<TestParameter> TestParameterArguments
         {
             get { return _testparameterarguments; }
-            set { _testparameterarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _testparameterarguments, value); }
         }
         #endregion
     }

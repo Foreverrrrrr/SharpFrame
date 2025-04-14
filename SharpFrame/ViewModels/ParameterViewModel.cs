@@ -5,6 +5,7 @@ using Prism.Services.Dialogs;
 using SharpFrame.Flow_of_Execution;
 using SharpFrame.Structure.Parameter;
 using SharpFrame.Views;
+using SharpFrame.Views.SharpStyle;
 using SharpFrame.Views.ToolViews;
 using Syncfusion.UI.Xaml.Diagram;
 using Syncfusion.UI.Xaml.Diagram.Controls;
@@ -25,9 +26,13 @@ namespace SharpFrame.ViewModels
     {
         private IEventAggregator eventAggregator;
         private IDialogService dialogService;
-        public ParameterViewModel(IEventAggregator eventaggregator, IDialogService dialog)
+        /// <summary>
+        /// 参数更新静态通知
+        /// </summary>
+        public static event Action<Parameter> ParameterUpdate;
+        public ParameterViewModel(IEventAggregator aggregator1, IDialogService dialog)
         {
-            this.eventAggregator = eventaggregator;
+            this.eventAggregator = aggregator1;
             this.dialogService = dialog;
             eventAggregator.GetEvent<LoginPermission>().Subscribe((type) =>
             {
@@ -57,9 +62,11 @@ namespace SharpFrame.ViewModels
                     FlowGraphArguments = new FlowGraphParameter(systems.FlowGraph_Obse);
                     for (int i = 0; i < Nodes.Count; i++)
                     {
-                        var quor = FlowGraphArguments.NodesOffset.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
+                        var quor = FlowGraphArguments.NodesStructure.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
                         Nodes[i].OffsetX = quor.OffsetX;
                         Nodes[i].OffsetY = quor.OffsetY;
+                        if (Nodes[i] is ComboBoxNodeViewModel comboBoxViewModel)
+                            comboBoxViewModel.SelectedItem = quor.Value?.ToString();
                     }
                     for (int i = 0; i < FlowGraphArguments.Connectors.Count; i++)
                     {
@@ -67,8 +74,7 @@ namespace SharpFrame.ViewModels
                             FlowGraphArguments.Connectors[i].SourceID,
                             FlowGraphArguments.Connectors[i].TargetID,
                             FlowGraphArguments.Connectors[i].SourcePortID,
-                            FlowGraphArguments.Connectors[i].TargetPortID
-                            );
+                            FlowGraphArguments.Connectors[i].TargetPortID);
                     }
                     TestComboBox_DropDownClosed_Evt += ((row) =>
                     {
@@ -89,6 +95,7 @@ namespace SharpFrame.ViewModels
                         }
                     });
                     eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
+                    ParameterUpdate?.Invoke(systems);
                 }
                 else
                 {
@@ -116,7 +123,6 @@ namespace SharpFrame.ViewModels
                 Parameter systems = new Parameter();
                 var system_list = ParameterJsonTool.GetJson();
                 ParameterName = system_list[ParameterIndexes];
-                SetParameterValue(ParameterName);
                 ParameterJsonTool.ReadJson(ParameterName, ref systems);
                 SystemArguments = systems.SystemParameters_Obse;
                 PointLocationArguments = systems.PointLocationParameter_Obse;
@@ -124,9 +130,11 @@ namespace SharpFrame.ViewModels
                 FlowGraphArguments = new FlowGraphParameter(systems.FlowGraph_Obse);
                 for (int i = 0; i < Nodes.Count; i++)
                 {
-                    var quor = FlowGraphArguments.NodesOffset.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
+                    var quor = FlowGraphArguments.NodesStructure.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
                     Nodes[i].OffsetX = quor.OffsetX;
                     Nodes[i].OffsetY = quor.OffsetY;
+                    if (Nodes[i] is ComboBoxNodeViewModel comboBoxViewModel)
+                        comboBoxViewModel.SelectedItem = quor.Value?.ToString();
                 }
                 Connectors.Clear();
                 for (int i = 0; i < FlowGraphArguments.Connectors.Count; i++)
@@ -138,7 +146,10 @@ namespace SharpFrame.ViewModels
                         FlowGraphArguments.Connectors[i].TargetPortID
                         );
                 }
+                eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
+                ParameterUpdate?.BeginInvoke(systems, null, null);
                 eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"切换参数型号“{ParameterName}”" });
+
             });
             ParameterSave = new DelegateCommand(() =>
             {
@@ -205,11 +216,11 @@ namespace SharpFrame.ViewModels
                     }
                 }
                 parameter.FlowGraph_Obse = FlowGraphPath.ConnectortoFlowGraphParameter(Nodes, Connectors);
-
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
+                ParameterUpdate?.Invoke(parameter);
                 eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
-                MessageBox.Show($"“{ParameterName}”参数保存完成");
+                eventAggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = $"“{ParameterName}”参数保存完成" });
             });
             ParameterDelete = new DelegateCommand(() =>
             {
@@ -366,17 +377,16 @@ namespace SharpFrame.ViewModels
             InitializationCompleteCommand = new DelegateCommand(() =>
             {
                 Constraints = (GraphConstraints.Default | GraphConstraints.Routing | GraphConstraints.Bridging) & ~GraphConstraints.ContextMenu;
-                FlowGraphPath graph = new FlowGraphPath();
-                RoutingNodeViewModel start = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_mark", 100, 100, "启动", "#FF00FF08");
-                RoutingNodeViewModel marking = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "marking", 100, 200, "打标", "#FF00FCFA");
-                RoutingNodeViewModel front_calibration = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "front_calibration", 300, 100, "前流道视觉标定", "#5BA5F0");
-                RoutingNodeViewModel front_mark = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "front_mark", 300, 200, "前流道Mark点区域", "#5BA5F0");
-                RoutingNodeViewModel front_runner_feed = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "front_runner_feed", 300, 300, "前流道进料模式", new List<string>() { "左进", "右进" }, "#5BA5F0");
-                RoutingNodeViewModel front_runner_discharge = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "front_runner_discharge", 300, 400, "前流道出料模式", new List<string>() { "左出", "右出" }, "#5BA5F0");
-                RoutingNodeViewModel behind_calibration = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_calibration", 500, 100, "后流道视觉标定", "#D5535D");
-                RoutingNodeViewModel behind_mark = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_mark", 500, 200, "后流道Mark点区域", "#D5535D");
-                RoutingNodeViewModel behind_runner_feed = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "behind_runner_feed", 500, 300, "后流道进料模式", new List<string>() { "左进", "右进" }, "#D5535D");
-                RoutingNodeViewModel behind_runner_discharge = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "behind_runner_discharge", 500, 400, "后流道出料模式", new List<string>() { "左出", "右出" }, "#D5535D");
+                RoutingNodeViewModel start = FlowChart.CreateTextBoxNodes(Nodes, 100, 100, "启动", "#FF00FF08");
+                RoutingNodeViewModel marking = FlowChart.CreateTextBoxNodes(Nodes, 100, 200, "打标", "#FF00FCFA");
+                RoutingNodeViewModel front_calibration = FlowChart.CreateTextBoxNodes(Nodes, 300, 100, "前流道视觉标定", "#5BA5F0");
+                RoutingNodeViewModel front_mark = FlowChart.CreateTextBoxNodes(Nodes, 300, 200, "前流道Mark点区域", "#5BA5F0");
+                ComboBoxNodeViewModel front_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 300, 300, "前流道进料模式", new List<string>() { "左进", "右进" }, "左进", "#5BA5F0");
+                ComboBoxNodeViewModel front_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 300, 400, "前流道出料模式", new List<string>() { "左出", "右出" }, "左出", "#5BA5F0");
+                RoutingNodeViewModel behind_calibration = FlowChart.CreateTextBoxNodes(Nodes, 500, 100, "后流道视觉标定", "#D5535D");
+                RoutingNodeViewModel behind_mark = FlowChart.CreateTextBoxNodes(Nodes, 500, 200, "后流道Mark点区域", "#D5535D");
+                ComboBoxNodeViewModel behind_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 500, 300, "后流道进料模式", new List<string>() { "左进", "右进" }, "左进", "#D5535D");
+                ComboBoxNodeViewModel behind_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 500, 400, "后流道出料模式", new List<string>() { "左出", "右出" }, "左出", "#D5535D");
                 foreach (var item in Nodes)
                 {
                     FlowChart.CreateNodePort(item, FlowChart.PortDirection.left);
@@ -390,8 +400,34 @@ namespace SharpFrame.ViewModels
                     RoutingNodeViewModel eventArgs = routing.Item as RoutingNodeViewModel;
                     if (eventArgs != null)
                     {
-
-
+                        if (eventArgs.ID as string == "前流道视觉标定" || eventArgs.ID as string == "后流道视觉标定")
+                        {
+                            var nodename = eventArgs.ID as string;
+                            IDialogParameters dialogParameters = new DialogParameters();
+                            dialogParameters.Add("ID", nodename);
+                            try
+                            {
+                                dialog.ShowDialog("VisualCalibrationView", dialogParameters, new Action<IDialogResult>((x) =>
+                                {
+                                    if (x.Result == ButtonResult.OK)
+                                    {
+                                        string customData = x.Parameters.GetValue<string>("Carmatrix");
+                                        var tempCollection = new ObservableCollection<TestParameter>(TestParameterArguments);
+                                        var parameter = tempCollection.Where(x => x.Name == nodename[0] + "流道相机标定参数").FirstOrDefault();
+                                        if (parameter != null)
+                                        {
+                                            parameter.Value = customData;
+                                        }
+                                        TestParameterArguments = null;
+                                        TestParameterArguments = tempCollection;
+                                    }
+                                }));
+                            }
+                            catch (Exception ex)
+                            {
+                                eventAggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = ex.Message });
+                            }
+                        }
                     }
                 });
                 ConnectorEditingCommand = new DelegateCommand<object>((obj) =>
@@ -410,13 +446,20 @@ namespace SharpFrame.ViewModels
                             var Target = t.TargetNode as RoutingNodeViewModel;
                             if (Source != null && Target != null)
                             {
-                                graph.AddEdge(Source.ID.ToString(), Target.ID.ToString());
-                                Connectors[Connectors.IndexOf(t)].Constraints = (ConnectorConstraints.Default | ConnectorConstraints.Bridging) & ~ConnectorConstraints.SourceDraggable & ~ConnectorConstraints.TargetDraggable;
+                                if (Source.ID.ToString() != Target.ID.ToString())
+                                {
+                                    FlowGraphPath.AddEdge(Source.ID.ToString(), Target.ID.ToString());
+                                    Connectors[Connectors.IndexOf(t)].Constraints = (ConnectorConstraints.Default | ConnectorConstraints.Bridging) & ~ConnectorConstraints.SourceDraggable & ~ConnectorConstraints.TargetDraggable;
+                                }
+                                else
+                                {
+                                    FlowChart.Delete(deleteableObjects);
+                                }
                             }
                             else
                             {
                                 if (Source != null && Target != null)
-                                    graph.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
+                                    FlowGraphPath.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
                                 FlowChart.Delete(deleteableObjects);
                             }
                         }
@@ -431,7 +474,7 @@ namespace SharpFrame.ViewModels
                         var Source = t.SourceNode as RoutingNodeViewModel;
                         var Target = t.TargetNode as RoutingNodeViewModel;
                         if (Source != null && Target != null)
-                            graph.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
+                            FlowGraphPath.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
                     }
                 });
             });
@@ -572,7 +615,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<PointLocationParameter> PointLocationArguments
         {
             get { return _pointlocationarguments; }
-            set { _pointlocationarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _pointlocationarguments, value); }
         }
         #endregion
 
@@ -622,7 +665,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<RoutingNodeViewModel> Nodes
         {
             get { return mNodes; }
-            set { mNodes = value; RaisePropertyChanged(); }
+            set { SetProperty(ref mNodes, value); }
         }
 
         private ObservableCollection<ConnectorViewModel> mConnectors = new ObservableCollection<ConnectorViewModel>();
@@ -632,7 +675,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<ConnectorViewModel> Connectors
         {
             get { return mConnectors; }
-            set { mConnectors = value; RaisePropertyChanged(); }
+            set { SetProperty(ref mConnectors, value); }
         }
 
         private GraphConstraints mConstraints;
@@ -709,7 +752,7 @@ namespace SharpFrame.ViewModels
         public int ParameterIndexes
         {
             get { return _parameterindexes; }
-            set { _parameterindexes = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _parameterindexes, value); }
         }
 
         private ObservableCollection<ComboxList> _parameterNameList = new ObservableCollection<ComboxList>();
@@ -719,7 +762,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<ComboxList> ParameterNameList
         {
             get { return _parameterNameList; }
-            set { _parameterNameList = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _parameterNameList, value); }
         }
 
         /// <summary>
@@ -749,9 +792,8 @@ namespace SharpFrame.ViewModels
         public bool IsVisible
         {
             get { return _isvisible; }
-            set { _isvisible = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _isvisible, value); }
         }
-
     }
 
     public struct ComboxList
