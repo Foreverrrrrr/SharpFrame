@@ -11,6 +11,26 @@ namespace SharpFrame.Flow_of_Execution
 {
     public class RoutingNodeViewModel : NodeViewModel
     {
+        private List<string> _items;
+        private string _selectedItem;
+
+        public List<string> Items
+        {
+            get => _items;
+            set
+            {
+                _items = value;
+            }
+        }
+
+        public string SelectedItem
+        {
+            get => _selectedItem;
+            set
+            {
+                _selectedItem = value;
+            }
+        }
         //To hold the fill color of the nodes.
         private Brush fill = new SolidColorBrush(Colors.Black);
 

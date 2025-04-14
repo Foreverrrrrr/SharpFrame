@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace SharpFrame.Flow_of_Execution
 {
@@ -38,11 +39,16 @@ namespace SharpFrame.Flow_of_Execution
         public bool IsConnect { get; set; }
 
         /// <summary>
+        /// 节点自定义参数
+        /// </summary>
+        public object Parameter { get; set; }
+
+        /// <summary>
         /// 添加节点
         /// </summary>
         /// <param name="name">节点名称</param>
         /// <param name="method">节点回调方法</param>
-        public FlowNode(string name, Action<FlowNode, object[]> method) : this(name)
+        public FlowNode(string name, DataTemplate template, Action<FlowNode, object[]> method) : this(name)
         {
             Method = method;
         }

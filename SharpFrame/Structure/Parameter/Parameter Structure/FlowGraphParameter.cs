@@ -22,18 +22,23 @@ namespace SharpFrame.Structure.Parameter
             }
 
             // 深拷贝 NodesOffset 集合
-            if (parameter.NodesOffset != null)
+            if (parameter.NodesStructure != null)
             {
-                NodesOffset = new List<NodesOffset>();
-                foreach (var offset in parameter.NodesOffset)
+                NodesStructure = new List<NodesStructure>();
+                foreach (var offset in parameter.NodesStructure)
                 {
-                    NodesOffset.Add(new NodesOffset(offset));
+                    NodesStructure.Add(new NodesStructure(offset));
                 }
             }
         }
-
+        /// <summary>
+        /// 连接器状态
+        /// </summary>
         public List<Connector> Connectors { get; set; } = new List<Connector>();
-        public List<NodesOffset> NodesOffset { get; set; } = new List<NodesOffset>();
+        /// <summary>
+        /// 节点结构
+        /// </summary>
+        public List<NodesStructure> NodesStructure { get; set; } = new List<NodesStructure>();
     }
 
     public class Connector
@@ -55,20 +60,22 @@ namespace SharpFrame.Structure.Parameter
         public string TargetPortID { get; set; }
     }
 
-    public class NodesOffset
+    public class NodesStructure
     {
-        public NodesOffset(NodesOffset nodes)
+        public NodesStructure(NodesStructure nodes)
         {
             this.ID = nodes.ID;
             this.OffsetX = nodes.OffsetX;
             this.OffsetY = nodes.OffsetY;
+            this.Value = nodes.Value;
         }
-        public NodesOffset()
+        public NodesStructure()
         {
 
         }
         public string ID { get; set; }
         public double OffsetX { get; set; }
         public double OffsetY { get; set; }
+        public object Value { get; set; }
     }
 }

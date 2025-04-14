@@ -127,6 +127,7 @@
     <Compile Include="Common\ProductionInformation.cs" />
     <Compile Include="Common\SQL_Server.cs" />
     <Compile Include="Common\SQL_Sqlite.cs" />
+    <Compile Include="Flow of Execution\ComboBoxNodeViewModel.cs" />
     <Compile Include="Flow of Execution\FlowGraphPath.cs" />
     <Compile Include="Flow of Execution\FlowNode.cs" />
     <Compile Include="Flow of Execution\RoutingNodeViewModel.cs" />

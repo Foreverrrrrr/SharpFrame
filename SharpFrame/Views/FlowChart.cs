@@ -16,6 +16,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -127,7 +128,7 @@ namespace SharpFrame.Views
 
         private ResourceDictionary _resourceDictionary;
 
-        private Rect currentViewPort = Rect.Empty;
+        private System.Windows.Rect currentViewPort = System.Windows.Rect.Empty;
 
         private object minfo;
 
@@ -268,7 +269,7 @@ namespace SharpFrame.Views
         /// <exception cref="Exception"></exception>
         public static void CreateNodePort(NodeViewModel node1, PortDirection portDirection)
         {
-            RectangleGeometry rectangleGeometry = new RectangleGeometry(new Rect(0, 0, 5, 5));
+            RectangleGeometry rectangleGeometry = new RectangleGeometry(new System.Windows.Rect(0, 0, 5, 5));
             NodePortViewModel nodePort = new NodePortViewModel()
             {
                 HitPadding = 20,
@@ -317,18 +318,26 @@ namespace SharpFrame.Views
             }
             t.Add(nodePort);
         }
-
-        public static RoutingNodeViewModel CreateComboBoxNodes(ObservableCollection<RoutingNodeViewModel> nodeViewModels, double offsetx, double offsety, string text, List<string> strings, string fillColor)
+        /// <summary>
+        /// 生成ComboBox控件节点
+        /// </summary>
+        /// <param name="nodeViewModels">UI节点集合</param>
+        /// <param name="offsetx">节点x偏移值</param>
+        /// <param name="offsety">节点y偏移值</param>
+        /// <param name="text">节点名称</param>
+        /// <param name="strings">ComboBox控件集合</param>
+        /// <param name="selectedItem">ComboBox控件首选内容</param>
+        /// <param name="fillColor">节点颜色</param>
+        /// <returns>ComboBox节点</returns>
+        public static ComboBoxNodeViewModel CreateComboBoxNodes(ObservableCollection<RoutingNodeViewModel> nodeViewModels, double offsetx, double offsety, string text, List<string> strings, string selectedItem, string fillColor)
         {
-            var borderFactory = CreateComboBoxDataTemplate(strings, 100, 22, 1, fillColor);
-            RoutingNodeViewModel node = new RoutingNodeViewModel()
+            ComboBoxNodeViewModel node = new ComboBoxNodeViewModel()
             {
                 ID = text,
                 UnitHeight = 50,
                 UnitWidth = 130,
                 OffsetX = offsetx,
                 OffsetY = offsety,
-                ContentTemplate = borderFactory,
                 Fill = new SolidColorBrush((Color)ColorConverter.ConvertFromString(fillColor)),
                 Constraints = NodeConstraints.None | ~NodeConstraints.Connectable & ~NodeConstraints.Delete,
                 Annotations = new ObservableCollection<IAnnotation>()
@@ -339,12 +348,16 @@ namespace SharpFrame.Views
                         Text = text,
                         FontSize = 15,
                         WrapText = TextWrapping.NoWrap,
-                        Offset = new Point(0.5, 1.2),
+                        Offset = new System.Windows.Point(0.5, 1.2),
                         Foreground = new SolidColorBrush(Colors.Black),
                         Constraints = AnnotationConstraints.None,
                     },
                 },
             };
+            var borderFactory = CreateComboBoxDataTemplate(node, text, strings, selectedItem, 100, 22, fillColor);
+            node.ContentTemplate = borderFactory;
+            node.Items = strings;
+            node.SelectedItem = selectedItem;
             nodeViewModels.Add(node);
             FlowGraphPath.AddNode(new FlowNode(text));
             return node;
@@ -373,7 +386,7 @@ namespace SharpFrame.Views
                             Text = text,
                             FontSize = 15,
                             WrapText = TextWrapping.NoWrap,
-                            Offset = new Point(0.5, 1.2),
+                            Offset = new System.Windows.Point(0.5, 1.2),
                             Foreground = new SolidColorBrush(Colors.Black),
                             Constraints = AnnotationConstraints.None,
                         },
@@ -408,7 +421,7 @@ namespace SharpFrame.Views
                         Text = text,
                         WrapText = TextWrapping.NoWrap,
                         FontSize = 15,
-                        Offset = new Point(0.5, 1.2),
+                        Offset = new System.Windows.Point(0.5, 1.2),
                         Foreground = new SolidColorBrush(Colors.Black),
                         Constraints = AnnotationConstraints.None,
                     },
@@ -490,7 +503,6 @@ namespace SharpFrame.Views
             return connector;
         }
 
-
         /// <summary>
         /// 设置ComboBox类型节点
         /// </summary>
@@ -500,12 +512,14 @@ namespace SharpFrame.Views
         /// <param name="defaultSelectedIndex">ComboBox默认选项</param>
         /// <param name="hexColor">节点背景色<param>
         /// <returns></returns>
-        private static DataTemplate CreateComboBoxDataTemplate(List<string> items, double width, double height, int defaultSelectedIndex, string hexColor)
+        private static DataTemplate CreateComboBoxDataTemplate(ComboBoxNodeViewModel viewModel, string name, List<string> items, string selected, double width, double height, string hexColor)
         {
             DataTemplate nodeTemplate = new DataTemplate();
             FrameworkElementFactory borderFactory = new FrameworkElementFactory(typeof(Border));
             borderFactory.SetValue(Border.BackgroundProperty, ConvertHexToBrush(hexColor));
             FrameworkElementFactory comboBoxFactory = new FrameworkElementFactory(typeof(ComboBox));
+            comboBoxFactory.SetValue(ComboBox.DataContextProperty, viewModel);
+            comboBoxFactory.SetValue(ComboBox.NameProperty, name);
             comboBoxFactory.SetValue(ComboBox.HorizontalAlignmentProperty, HorizontalAlignment.Center);
             comboBoxFactory.SetValue(ComboBox.WidthProperty, width);
             comboBoxFactory.SetValue(ComboBox.VerticalAlignmentProperty, VerticalAlignment.Center);
@@ -513,16 +527,22 @@ namespace SharpFrame.Views
             comboBoxFactory.SetValue(ComboBox.BackgroundProperty, ConvertHexToBrush("#FFECECEC"));
             comboBoxFactory.SetValue(ComboBox.VerticalAlignmentProperty, VerticalAlignment.Center);
             comboBoxFactory.SetValue(ComboBox.HorizontalAlignmentProperty, HorizontalAlignment.Center);
-            if (defaultSelectedIndex >= 0 && defaultSelectedIndex < items.Count)
+            Binding itemsBinding = new Binding("Items") { Source = viewModel };
+            comboBoxFactory.SetBinding(ComboBox.ItemsSourceProperty, itemsBinding);
+
+            Binding selectedItemBinding = new Binding("SelectedItem")
             {
-                comboBoxFactory.SetValue(ComboBox.SelectedIndexProperty, defaultSelectedIndex);
-            }
-            foreach (var item in items)
-            {
-                FrameworkElementFactory itemFactory = new FrameworkElementFactory(typeof(ComboBoxItem));
-                itemFactory.SetValue(ComboBoxItem.ContentProperty, item);
-                comboBoxFactory.AppendChild(itemFactory);
-            }
+                Source = viewModel,
+                Mode = BindingMode.TwoWay  // 双向绑定：UI 变化同步到 ViewModel，ViewModel 变化同步到 UI
+            };
+            comboBoxFactory.SetBinding(ComboBox.SelectedItemProperty, selectedItemBinding);
+            //foreach (var item in items)
+            //{
+            //    FrameworkElementFactory itemFactory = new FrameworkElementFactory(typeof(ComboBoxItem));
+            //    itemFactory.SetValue(ComboBoxItem.ContentProperty, item);
+            //    comboBoxFactory.AppendChild(itemFactory);
+            //}
+
             borderFactory.AppendChild(comboBoxFactory);
             nodeTemplate.VisualTree = borderFactory;
             return nodeTemplate;

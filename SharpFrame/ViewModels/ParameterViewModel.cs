@@ -62,9 +62,11 @@ namespace SharpFrame.ViewModels
                     FlowGraphArguments = new FlowGraphParameter(systems.FlowGraph_Obse);
                     for (int i = 0; i < Nodes.Count; i++)
                     {
-                        var quor = FlowGraphArguments.NodesOffset.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
+                        var quor = FlowGraphArguments.NodesStructure.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
                         Nodes[i].OffsetX = quor.OffsetX;
                         Nodes[i].OffsetY = quor.OffsetY;
+                        if (Nodes[i] is ComboBoxNodeViewModel comboBoxViewModel)
+                            comboBoxViewModel.SelectedItem = quor.Value?.ToString();
                     }
                     for (int i = 0; i < FlowGraphArguments.Connectors.Count; i++)
                     {
@@ -129,9 +131,11 @@ namespace SharpFrame.ViewModels
                 FlowGraphArguments = new FlowGraphParameter(systems.FlowGraph_Obse);
                 for (int i = 0; i < Nodes.Count; i++)
                 {
-                    var quor = FlowGraphArguments.NodesOffset.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
+                    var quor = FlowGraphArguments.NodesStructure.Where(x => (x.ID as string) == Nodes[i].ID.ToString()).FirstOrDefault();
                     Nodes[i].OffsetX = quor.OffsetX;
                     Nodes[i].OffsetY = quor.OffsetY;
+                    if (Nodes[i] is ComboBoxNodeViewModel comboBoxViewModel)
+                        comboBoxViewModel.SelectedItem = quor.Value?.ToString();
                 }
                 Connectors.Clear();
                 for (int i = 0; i < FlowGraphArguments.Connectors.Count; i++)
@@ -378,12 +382,12 @@ namespace SharpFrame.ViewModels
                 RoutingNodeViewModel marking = FlowChart.CreateTextBoxNodes(Nodes, 100, 200, "打标", "#FF00FCFA");
                 RoutingNodeViewModel front_calibration = FlowChart.CreateTextBoxNodes(Nodes, 300, 100, "前流道视觉标定", "#5BA5F0");
                 RoutingNodeViewModel front_mark = FlowChart.CreateTextBoxNodes(Nodes, 300, 200, "前流道Mark点区域", "#5BA5F0");
-                RoutingNodeViewModel front_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 300, 300, "前流道进料模式", new List<string>() { "左进", "右进" }, "#5BA5F0");
-                RoutingNodeViewModel front_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 300, 400, "前流道出料模式", new List<string>() { "左出", "右出" }, "#5BA5F0");
+                ComboBoxNodeViewModel front_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 300, 300, "前流道进料模式", new List<string>() { "左进", "右进" }, "左进", "#5BA5F0");
+                ComboBoxNodeViewModel front_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 300, 400, "前流道出料模式", new List<string>() { "左出", "右出" }, "左出", "#5BA5F0");
                 RoutingNodeViewModel behind_calibration = FlowChart.CreateTextBoxNodes(Nodes, 500, 100, "后流道视觉标定", "#D5535D");
                 RoutingNodeViewModel behind_mark = FlowChart.CreateTextBoxNodes(Nodes, 500, 200, "后流道Mark点区域", "#D5535D");
-                RoutingNodeViewModel behind_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 500, 300, "后流道进料模式", new List<string>() { "左进", "右进" }, "#D5535D");
-                RoutingNodeViewModel behind_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 500, 400, "后流道出料模式", new List<string>() { "左出", "右出" }, "#D5535D");
+                ComboBoxNodeViewModel behind_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 500, 300, "后流道进料模式", new List<string>() { "左进", "右进" }, "左进", "#D5535D");
+                ComboBoxNodeViewModel behind_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 500, 400, "后流道出料模式", new List<string>() { "左出", "右出" }, "左出", "#D5535D");
                 foreach (var item in Nodes)
                 {
                     FlowChart.CreateNodePort(item, FlowChart.PortDirection.left);

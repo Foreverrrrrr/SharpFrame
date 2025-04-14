@@ -31,6 +31,14 @@ namespace SharpFrame.Flow_of_Execution
             PathNode[node.Name] = node;
         }
 
+        public static void SetNodeObject(string nodename, object value)
+        {
+            if (pathNode.ContainsKey(nodename))
+            {
+                pathNode[nodename].Parameter = value;
+            }
+        }
+
         /// <summary>
         /// 添加节点连接逻辑
         /// </summary>
@@ -127,11 +135,13 @@ namespace SharpFrame.Flow_of_Execution
             FlowGraphParameter Save_List = new FlowGraphParameter();
             foreach (var item in nodes)
             {
-                Structure.Parameter.NodesOffset nodesoffset = new Structure.Parameter.NodesOffset();
+                Structure.Parameter.NodesStructure nodesoffset = new Structure.Parameter.NodesStructure();
                 nodesoffset.ID = item.ID.ToString();
                 nodesoffset.OffsetX = item.OffsetX;
                 nodesoffset.OffsetY = item.OffsetY;
-                Save_List.NodesOffset.Add(nodesoffset);
+                if (item is ComboBoxNodeViewModel comboBoxViewModel)
+                    nodesoffset.Value = comboBoxViewModel.SelectedItem;
+                Save_List.NodesStructure.Add(nodesoffset);
             }
             foreach (var item in connectors)
             {
