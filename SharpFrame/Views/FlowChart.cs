@@ -318,7 +318,7 @@ namespace SharpFrame.Views
             t.Add(nodePort);
         }
 
-        public static RoutingNodeViewModel CreateComboBoxNodes(ref FlowGraphPath flowgraph, ObservableCollection<RoutingNodeViewModel> nodeViewModels, Action<FlowNode> method, string id, double offsetx, double offsety, string text, List<string> strings, string fillColor)
+        public static RoutingNodeViewModel CreateComboBoxNodes(ObservableCollection<RoutingNodeViewModel> nodeViewModels, double offsetx, double offsety, string text, List<string> strings, string fillColor)
         {
             var borderFactory = CreateComboBoxDataTemplate(strings, 100, 22, 1, fillColor);
             RoutingNodeViewModel node = new RoutingNodeViewModel()
@@ -346,11 +346,11 @@ namespace SharpFrame.Views
                 },
             };
             nodeViewModels.Add(node);
-            flowgraph.AddNode(new FlowNode(text, method));
+            FlowGraphPath.AddNode(new FlowNode(text));
             return node;
         }
 
-        public static RoutingNodeViewModel CreateNodes(string datatemplateKey, string id, double offsetx, double offsety, string text, string fillColor)
+        public static RoutingNodeViewModel CreateNodes(string datatemplateKey, double offsetx, double offsety, string text, string fillColor)
         {
             var nodeTemplate = ControlElement.TryFindResource(datatemplateKey) as DataTemplate;
             if (nodeTemplate != null)
@@ -387,7 +387,7 @@ namespace SharpFrame.Views
             }
         }
 
-        public static RoutingNodeViewModel CreateTextBoxNodes(ref FlowGraphPath flowgraph, ObservableCollection<RoutingNodeViewModel> nodeViewModels, Action<FlowNode> method, string id, double offsetx, double offsety, string text, string fillColor)
+        public static RoutingNodeViewModel CreateTextBoxNodes(ObservableCollection<RoutingNodeViewModel> nodeViewModels, double offsetx, double offsety, string text, string fillColor)
         {
             var borderFactory = CreateTextBlockDataTemplate(text, 100, 20, fillColor);
             RoutingNodeViewModel node = new RoutingNodeViewModel()
@@ -415,7 +415,7 @@ namespace SharpFrame.Views
                 },
             };
             nodeViewModels.Add(node);
-            flowgraph.AddNode(new FlowNode(text, method));
+            FlowGraphPath.AddNode(new FlowNode(text));
             return node;
         }
 
@@ -477,7 +477,16 @@ namespace SharpFrame.Views
                     new Setter(System.Windows.Shapes.Path.StrokeThicknessProperty, 1.0)
                 }
             };
-            connectors.Add(connector);
+            bool isDuplicate = connectors.Any(c =>
+           c.SourceNode == source &&
+           c.TargetNode == target &&
+           c.SourcePortID as string == sourcePortID &&
+           c.TargetPortID as string == targetPortID);
+            if (!isDuplicate)
+            {
+                connectors.Add(connector);
+                FlowGraphPath.AddEdge(sourceNode, targetNode);
+            }
             return connector;
         }
 

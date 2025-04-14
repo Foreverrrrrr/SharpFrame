@@ -10,7 +10,7 @@ namespace SharpFrame.Flow_of_Execution
     {
         public string Name { get; set; }
 
-        public Action<FlowNode> Method { get; set; }
+        public Action<FlowNode, object[]> Method { get; set; }
 
         /// <summary>
         /// 后节点集合
@@ -42,7 +42,7 @@ namespace SharpFrame.Flow_of_Execution
         /// </summary>
         /// <param name="name">节点名称</param>
         /// <param name="method">节点回调方法</param>
-        public FlowNode(string name, Action<FlowNode> method) : this(name)
+        public FlowNode(string name, Action<FlowNode, object[]> method) : this(name)
         {
             Method = method;
         }

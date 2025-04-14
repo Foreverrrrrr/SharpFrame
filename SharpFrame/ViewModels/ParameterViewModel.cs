@@ -26,9 +26,13 @@ namespace SharpFrame.ViewModels
     {
         private IEventAggregator eventAggregator;
         private IDialogService dialogService;
-        public ParameterViewModel(IEventAggregator eventaggregator, IDialogService dialog)
+        /// <summary>
+        /// 参数更新静态通知
+        /// </summary>
+        public static event Action<Parameter> ParameterUpdate;
+        public ParameterViewModel(IEventAggregator aggregator1, IDialogService dialog)
         {
-            this.eventAggregator = eventaggregator;
+            this.eventAggregator = aggregator1;
             this.dialogService = dialog;
             eventAggregator.GetEvent<LoginPermission>().Subscribe((type) =>
             {
@@ -68,8 +72,7 @@ namespace SharpFrame.ViewModels
                             FlowGraphArguments.Connectors[i].SourceID,
                             FlowGraphArguments.Connectors[i].TargetID,
                             FlowGraphArguments.Connectors[i].SourcePortID,
-                            FlowGraphArguments.Connectors[i].TargetPortID
-                            );
+                            FlowGraphArguments.Connectors[i].TargetPortID);
                     }
                     TestComboBox_DropDownClosed_Evt += ((row) =>
                     {
@@ -90,6 +93,7 @@ namespace SharpFrame.ViewModels
                         }
                     });
                     eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
+                    ParameterUpdate?.Invoke(systems);
                 }
                 else
                 {
@@ -139,7 +143,10 @@ namespace SharpFrame.ViewModels
                         FlowGraphArguments.Connectors[i].TargetPortID
                         );
                 }
+                eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(systems);
+                ParameterUpdate?.BeginInvoke(systems, null, null);
                 eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"切换参数型号“{ParameterName}”" });
+
             });
             ParameterSave = new DelegateCommand(() =>
             {
@@ -206,9 +213,9 @@ namespace SharpFrame.ViewModels
                     }
                 }
                 parameter.FlowGraph_Obse = FlowGraphPath.ConnectortoFlowGraphParameter(Nodes, Connectors);
-
                 ParameterJsonTool.WriteJson(ParameterName, parameter);
                 eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
+                ParameterUpdate?.Invoke(parameter);
                 eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
                 MessageBox.Show($"“{ParameterName}”参数保存完成");
             });
@@ -367,17 +374,16 @@ namespace SharpFrame.ViewModels
             InitializationCompleteCommand = new DelegateCommand(() =>
             {
                 Constraints = (GraphConstraints.Default | GraphConstraints.Routing | GraphConstraints.Bridging) & ~GraphConstraints.ContextMenu;
-                FlowGraphPath graph = new FlowGraphPath();
-                RoutingNodeViewModel start = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_mark", 100, 100, "启动", "#FF00FF08");
-                RoutingNodeViewModel marking = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "marking", 100, 200, "打标", "#FF00FCFA");
-                RoutingNodeViewModel front_calibration = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "front_calibration", 300, 100, "前流道视觉标定", "#5BA5F0");
-                RoutingNodeViewModel front_mark = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "front_mark", 300, 200, "前流道Mark点区域", "#5BA5F0");
-                RoutingNodeViewModel front_runner_feed = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "front_runner_feed", 300, 300, "前流道进料模式", new List<string>() { "左进", "右进" }, "#5BA5F0");
-                RoutingNodeViewModel front_runner_discharge = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "front_runner_discharge", 300, 400, "前流道出料模式", new List<string>() { "左出", "右出" }, "#5BA5F0");
-                RoutingNodeViewModel behind_calibration = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_calibration", 500, 100, "后流道视觉标定", "#D5535D");
-                RoutingNodeViewModel behind_mark = FlowChart.CreateTextBoxNodes(ref graph, Nodes, Log, "behind_mark", 500, 200, "后流道Mark点区域", "#D5535D");
-                RoutingNodeViewModel behind_runner_feed = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "behind_runner_feed", 500, 300, "后流道进料模式", new List<string>() { "左进", "右进" }, "#D5535D");
-                RoutingNodeViewModel behind_runner_discharge = FlowChart.CreateComboBoxNodes(ref graph, Nodes, Log, "behind_runner_discharge", 500, 400, "后流道出料模式", new List<string>() { "左出", "右出" }, "#D5535D");
+                RoutingNodeViewModel start = FlowChart.CreateTextBoxNodes(Nodes, 100, 100, "启动", "#FF00FF08");
+                RoutingNodeViewModel marking = FlowChart.CreateTextBoxNodes(Nodes, 100, 200, "打标", "#FF00FCFA");
+                RoutingNodeViewModel front_calibration = FlowChart.CreateTextBoxNodes(Nodes, 300, 100, "前流道视觉标定", "#5BA5F0");
+                RoutingNodeViewModel front_mark = FlowChart.CreateTextBoxNodes(Nodes, 300, 200, "前流道Mark点区域", "#5BA5F0");
+                RoutingNodeViewModel front_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 300, 300, "前流道进料模式", new List<string>() { "左进", "右进" }, "#5BA5F0");
+                RoutingNodeViewModel front_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 300, 400, "前流道出料模式", new List<string>() { "左出", "右出" }, "#5BA5F0");
+                RoutingNodeViewModel behind_calibration = FlowChart.CreateTextBoxNodes(Nodes, 500, 100, "后流道视觉标定", "#D5535D");
+                RoutingNodeViewModel behind_mark = FlowChart.CreateTextBoxNodes(Nodes, 500, 200, "后流道Mark点区域", "#D5535D");
+                RoutingNodeViewModel behind_runner_feed = FlowChart.CreateComboBoxNodes(Nodes, 500, 300, "后流道进料模式", new List<string>() { "左进", "右进" }, "#D5535D");
+                RoutingNodeViewModel behind_runner_discharge = FlowChart.CreateComboBoxNodes(Nodes, 500, 400, "后流道出料模式", new List<string>() { "左出", "右出" }, "#D5535D");
                 foreach (var item in Nodes)
                 {
                     FlowChart.CreateNodePort(item, FlowChart.PortDirection.left);
@@ -391,8 +397,27 @@ namespace SharpFrame.ViewModels
                     RoutingNodeViewModel eventArgs = routing.Item as RoutingNodeViewModel;
                     if (eventArgs != null)
                     {
-
-
+                        if (eventArgs.ID as string == "前流道视觉标定" || eventArgs.ID as string == "后流道视觉标定")
+                        {
+                            var nodename = eventArgs.ID as string;
+                            IDialogParameters dialogParameters = new DialogParameters();
+                            dialogParameters.Add("ID", nodename);
+                            dialog.ShowDialog("VisualCalibrationView", dialogParameters, new Action<IDialogResult>((x) =>
+                            {
+                                if (x.Result == ButtonResult.OK)
+                                {
+                                    string customData = x.Parameters.GetValue<string>("Carmatrix");
+                                    var tempCollection = new ObservableCollection<TestParameter>(TestParameterArguments);
+                                    var parameter = tempCollection.Where(x => x.Name == nodename[0] + "流道相机标定参数").FirstOrDefault();
+                                    if (parameter != null)
+                                    {
+                                        parameter.Value = customData;
+                                    }
+                                    TestParameterArguments = null;
+                                    TestParameterArguments = tempCollection;
+                                }
+                            })); ;
+                        }
                     }
                 });
                 ConnectorEditingCommand = new DelegateCommand<object>((obj) =>
@@ -411,13 +436,20 @@ namespace SharpFrame.ViewModels
                             var Target = t.TargetNode as RoutingNodeViewModel;
                             if (Source != null && Target != null)
                             {
-                                graph.AddEdge(Source.ID.ToString(), Target.ID.ToString());
-                                Connectors[Connectors.IndexOf(t)].Constraints = (ConnectorConstraints.Default | ConnectorConstraints.Bridging) & ~ConnectorConstraints.SourceDraggable & ~ConnectorConstraints.TargetDraggable;
+                                if (Source.ID.ToString() != Target.ID.ToString())
+                                {
+                                    FlowGraphPath.AddEdge(Source.ID.ToString(), Target.ID.ToString());
+                                    Connectors[Connectors.IndexOf(t)].Constraints = (ConnectorConstraints.Default | ConnectorConstraints.Bridging) & ~ConnectorConstraints.SourceDraggable & ~ConnectorConstraints.TargetDraggable;
+                                }
+                                else
+                                {
+                                    FlowChart.Delete(deleteableObjects);
+                                }
                             }
                             else
                             {
                                 if (Source != null && Target != null)
-                                    graph.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
+                                    FlowGraphPath.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
                                 FlowChart.Delete(deleteableObjects);
                             }
                         }
@@ -432,7 +464,7 @@ namespace SharpFrame.ViewModels
                         var Source = t.SourceNode as RoutingNodeViewModel;
                         var Target = t.TargetNode as RoutingNodeViewModel;
                         if (Source != null && Target != null)
-                            graph.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
+                            FlowGraphPath.RemoveEdge(Source.ID.ToString(), Target.ID.ToString());
                     }
                 });
             });

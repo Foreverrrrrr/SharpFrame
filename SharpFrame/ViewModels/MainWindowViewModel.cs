@@ -57,11 +57,11 @@ namespace SharpFrame.ViewModels
                 {
                     aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
                 });
-                aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
                 Thread_Auto_Base.NewClass();
                 Stop_State = true;
                 InfoStructure info = new InfoStructure();
                 ProductionInformation.ReadProductionInfo(ref info);
+                aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
             });
             VisionSwitching = new DelegateCommand<string>((ManagerName) =>
             {

@@ -14,13 +14,19 @@ namespace SharpFrame.Flow_of_Execution
 {
     public class FlowGraphPath
     {
-        private Dictionary<string, FlowNode> PathNode = new Dictionary<string, FlowNode>();
+        private static Dictionary<string, FlowNode> pathNode = new Dictionary<string, FlowNode>();
+
+        public static Dictionary<string, FlowNode> PathNode
+        {
+            get { return pathNode; }
+            set { pathNode = value; }
+        }
 
         /// <summary>
         /// 添加节点
         /// </summary>
         /// <param name="node"></param>
-        public void AddNode(FlowNode node)
+        public static void AddNode(FlowNode node)
         {
             PathNode[node.Name] = node;
         }
@@ -30,17 +36,20 @@ namespace SharpFrame.Flow_of_Execution
         /// </summary>
         /// <param name="from">连接起始节点</param>
         /// <param name="to">连接结束节点</param>
-        public void AddEdge(string from, string to)
+        public static void AddEdge(string from, string to)
         {
             if (from != to)
             {
                 if (PathNode.ContainsKey(from) && PathNode.ContainsKey(to))
                 {
-                    PathNode[from].IsConnect = true;
-                    PathNode[to].IsConnect = true;
-                    PathNode[from].NextNodes.Add(PathNode[to]);
-                    PathNode[to].PreNodes.Add(PathNode[from]);
-                    PathNode[to].Level = PathNode[from].Level + 1;
+                    if (!PathNode[from].NextNodes.Contains(PathNode[to]))
+                    {
+                        PathNode[from].IsConnect = true;
+                        PathNode[to].IsConnect = true;
+                        PathNode[from].NextNodes.Add(PathNode[to]);
+                        PathNode[to].PreNodes.Add(PathNode[from]);
+                        PathNode[to].Level = PathNode[from].Level + 1;
+                    }
                 }
             }
         }
@@ -48,7 +57,7 @@ namespace SharpFrame.Flow_of_Execution
         /// <summary>
         /// 广度优先路径规划
         /// </summary>
-        public void Route_Planning()
+        public static bool Route_Planning(object[] objects)
         {
             var connect = PathNode.Values.All(node => node.IsConnect);
             if (connect)
@@ -61,28 +70,29 @@ namespace SharpFrame.Flow_of_Execution
                 {
                     foreach (FlowNode item in startNodes)
                     {
-                        BreadthFirstExecute(item);
+                        BreadthFirstExecute(item, objects);
                     }
                 }
                 else
                 {
-                    Console.WriteLine("检测到多个起始流程");
+                    throw new Exception("检测到多个初始节点流程");
                 }
             }
             else
             {
-                Console.WriteLine("检测到有未连接的流程");
+                throw new Exception("检测到有未连接的节点流程");
             }
+            return connect;
         }
 
-        public void BreadthFirstExecute(FlowNode startNode)
+        private static void BreadthFirstExecute(FlowNode startNode, object[] objects)
         {
             Queue<FlowNode> queue = new Queue<FlowNode>();
             queue.Enqueue(startNode);
             while (queue.Count > 0)
             {
                 FlowNode currentNode = queue.Dequeue();
-                currentNode.Method?.Invoke(currentNode);
+                currentNode.Method?.Invoke(currentNode, objects);
                 foreach (var nextNode in currentNode.NextNodes)
                 {
                     if (!nextNode.IsExecuted)
@@ -97,16 +107,16 @@ namespace SharpFrame.Flow_of_Execution
         /// <summary>
         /// 递归执行当前节点及其后续节点的方法
         /// </summary>
-        public void RecursiveExecute(FlowNode flowNode)
+        private static void RecursiveExecute(FlowNode flowNode, object[] objects)
         {
             if (flowNode.NextNodes.Count == 0)
             {
-                flowNode.Method?.Invoke(flowNode);
+                flowNode.Method?.Invoke(flowNode, objects);
                 return;
             }
-            flowNode.Method?.Invoke(flowNode);
+            flowNode.Method?.Invoke(flowNode, objects);
             foreach (var nextNode in flowNode.NextNodes)
-                RecursiveExecute(nextNode);
+                RecursiveExecute(nextNode, objects);
         }
 
         /// <summary>
@@ -185,7 +195,7 @@ namespace SharpFrame.Flow_of_Execution
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        public void RemoveEdge(string from, string to)
+        public static void RemoveEdge(string from, string to)
         {
             if (from != to)
             {
@@ -216,7 +226,7 @@ namespace SharpFrame.Flow_of_Execution
         /// 节点移除
         /// </summary>
         /// <param name="nodeName">节点名称</param>
-        public void RemoveNode(string nodeName)
+        public static void RemoveNode(string nodeName)
         {
         }
     }

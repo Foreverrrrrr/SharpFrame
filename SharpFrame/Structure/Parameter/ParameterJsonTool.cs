@@ -154,6 +154,17 @@ namespace SharpFrame.Structure.Parameter
                 return false;
         }
 
+        public static string ToJson<T>(ref T t)
+        {
+            string serializedResult = JToken.Parse(JsonConvert.SerializeObject(t)).ToString();
+            return serializedResult;
+        }
+        public static void ToObj<T>(object str, ref T t)
+        {
+            T deserializeResult = JsonConvert.DeserializeObject<T>(str.ToString());
+            t = deserializeResult;
+        }
+
         public static ObservableCollection<T> ReadAllJson<T>(T t) where T : class
         {
             string path = "";

@@ -21,7 +21,7 @@
                 <TextBlock Margin="10,0,0,0" Text="型号名称：" FontSize="16" Foreground="Black" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                 <ComboBox Margin="0,0,10,0" SelectedIndex="{Binding ParameterIndexes}" DisplayMemberPath="Name" SelectedValuePath="ID" ItemsSource="{Binding ParameterNameList}" FontSize="16" Width="180" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="Black" Background="White">
                     <i:Interaction.Triggers>
-                        <i:EventTrigger EventName="DropDownClosed">
+                        <i:EventTrigger EventName="SelectionChanged">
                             <prism:InvokeCommandAction Command="{Binding ModelSwitching}"/>
                         </i:EventTrigger>
                     </i:Interaction.Triggers>
