@@ -44,7 +44,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<Structure.Parameter.PointLocationParameter> PointDefaultArguments
         {
             get { return _pointdefaultarguments; }
-            set { _pointdefaultarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _pointdefaultarguments, value); }
         }
     }
 }

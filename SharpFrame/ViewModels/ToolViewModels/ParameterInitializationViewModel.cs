@@ -72,9 +72,9 @@ namespace SharpFrame.ViewModels.ToolViewModels
                     k = SystemArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
                 }
                 SystemArguments.Insert(k, t.NewParameter);
-                ObservableCollection<SharpFrame.Structure.Parameter.SystemParameter> systemStructures = new ObservableCollection<SharpFrame.Structure.Parameter.SystemParameter>();
+                ObservableCollection<ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter> systemStructures = new ObservableCollection<ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter>();
                 int index = 0;
-                foreach (SharpFrame.Structure.Parameter.SystemParameter item in SystemArguments.Select(x => new SharpFrame.Structure.Parameter.SystemParameter(x)))
+                foreach (ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter item in SystemArguments.Select(x => new ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter(x)))
                 {
                     item.ID = index;
                     systemStructures.Add(item);
@@ -191,7 +191,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<Structure.Parameter.SystemParameter> SystemArguments
         {
             get { return _systemarguments; }
-            set { _systemarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _systemarguments, value); }
         }
         #endregion
 
@@ -214,7 +214,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<PointLocationParameter> PointLocationArguments
         {
             get { return _pointlocationarguments; }
-            set { _pointlocationarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _pointlocationarguments, value); }
         }
         #endregion
 
@@ -236,7 +236,7 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public ObservableCollection<TestParameter> TestParameterArguments
         {
             get { return _testparameterarguments; }
-            set { _testparameterarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _testparameterarguments, value); }
         }
         #endregion
     }

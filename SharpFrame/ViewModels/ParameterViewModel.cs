@@ -609,7 +609,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<PointLocationParameter> PointLocationArguments
         {
             get { return _pointlocationarguments; }
-            set { _pointlocationarguments = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _pointlocationarguments, value); }
         }
         #endregion
 
@@ -659,7 +659,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<RoutingNodeViewModel> Nodes
         {
             get { return mNodes; }
-            set { mNodes = value; RaisePropertyChanged(); }
+            set { SetProperty(ref mNodes, value); }
         }
 
         private ObservableCollection<ConnectorViewModel> mConnectors = new ObservableCollection<ConnectorViewModel>();
@@ -669,7 +669,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<ConnectorViewModel> Connectors
         {
             get { return mConnectors; }
-            set { mConnectors = value; RaisePropertyChanged(); }
+            set { SetProperty(ref mConnectors, value); }
         }
 
         private GraphConstraints mConstraints;
@@ -746,7 +746,7 @@ namespace SharpFrame.ViewModels
         public int ParameterIndexes
         {
             get { return _parameterindexes; }
-            set { _parameterindexes = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _parameterindexes, value); }
         }
 
         private ObservableCollection<ComboxList> _parameterNameList = new ObservableCollection<ComboxList>();
@@ -756,7 +756,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<ComboxList> ParameterNameList
         {
             get { return _parameterNameList; }
-            set { _parameterNameList = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _parameterNameList, value); }
         }
 
         /// <summary>
@@ -786,9 +786,8 @@ namespace SharpFrame.ViewModels
         public bool IsVisible
         {
             get { return _isvisible; }
-            set { _isvisible = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _isvisible, value); }
         }
-
     }
 
     public struct ComboxList

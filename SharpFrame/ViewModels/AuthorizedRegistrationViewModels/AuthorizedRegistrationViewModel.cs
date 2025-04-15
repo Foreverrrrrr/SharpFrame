@@ -90,7 +90,7 @@ namespace SharpFrame.ViewModels.AuthorizedRegistrationViewModels
         public string RegistrationCode
         {
             get { return _registrationcode; }
-            set { _registrationcode = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _registrationcode, value); }
         }
 
         private string _password;
@@ -98,7 +98,7 @@ namespace SharpFrame.ViewModels.AuthorizedRegistrationViewModels
         public string Password
         {
             get { return _password; }
-            set { _password = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _password, value); }
         }
     }
 }

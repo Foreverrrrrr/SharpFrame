@@ -74,7 +74,7 @@ namespace SharpFrame.ViewModels
         public DateTime Time
         {
             get { return _time; }
-            set { _time = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _time, value); }
         }
 
         private ObservableCollection<Data> _databaseview;
@@ -82,7 +82,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<Data> DatabaseView
         {
             get { return _databaseview; }
-            set { _databaseview = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _databaseview, value); }
         }
     }
 

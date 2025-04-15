@@ -39,14 +39,14 @@ namespace SharpFrame.ViewModels
         public string Lonin_Log
         {
             get { return _longin_log; }
-            set { _longin_log = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _longin_log, value); }
         }
 
         private string _title = "Sharp Frame";
         public string Title
         {
             get { return _title; }
-            set { _title = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _title, value); }
         }
 
         private string _password = "666888";
@@ -54,7 +54,7 @@ namespace SharpFrame.ViewModels
         public string PassWord
         {
             get { return _password; }
-            set { _password = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _password, value); }
         }
 
         private string _username;
@@ -62,7 +62,7 @@ namespace SharpFrame.ViewModels
         public string Username
         {
             get { return _username; }
-            set { _username = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _username, value); }
         }
 
         private bool _client_on_line;
@@ -70,7 +70,7 @@ namespace SharpFrame.ViewModels
         public bool Client_On_Line
         {
             get { return _client_on_line; }
-            set { _client_on_line = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _client_on_line, value); }
         }
 
         private object _warranty = null;
@@ -78,7 +78,7 @@ namespace SharpFrame.ViewModels
         public object Warranty
         {
             get { return _warranty; }
-            set { _warranty = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _warranty, value); }
         }
     }
 }

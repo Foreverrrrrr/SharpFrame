@@ -36,7 +36,7 @@ namespace SharpFrame.ViewModels
         public ObservableCollection<MainLogStructure> MainLog
         {
             get { return _mainlog; }
-            set { _mainlog = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _mainlog, value); }
         }
     }
 

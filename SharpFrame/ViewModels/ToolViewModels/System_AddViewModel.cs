@@ -117,28 +117,28 @@ namespace SharpFrame.ViewModels.ToolViewModels
         public string Name
         {
             get { return _name; }
-            set { _name = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _name, value); }
         }
 
         private string _inputvalue = "";
         public string Input_Value
         {
             get { return _inputvalue; }
-            set { _inputvalue = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _inputvalue, value); }
         }
 
         private int _typemodel = 0;
         public int TypeModel
         {
             get { return _typemodel; }
-            set { _typemodel = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _typemodel, value); }
         }
 
         private string _title = "Prism Application";
         public string Title
         {
             get { return _title; }
-            set { _title = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _title, value); }
         }
     }
 }

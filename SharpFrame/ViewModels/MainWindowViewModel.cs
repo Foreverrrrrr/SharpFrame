@@ -236,7 +236,7 @@ namespace SharpFrame.ViewModels
         public string Title
         {
             get { return _title; }
-            set { _title = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _title, value); }
         }
 
         private bool _loadingbarstate = false;
@@ -246,7 +246,7 @@ namespace SharpFrame.ViewModels
         public bool LoadingBarState
         {
             get { return _loadingbarstate; }
-            set { _loadingbarstate = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _loadingbarstate, value); }
         }
 
         private string _system_state;
@@ -254,7 +254,7 @@ namespace SharpFrame.ViewModels
         public string SystemState
         {
             get { return _system_state; }
-            set { _system_state = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _system_state, value); }
         }
 
         #region 获取显示器分辨率
@@ -262,7 +262,7 @@ namespace SharpFrame.ViewModels
         public double Height
         {
             get { return _height; }
-            set { _height = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _height, value); }
         }
 
         private double _width = SystemParameters.PrimaryScreenWidth + 10;
@@ -270,7 +270,7 @@ namespace SharpFrame.ViewModels
         public double Width
         {
             get { return _width; }
-            set { _width = value; RaisePropertyChanged(); }
+            set { SetProperty(ref _width, value); }
         }
         #endregion
     }
