@@ -72,9 +72,9 @@ namespace SharpFrame.ViewModels.ToolViewModels
                     k = SystemArguments.ToList().Find(x => x.ID == t.InsertionParameter.ID).ID;
                 }
                 SystemArguments.Insert(k, t.NewParameter);
-                ObservableCollection<ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter> systemStructures = new ObservableCollection<ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter>();
+                ObservableCollection<SharpFrame.Structure.Parameter.SystemParameter> systemStructures = new ObservableCollection<SharpFrame.Structure.Parameter.SystemParameter>();
                 int index = 0;
-                foreach (ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter item in SystemArguments.Select(x => new ZX24010DualTrackLaserMarking.Structure.Parameter.SystemParameter(x)))
+                foreach (SharpFrame.Structure.Parameter.SystemParameter item in SystemArguments.Select(x => new SharpFrame.Structure.Parameter.SystemParameter(x)))
                 {
                     item.ID = index;
                     systemStructures.Add(item);
