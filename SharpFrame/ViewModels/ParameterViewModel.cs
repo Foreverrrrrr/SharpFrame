@@ -123,7 +123,6 @@ namespace SharpFrame.ViewModels
                 Parameter systems = new Parameter();
                 var system_list = ParameterJsonTool.GetJson();
                 ParameterName = system_list[ParameterIndexes];
-                SetParameterValue(ParameterName);
                 ParameterJsonTool.ReadJson(ParameterName, ref systems);
                 SystemArguments = systems.SystemParameters_Obse;
                 PointLocationArguments = systems.PointLocationParameter_Obse;
@@ -406,21 +405,28 @@ namespace SharpFrame.ViewModels
                             var nodename = eventArgs.ID as string;
                             IDialogParameters dialogParameters = new DialogParameters();
                             dialogParameters.Add("ID", nodename);
-                            dialog.ShowDialog("VisualCalibrationView", dialogParameters, new Action<IDialogResult>((x) =>
+                            try
                             {
-                                if (x.Result == ButtonResult.OK)
+                                dialog.ShowDialog("VisualCalibrationView", dialogParameters, new Action<IDialogResult>((x) =>
                                 {
-                                    string customData = x.Parameters.GetValue<string>("Carmatrix");
-                                    var tempCollection = new ObservableCollection<TestParameter>(TestParameterArguments);
-                                    var parameter = tempCollection.Where(x => x.Name == nodename[0] + "流道相机标定参数").FirstOrDefault();
-                                    if (parameter != null)
+                                    if (x.Result == ButtonResult.OK)
                                     {
-                                        parameter.Value = customData;
+                                        string customData = x.Parameters.GetValue<string>("Carmatrix");
+                                        var tempCollection = new ObservableCollection<TestParameter>(TestParameterArguments);
+                                        var parameter = tempCollection.Where(x => x.Name == nodename[0] + "流道相机标定参数").FirstOrDefault();
+                                        if (parameter != null)
+                                        {
+                                            parameter.Value = customData;
+                                        }
+                                        TestParameterArguments = null;
+                                        TestParameterArguments = tempCollection;
                                     }
-                                    TestParameterArguments = null;
-                                    TestParameterArguments = tempCollection;
-                                }
-                            })); ;
+                                }));
+                            }
+                            catch (Exception ex)
+                            {
+
+                            }
                         }
                     }
                 });
