@@ -5,6 +5,7 @@ using Prism.Services.Dialogs;
 using SharpFrame.Flow_of_Execution;
 using SharpFrame.Structure.Parameter;
 using SharpFrame.Views;
+using SharpFrame.Views.SharpStyle;
 using SharpFrame.Views.ToolViews;
 using Syncfusion.UI.Xaml.Diagram;
 using Syncfusion.UI.Xaml.Diagram.Controls;
@@ -220,7 +221,7 @@ namespace SharpFrame.ViewModels
                 eventAggregator.GetEvent<ParameterUpdateEvent>().Publish(parameter);
                 ParameterUpdate?.Invoke(parameter);
                 eventAggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = $"“{ParameterName}”参数保存完成" });
-                MessageBox.Show($"“{ParameterName}”参数保存完成");
+                eventAggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = $"“{ParameterName}”参数保存完成" });
             });
             ParameterDelete = new DelegateCommand(() =>
             {
@@ -425,7 +426,7 @@ namespace SharpFrame.ViewModels
                             }
                             catch (Exception ex)
                             {
-
+                                eventAggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = ex.Message });
                             }
                         }
                     }

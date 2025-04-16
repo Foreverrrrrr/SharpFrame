@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SharpFrame.Views"
+             xmlns:local="clr-namespace:SharpFrame.Views.SharpStyle"
              mc:Ignorable="d" 
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
              xmlns:prism="http://prismlibrary.com/" 
@@ -53,7 +53,7 @@
                                      ViewPortChangedCommand="{Binding ViewPortChangedCommand}" 
                                      ItemDoubleTappedCommand="{Binding ItemDoubleTappedCommand}" 
                                      ItemDeletedCommand="{Binding ItemDeletedCommand}" 
-                                     InitializationCompleteCommand="{Binding InitializationCompleteCommand}" Foreground="Black"/>
+                                     InitializationCompleteCommand="{Binding InitializationCompleteCommand}" Foreground="Black" />
                 </Border>
             </Grid>
             <Grid Grid.Column="1">

@@ -1,8 +1,7 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:local="clr-namespace:SharpFrame.Views">
-
+    xmlns:local="clr-namespace:SharpFrame.Views.SharpStyle">
 
     <Style TargetType="{x:Type local:AxisManualOperation}">
         <Setter Property="Template">
@@ -58,4 +57,5 @@
             </Setter.Value>
         </Setter>
     </Style>
+
 </ResourceDictionary>

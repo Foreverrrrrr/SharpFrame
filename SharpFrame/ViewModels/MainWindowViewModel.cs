@@ -6,7 +6,9 @@ using SharpFrame.Common;
 using SharpFrame.log4Net;
 using SharpFrame.Logic.Base;
 using SharpFrame.Views;
+using SharpFrame.Views.SharpStyle;
 using System;
+using System.Collections.ObjectModel;
 using System.Windows;
 using static SharpFrame.Logic.Base.Thread_Auto_Base;
 
@@ -49,7 +51,7 @@ namespace SharpFrame.ViewModels
             PageLoadFinish = new DelegateCommand(() =>
             {
                 aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = "程序加载完成" });
-                Thread_Auto_Base.NewClass_RunEvent += (t, s) =>
+                Thread_Auto_Base.NewClass_RunEvent += (t, s, ob) =>
                 {
                     aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
                 };
@@ -63,8 +65,29 @@ namespace SharpFrame.ViewModels
                 ProductionInformation.ReadProductionInfo(ref info);
                 aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
             });
+            aggregator.GetEvent<Notification>().Subscribe((t) =>
+            {
+                NotificationModel model = null;
+                switch (t.Type)
+                {
+                    case Notification.InfoType.Info:
+                        model = new NotificationInfoModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        break;
+                    case Notification.InfoType.Warning:
+                        model = new NotificationWarningModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        break;
+                    case Notification.InfoType.Error:
+                        model = new NotificationErrorModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        break;
+                    case Notification.InfoType.Fatal:
+                        model = new NotificationFatalModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        break;
+                }
+                IsNotice.Insert(IsNotice.Count, model);
+            }, ThreadOption.UIThread);
             VisionSwitching = new DelegateCommand<string>((ManagerName) =>
             {
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = ManagerName });
                 try
                 {
                     regionManager.Regions["MainRegion"].RequestNavigate(ManagerName);
@@ -91,6 +114,20 @@ namespace SharpFrame.ViewModels
                 else
                     LoadingBarState = false;
             });
+            IsNotice.CollectionChanged += (s, e) =>
+            {
+                if (e.NewItems != null)
+                {
+                    foreach (var item in e.NewItems)
+                    {
+                        if (item is NotificationModel timedItem)
+                        {
+                            timedItem.AutoRemoveRequested += (sender, args) =>
+                                Application.Current.Dispatcher.Invoke(() => IsNotice.Remove((NotificationModel)item));
+                        }
+                    }
+                }
+            };
             Viewinitial();
         }
 
@@ -255,6 +292,16 @@ namespace SharpFrame.ViewModels
         {
             get { return _system_state; }
             set { SetProperty(ref _system_state, value); }
+        }
+
+        private ObservableCollection<NotificationModel> _isNotice = new ObservableCollection<NotificationModel>();
+        /// <summary>
+        /// 悬浮弹窗集合
+        /// </summary>
+        public ObservableCollection<NotificationModel> IsNotice
+        {
+            get { return _isNotice; }
+            set { SetProperty(ref _isNotice, value); }
         }
 
         #region 获取显示器分辨率

@@ -13,7 +13,7 @@ namespace SharpFrame.Logic.Base
         /// <summary>
         /// 流程线程创建事件
         /// </summary>
-        public static event Action<DateTime, string> NewClass_RunEvent;
+        public static event Action<DateTime, string, object> NewClass_RunEvent;
 
         /// <summary>
         /// 全局状态机日志事件
@@ -71,7 +71,7 @@ namespace SharpFrame.Logic.Base
                     if (t.Length > 0)
                         Thread_Configuration(derivedType.Name, method, instance, spintime);
                 }
-                NewClass_RunEvent?.Invoke(DateTime.Now, derivedType.FullName + "中自动运行线程启动");
+                NewClass_RunEvent?.Invoke(DateTime.Now, derivedType.FullName + "中自动运行线程启动", instance);
             }
         }
 

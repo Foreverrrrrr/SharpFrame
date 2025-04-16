@@ -4,7 +4,7 @@
         xmlns:prism="http://prismlibrary.com/"
         prism:ViewModelLocator.AutoWireViewModel="True" Title="{Binding Title}" 
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:local="clr-namespace:SharpFrame.Views.SharpStyle"
         WindowStartupLocation="CenterScreen" ResizeMode="CanMinimize" 
         Height="{Binding Height}" Width="{Binding Width}" Background="White">
     <i:Interaction.Triggers>
@@ -86,6 +86,9 @@
                                     Foreground="{x:Null}" 
                                     Panel.ZIndex="1" Width="1770" Height="900" Margin="3,0,0,0"/>
                     </Grid>
+                    <StackPanel Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Right">
+                        <local:GenericNotification IsNotice="{Binding IsNotice}"/>
+                    </StackPanel>
                 </Grid>
             </Border>
             <Grid Grid.Row="3" Margin="5">

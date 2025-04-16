@@ -174,24 +174,28 @@
     <Compile Include="Views\AuthorizedRegistrationViews\AuthorizedRegistrationView.xaml.cs">
       <DependentUpon>AuthorizedRegistrationView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\AxisManualOperation.cs" />
     <Compile Include="Views\DebuggingView.xaml.cs">
       <DependentUpon>DebuggingView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FlowChart.cs" />
     <Compile Include="Views\LogView.xaml.cs">
       <DependentUpon>LogView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\NotificationViews\NotificationPopupView.xaml.cs">
-      <DependentUpon>NotificationPopupView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\OpenVision.cs" />
     <Compile Include="Views\ParameterView.xaml.cs">
       <DependentUpon>ParameterView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\RelationalDatabaseView.xaml.cs">
       <DependentUpon>RelationalDatabaseView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\SharpStyle\AxisManualOperation.cs" />
+    <Compile Include="Views\SharpStyle\FlowChart.cs" />
+    <Compile Include="Views\SharpStyle\Notification\NotificationTemplateSelector.cs" />
+    <Compile Include="Views\SharpStyle\Notification\Notification_Error.cs" />
+    <Compile Include="Views\SharpStyle\Notification\Notification_Fatal.cs" />
+    <Compile Include="Views\SharpStyle\Notification\Notification_Info.cs" />
+    <Compile Include="Views\SharpStyle\Notification\Notification_Warning.cs" />
+    <Compile Include="Views\SharpStyle\Notification\GenericNotification.cs" />
+    <Compile Include="Views\SharpStyle\Notification\TimedNotification.cs" />
+    <Compile Include="Views\SharpStyle\OpenVision.cs" />
     <Compile Include="Views\SystemLogIn.xaml.cs">
       <DependentUpon>SystemLogIn.xaml</DependentUpon>
     </Compile>
@@ -218,6 +222,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="GenericNotificationStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="PictureEditorStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -227,6 +235,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Themes\FlowChartStyle.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\GenericNotificationStyle.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -259,10 +271,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Views\NotificationViews\NotificationPopupView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\ParameterView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
