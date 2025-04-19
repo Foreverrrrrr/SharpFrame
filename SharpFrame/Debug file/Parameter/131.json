@@ -1,0 +1,224 @@
+﻿{
+  "SystemParameters_Obse": [
+    {
+      "ID": 0,
+      "Name": "0",
+      "Value": 0.211,
+      "ValueType": "System.Double, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 4
+    },
+    {
+      "ID": 1,
+      "Name": "数据库连接字符串",
+      "Value": "Data Source=DESKTOP-VB96UD7;Initial Catalog=Test;Persist Security Info=True;User ID=sa;Password=Forever",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    },
+    {
+      "ID": 2,
+      "Name": "2",
+      "Value": "dsadas",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    }
+  ],
+  "PointLocationParameter_Obse": [
+    {
+      "ID": 0,
+      "Name": "安全点",
+      "Enable": true,
+      "PointA": 0.0,
+      "PointB": 0.0,
+      "PointC": 0.0,
+      "PointD": 0.0,
+      "PointE": 0.0,
+      "PointF": 0.0
+    },
+    {
+      "ID": 1,
+      "Name": "P1",
+      "Enable": false,
+      "PointA": 0.0,
+      "PointB": 0.0,
+      "PointC": 0.0,
+      "PointD": 0.0,
+      "PointE": 0.0,
+      "PointF": 0.0
+    },
+    {
+      "ID": 2,
+      "Name": "P2",
+      "Enable": true,
+      "PointA": 0.0,
+      "PointB": 0.0,
+      "PointC": 0.0,
+      "PointD": 0.0,
+      "PointE": 0.0,
+      "PointF": 0.0
+    }
+  ],
+  "TestParameter_Obse": [
+    {
+      "ID": 0,
+      "Name": "前流道相机标定参数",
+      "Value": "{\r\n  \"Reprojection\": 0.0949516649237983,\r\n  \"Pixel\": 0.0097694520310838279,\r\n  \"CameraMatrix\": [\r\n    [\r\n      43522.031981798995,\r\n      0.0,\r\n      2267.6747298362111\r\n    ],\r\n    [\r\n      0.0,\r\n      43524.464812618462,\r\n      1169.6987207660827\r\n    ],\r\n    [\r\n      0.0,\r\n      0.0,\r\n      1.0\r\n    ]\r\n  ],\r\n  \"DistCoeffs\": [\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0\r\n  ]\r\n}",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    },
+    {
+      "ID": 1,
+      "Name": "后流道相机标定参数",
+      "Value": "{\r\n  \"Reprojection\": 0.0949516649237983,\r\n  \"Pixel\": 0.0097694520310838279,\r\n  \"CameraMatrix\": [\r\n    [\r\n      43522.031981798995,\r\n      0.0,\r\n      2267.6747298362111\r\n    ],\r\n    [\r\n      0.0,\r\n      43524.464812618462,\r\n      1169.6987207660827\r\n    ],\r\n    [\r\n      0.0,\r\n      0.0,\r\n      1.0\r\n    ]\r\n  ],\r\n  \"DistCoeffs\": [\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0,\r\n    0.0\r\n  ]\r\n}",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    },
+    {
+      "ID": 2,
+      "Name": "前流道Pixel",
+      "Value": 0.0,
+      "ValueType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 3
+    },
+    {
+      "ID": 3,
+      "Name": "后流道相机标定矩阵",
+      "Value": "23",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    },
+    {
+      "ID": 4,
+      "Name": "后流道相机畸变矩阵",
+      "Value": "321",
+      "ValueType": "System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 0
+    },
+    {
+      "ID": 5,
+      "Name": "后流道Pixel",
+      "Value": 0.0,
+      "ValueType": "System.Single, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089",
+      "SelectedValue": 3
+    }
+  ],
+  "FlowGraph_Obse": {
+    "Connectors": [
+      {
+        "SourceID": "启动",
+        "TargetID": "前流道视觉标定",
+        "SourcePortID": "启动down",
+        "TargetPortID": "前流道视觉标定up"
+      },
+      {
+        "SourceID": "启动",
+        "TargetID": "后流道视觉标定",
+        "SourcePortID": "启动down",
+        "TargetPortID": "后流道视觉标定up"
+      },
+      {
+        "SourceID": "前流道视觉标定",
+        "TargetID": "前流道Mark点区域",
+        "SourcePortID": "前流道视觉标定down",
+        "TargetPortID": "前流道Mark点区域up"
+      },
+      {
+        "SourceID": "后流道视觉标定",
+        "TargetID": "后流道Mark点区域",
+        "SourcePortID": "后流道视觉标定down",
+        "TargetPortID": "后流道Mark点区域up"
+      },
+      {
+        "SourceID": "后流道Mark点区域",
+        "TargetID": "后流道进料模式",
+        "SourcePortID": "后流道Mark点区域down",
+        "TargetPortID": "后流道进料模式up"
+      },
+      {
+        "SourceID": "前流道Mark点区域",
+        "TargetID": "前流道进料模式",
+        "SourcePortID": "前流道Mark点区域down",
+        "TargetPortID": "前流道进料模式up"
+      },
+      {
+        "SourceID": "前流道进料模式",
+        "TargetID": "打标",
+        "SourcePortID": "前流道进料模式down",
+        "TargetPortID": "打标up"
+      },
+      {
+        "SourceID": "后流道进料模式",
+        "TargetID": "打标",
+        "SourcePortID": "后流道进料模式down",
+        "TargetPortID": "打标up"
+      },
+      {
+        "SourceID": "打标",
+        "TargetID": "前流道出料模式",
+        "SourcePortID": "打标down",
+        "TargetPortID": "前流道出料模式up"
+      }
+    ],
+    "NodesStructure": [
+      {
+        "ID": "启动",
+        "OffsetX": 413.0,
+        "OffsetY": 84.0,
+        "Value": null
+      },
+      {
+        "ID": "打标",
+        "OffsetX": 413.0,
+        "OffsetY": 519.0,
+        "Value": null
+      },
+      {
+        "ID": "前流道视觉标定",
+        "OffsetX": 309.0,
+        "OffsetY": 202.0,
+        "Value": null
+      },
+      {
+        "ID": "前流道Mark点区域",
+        "OffsetX": 309.0,
+        "OffsetY": 302.0,
+        "Value": null
+      },
+      {
+        "ID": "前流道进料模式",
+        "OffsetX": 309.0,
+        "OffsetY": 402.0,
+        "Value": "左进"
+      },
+      {
+        "ID": "前流道出料模式",
+        "OffsetX": 300.0,
+        "OffsetY": 619.0,
+        "Value": "84"
+      },
+      {
+        "ID": "后流道视觉标定",
+        "OffsetX": 509.0,
+        "OffsetY": 202.0,
+        "Value": null
+      },
+      {
+        "ID": "后流道Mark点区域",
+        "OffsetX": 509.0,
+        "OffsetY": 302.0,
+        "Value": null
+      },
+      {
+        "ID": "后流道进料模式",
+        "OffsetX": 509.0,
+        "OffsetY": 402.0,
+        "Value": "左进"
+      },
+      {
+        "ID": "后流道出料模式",
+        "OffsetX": 504.0,
+        "OffsetY": 618.0,
+        "Value": "左出"
+      }
+    ]
+  }
+}
