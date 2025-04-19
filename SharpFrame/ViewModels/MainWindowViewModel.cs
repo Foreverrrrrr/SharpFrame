@@ -65,8 +65,6 @@ namespace SharpFrame.ViewModels
                 Stop_State = true;
                 InfoStructure info = new InfoStructure();
                 ProductionInformation.ReadProductionInfo(ref info);
-                MotionBase motionBase = MotionBase.GetClassType(MotionBase.CardName.LeiSaiPulse);
-                motionBase.OpenCard();
                 aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
             });
             aggregator.GetEvent<Notification>().Subscribe((t) =>
