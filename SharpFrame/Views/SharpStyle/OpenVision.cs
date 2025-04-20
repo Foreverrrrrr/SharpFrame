@@ -9,43 +9,16 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static System.Collections.Specialized.BitVector32;
+using static SharpFrame.Views.SharpStyle.HandelEventArgs;
 
 namespace SharpFrame.Views.SharpStyle
 {
-    /// <summary>
-    /// 按照步骤 1a 或 1b 操作，然后执行步骤 2 以在 XAML 文件中使用此自定义控件。
-    ///
-    /// 步骤 1a) 在当前项目中存在的 XAML 文件中使用该自定义控件。
-    /// 将此 XmlNamespace 特性添加到要使用该特性的标记文件的根
-    /// 元素中:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:CustomControl.NewFolder1"
-    ///
-    ///
-    /// 步骤 1b) 在其他项目中存在的 XAML 文件中使用该自定义控件。
-    /// 将此 XmlNamespace 特性添加到要使用该特性的标记文件的根
-    /// 元素中:
-    ///
-    ///     xmlns:MyNamespace="clr-namespace:CustomControl.NewFolder1;assembly=CustomControl.NewFolder1"
-    ///
-    /// 您还需要添加一个从 XAML 文件所在的项目到此项目的项目引用，
-    /// 并重新生成以避免编译错误:
-    ///
-    ///     在解决方案资源管理器中右击目标项目，然后依次单击
-    ///     “添加引用”->“项目”->[浏览查找并选择此项目]
-    ///
-    ///
-    /// 步骤 2)
-    /// 继续操作并在 XAML 文件中使用控件。
-    ///
-    ///     <MyNamespace:OpenVision/>
-    ///
-    /// </summary>
     public class OpenVision : Control, IDisposable
     {
         private Canvas ImageCanvas;
@@ -84,6 +57,17 @@ namespace SharpFrame.Views.SharpStyle
                 ImageCanvas.MouseRightButtonDown += MouseRDown;
                 ImageCanvas.MouseRightButtonUp += MouseRUp;
             }
+            this.Loaded += (o, x) =>
+            {
+                var image = GetTemplateChild("OriginalImageControl") as Image;
+                PresentationSource presentationSource = PresentationSource.FromVisual(image);
+                HwndSource hwndSource = presentationSource as HwndSource;
+                if (hwndSource != null)
+                {
+                    SetValue(HandlePropertyKey, hwndSource?.Handle ?? IntPtr.Zero);
+                    RaiseIntercepHandelValueEvent(Handle);
+                }
+            };
         }
 
         private void MouseRUp(object sender, MouseButtonEventArgs e)
@@ -99,14 +83,14 @@ namespace SharpFrame.Views.SharpStyle
         /// <param name="e"></param>
         private void MouseRDown(object sender, MouseButtonEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
+            if (ImageCanvas == null || SelectionRectangle == null || InputImage == null)
                 return;
             if (isSelecting)
                 return;
             double controlWidth = ImageCanvas.ActualWidth;
             double controlHeight = ImageCanvas.ActualHeight;
-            double imageWidth = ((BitmapSource)Image).PixelWidth;
-            double imageHeight = ((BitmapSource)Image).PixelHeight;
+            double imageWidth = ((BitmapSource)InputImage).PixelWidth;
+            double imageHeight = ((BitmapSource)InputImage).PixelHeight;
             double scaleX = controlWidth / imageWidth;
             double scaleY = controlHeight / imageHeight;
             double scale = Math.Min(scaleX, scaleY);
@@ -136,7 +120,7 @@ namespace SharpFrame.Views.SharpStyle
         /// <param name="e"></param>
         private void Mouse_Wheel(object sender, MouseWheelEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
+            if (ImageCanvas == null || SelectionRectangle == null || InputImage == null)
                 return;
             if (isSelecting)
                 return;
@@ -178,7 +162,7 @@ namespace SharpFrame.Views.SharpStyle
         /// <param name="e"></param>
         private void Mouse_Move(object sender, MouseEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
+            if (ImageCanvas == null || SelectionRectangle == null || InputImage == null)
                 return;
             if (isSelecting)
             {
@@ -208,16 +192,16 @@ namespace SharpFrame.Views.SharpStyle
             Point mousePosition = e.GetPosition(ImageCanvas);
 
             // 计算图像的缩放因子
-            double scaleX = (double)((BitmapSource)Image).PixelWidth / ImageCanvas.ActualWidth;
-            double scaleY = (double)((BitmapSource)Image).PixelHeight / ImageCanvas.ActualHeight;
+            double scaleX = (double)((BitmapSource)InputImage).PixelWidth / ImageCanvas.ActualWidth;
+            double scaleY = (double)((BitmapSource)InputImage).PixelHeight / ImageCanvas.ActualHeight;
 
             // 根据缩放因子转换鼠标坐标
             int pixelx = (int)(mousePosition.X * scaleX);
             int pixely = (int)(mousePosition.Y * scaleY);
-            if (pixelx >= 0 && pixelx < ((BitmapSource)Image).PixelWidth && pixely >= 0 && pixely < ((BitmapSource)Image).PixelHeight)
+            if (pixelx >= 0 && pixelx < ((BitmapSource)InputImage).PixelWidth && pixely >= 0 && pixely < ((BitmapSource)InputImage).PixelHeight)
             {
                 byte[] pixelData = new byte[4];
-                ((BitmapSource)Image).CopyPixels(new Int32Rect(pixelx, pixely, 1, 1), pixelData, 4, 0);
+                ((BitmapSource)InputImage).CopyPixels(new Int32Rect(pixelx, pixely, 1, 1), pixelData, 4, 0);
                 byte blue = pixelData[0];
                 byte green = pixelData[1];
                 byte red = pixelData[2];
@@ -225,7 +209,6 @@ namespace SharpFrame.Views.SharpStyle
 
                 // 计算灰度值
                 double grayValue = 0.299 * red + 0.587 * green + 0.114 * blue;
-
                 PixelInfo pixel = new PixelInfo()
                 {
                     X = pixelx,
@@ -250,7 +233,7 @@ namespace SharpFrame.Views.SharpStyle
         /// <param name="e"></param>
         private void MouseLUp(object sender, MouseButtonEventArgs e)
         {
-            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
+            if (ImageCanvas == null || SelectionRectangle == null || InputImage == null)
                 return;
             if (isSelecting)
             {
@@ -268,12 +251,12 @@ namespace SharpFrame.Views.SharpStyle
                     int cropHeight = (int)Math.Round(rectEnd.Y - rectStart.Y);
                     cropX = Math.Max(cropX, 0);
                     cropY = Math.Max(cropY, 0);
-                    cropWidth = Math.Min(cropWidth, ((BitmapSource)Image).PixelWidth - cropX);
-                    cropHeight = Math.Min(cropHeight, ((BitmapSource)Image).PixelHeight - cropY);
+                    cropWidth = Math.Min(cropWidth, ((BitmapSource)InputImage).PixelWidth - cropX);
+                    cropHeight = Math.Min(cropHeight, ((BitmapSource)InputImage).PixelHeight - cropY);
                     if (cropWidth > 0 && cropHeight > 0)
                     {
                         Int32Rect cropRect = new Int32Rect(cropX, cropY, cropWidth, cropHeight);
-                        CroppedBitmap croppedBitmap = new CroppedBitmap(((BitmapSource)Image), cropRect);
+                        CroppedBitmap croppedBitmap = new CroppedBitmap(((BitmapSource)InputImage), cropRect);
                         ROI roi = new ROI()
                         {
                             X = cropX,
@@ -297,7 +280,7 @@ namespace SharpFrame.Views.SharpStyle
         private void MouseLDown(object sender, MouseButtonEventArgs e)
         {
 
-            if (ImageCanvas == null || SelectionRectangle == null || Image == null)
+            if (ImageCanvas == null || SelectionRectangle == null || InputImage == null)
                 return;
             startPoint = e.GetPosition(ImageCanvas);
             isSelecting = true;
@@ -315,7 +298,7 @@ namespace SharpFrame.Views.SharpStyle
         public static readonly RoutedEvent InterceptROIEvent = EventManager.RegisterRoutedEvent(
             "InterceptROI", RoutingStrategy.Bubble, typeof(RoutedEventHandler<ROI>), typeof(OpenVision));
 
-
+        // Roi区域Command
         public event RoutedEventHandler<ROI> InterceptROI
         {
             add { AddHandler(InterceptROIEvent, value); }
@@ -332,15 +315,32 @@ namespace SharpFrame.Views.SharpStyle
             RaiseEvent(args);
         }
 
-        // 注册路由事件
+        // 注册鼠标移动路由事件
         public static readonly RoutedEvent MovePixelInfoEvent = EventManager.RegisterRoutedEvent(
             "MovePixelInfo", RoutingStrategy.Bubble, typeof(PixelInfoRoutedEventHandler), typeof(OpenVision));
 
-        // 事件包装器
+        // 鼠标位移像素Command
         public event PixelInfoRoutedEventHandler MovePixelInfo
         {
             add { AddHandler(MovePixelInfoEvent, value); }
             remove { RemoveHandler(MovePixelInfoEvent, value); }
+        }
+
+
+        protected void RaiseIntercepHandelValueEvent(IntPtr handel)
+        {
+            HandelEventArgs args = new HandelEventArgs(HandelEvent, handel);
+            RaiseEvent(args);
+        }
+
+        public static readonly RoutedEvent HandelEvent = EventManager.RegisterRoutedEvent(
+            "HandelValue", RoutingStrategy.Bubble, typeof(HandelValueEventHandler), typeof(OpenVision));
+
+        // 控件HandelCommand
+        public event HandelValueEventHandler HandelValue
+        {
+            add { AddHandler(HandelEvent, value); }
+            remove { RemoveHandler(HandelEvent, value); }
         }
 
         /// <summary>
@@ -384,7 +384,7 @@ namespace SharpFrame.Views.SharpStyle
         }
 
         public static readonly DependencyProperty OpenVisionImage = DependencyProperty.Register(
-           "Image",
+           "InputImage",
            typeof(ImageSource),
            typeof(OpenVision),
            new PropertyMetadata(null, OnImageChanged));
@@ -412,11 +412,22 @@ namespace SharpFrame.Views.SharpStyle
         /// <summary>
         /// 图像源
         /// </summary>
-        public ImageSource Image
+        public ImageSource InputImage
         {
             get { return (ImageSource)GetValue(OpenVisionImage); }
             set { SetValue(OpenVisionImage, value); ; }
         }
+
+        // 注册Handle
+        private static readonly DependencyPropertyKey HandlePropertyKey =
+        DependencyProperty.RegisterReadOnly(
+            "Handle",
+            typeof(IntPtr),
+            typeof(OpenVision),
+            new PropertyMetadata(IntPtr.Zero));
+
+        public IntPtr Handle =>
+            (IntPtr)GetValue(HandlePropertyKey.DependencyProperty);
 
         public void Dispose()
         {
@@ -438,9 +449,19 @@ namespace SharpFrame.Views.SharpStyle
             transformGroup = null;
             scaleTransform = null;
             translateTransform = null;
-            Image = null;
+            InputImage = null;
             GC.SuppressFinalize(this);
         }
+    }
+
+    public class HandelEventArgs : RoutedEventArgs
+    {
+        public IntPtr ImageHandel { get; set; }
+        public HandelEventArgs(RoutedEvent routedEvent, IntPtr handel) : base(routedEvent)
+        {
+            ImageHandel = handel;
+        }
+        public delegate void HandelValueEventHandler(object sender, HandelEventArgs e);
     }
 
     #region 鼠标跟随像素信息路由事件

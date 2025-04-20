@@ -1,4 +1,5 @@
 ﻿using MvCamCtrl.NET;
+using OpenCvSharp;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -59,9 +60,10 @@ namespace SharpFrame.Common
 
         private UInt32[] sizefordriver;
 
-        [DllImport("kernel32.dll", EntryPoint = "CopyMemory", SetLastError = false)]
+        [DllImport("kernel32.dll", EntryPoint = "RtlCopyMemory", SetLastError = false)]
         public static extern void CopyMemory(IntPtr dest, IntPtr src, uint count);
         public IntPtr[] Pictorialhandle { get; set; }//获取外部图像控件的句柄
+        public Bitmap[] PictorialBitmap { get; set; }
 
         public enum FetchModel
         {
@@ -130,6 +132,7 @@ namespace SharpFrame.Common
             writeableBitmaps = new WriteableBitmap[deviceinfo.nDeviceNum];
             mycamera = new MyCamera[deviceinfo.nDeviceNum];
             Pictorialhandle = new IntPtr[deviceinfo.nDeviceNum];
+            PictorialBitmap = new Bitmap[deviceinfo.nDeviceNum];
             devicemessage = new MyCamera.MV_CC_DEVICE_INFO[deviceinfo.nDeviceNum];
             MvsOpen = new bool[deviceinfo.nDeviceNum];
             m_BufForDriver = new IntPtr[deviceinfo.nDeviceNum];
@@ -178,7 +181,7 @@ namespace SharpFrame.Common
                 {
                     if (m_BufForDriver[nIndex] != IntPtr.Zero)
                     {
-                        Marshal.Release(m_BufForDriver[nIndex]);
+                        Marshal.FreeHGlobal(m_BufForDriver[nIndex]);
                         m_BufForDriver[nIndex] = IntPtr.Zero;
                     }
 
@@ -192,7 +195,7 @@ namespace SharpFrame.Common
                 frameinfo[nIndex] = pFrameInfo;
                 CopyMemory(m_BufForDriver[nIndex], pData, pFrameInfo.nFrameLen);
             }
-            Callback_conversion(nIndex, pFrameInfo);
+            //Callback_conversion(nIndex, pFrameInfo, ref PictorialBitmap[nIndex]);
             stDisplayInfo[nIndex] = new MyCamera.MV_DISPLAY_FRAME_INFO();
             stDisplayInfo[nIndex].hWnd = Pictorialhandle[nIndex];
             stDisplayInfo[nIndex].pData = pData;
@@ -202,19 +205,17 @@ namespace SharpFrame.Common
             stDisplayInfo[nIndex].enPixelType = pFrameInfo.enPixelType;
             //ConvertToWriteableBitmap(nIndex, pFrameInfo);
             mycamera[nIndex].MV_CC_DisplayOneFrame_NET(ref stDisplayInfo[nIndex]);
-
         }
 
-        private Bitmap Callback_conversion(int indexes, MV_FRAME_OUT_INFO_EX pFrameInfo)
+        private void Callback_conversion(int indexes, MV_FRAME_OUT_INFO_EX pFrameInfo, ref Bitmap bitmap)
         {
             byte[] imageData = new byte[pFrameInfo.nFrameLen];
             Marshal.Copy(m_BufForDriver[indexes], imageData, 0, (int)pFrameInfo.nFrameLen);
-            Bitmap bitmap = new Bitmap(pFrameInfo.nWidth, pFrameInfo.nHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
+            bitmap = new Bitmap(pFrameInfo.nWidth, pFrameInfo.nHeight, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
             Rectangle rect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
             BitmapData bitmapData = bitmap.LockBits(rect, ImageLockMode.WriteOnly, bitmap.PixelFormat);
             Marshal.Copy(imageData, 0, bitmapData.Scan0, imageData.Length);
             bitmap.UnlockBits(bitmapData);
-            return bitmap;
         }
 
         /// <summary>
@@ -328,7 +329,6 @@ namespace SharpFrame.Common
                         break;
                 }
                 writeableBitmaps[nIndex] = new WriteableBitmap((int)pFrameInfo.nWidth, (int)pFrameInfo.nHeight, 96, 96, pixelFormat, null);
-                //WriteableBitmaps_Initialize?.Invoke(nIndex, writeableBitmaps[nIndex]);
             }
             WriteableBitmap bitmap = writeableBitmaps[nIndex];
             try
@@ -379,25 +379,25 @@ namespace SharpFrame.Common
             }
         }
 
-        public BitmapImage GetBitmapImage(int Index)
+        public WriteableBitmap GetBitmapImage(int Index)
         {
             ConvertToWriteableBitmap(Index, frameinfo[Index]);
-            using (MemoryStream stream = new MemoryStream())
-            {
-                PngBitmapEncoder encoder = new PngBitmapEncoder();
-                encoder.Frames.Add(BitmapFrame.Create(writeableBitmaps[Index]));
-                encoder.Save(stream);
-                stream.Position = 0;
-                BitmapImage bitmapImage = new BitmapImage();
-                bitmapImage.BeginInit();
-                bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                bitmapImage.StreamSource = stream;
-                bitmapImage.EndInit();
-                bitmapImage.Freeze();
-                return bitmapImage;
-            }
+            return writeableBitmaps[Index];
+            //using (MemoryStream stream = new MemoryStream())
+            //{
+            //    PngBitmapEncoder encoder = new PngBitmapEncoder();
+            //    encoder.Frames.Add(BitmapFrame.Create(writeableBitmaps[Index]));
+            //    encoder.Save(stream);
+            //    stream.Position = 0;
+            //    BitmapImage bitmapImage = new BitmapImage();
+            //    bitmapImage.BeginInit();
+            //    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+            //    bitmapImage.StreamSource = stream;
+            //    bitmapImage.EndInit();
+            //    bitmapImage.Freeze();
+            //    return bitmapImage;
+            //}
         }
-
 
         private void SaveWriteableBitmapAsPng(WriteableBitmap bitmap, string filePath)
         {
@@ -494,7 +494,7 @@ namespace SharpFrame.Common
             {
                 if (m_BufForDriver[i] != IntPtr.Zero)
                 {
-                    Marshal.Release(m_BufForDriver[i]);
+                    Marshal.FreeHGlobal(m_BufForDriver[i]);
                 }
                 mycamera[i].MV_CC_CloseDevice_NET();
                 mycamera[i].MV_CC_DestroyDevice_NET();
@@ -525,30 +525,30 @@ namespace SharpFrame.Common
         //    }
         //}
 
-        ///// <summary>
-        ///// 采集单通道图像
-        ///// </summary>
-        ///// <param name="indexes"></param>
-        ///// <returns></returns>
-        ///// <exception cref="AbandonedMutexException"></exception>
-        //public Mat GetMat8UCV1(int indexes)
-        //{
-        //    try
-        //    {
-        //        var height = stDisplayInfo[indexes].nHeight;
-        //        var width = stDisplayInfo[indexes].nWidth;
-        //        Mat imat = new Mat(height, width, MatType.CV_8UC1, stDisplayInfo[indexes].pData);//单通道
+        /// <summary>
+        /// 采集单通道图像
+        /// </summary>
+        /// <param name="indexes"></param>
+        /// <returns></returns>
+        /// <exception cref="AbandonedMutexException"></exception>
+        public Mat GetMat8UCV1(int indexes)
+        {
+            try
+            {
+                var height = stDisplayInfo[indexes].nHeight;
+                var width = stDisplayInfo[indexes].nWidth;
+                Mat imat = Mat.FromPixelData(height, width, MatType.CV_8UC1, stDisplayInfo[indexes].pData);//单通道
 
-        //        Cv2.CvtColor(imat, imat, ColorConversionCodes.BGR2RGB);//将颜色通道BGR 8转换为RGB
-        //        GC.Collect();
-        //        return imat;
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return null;
-        //        throw new AbandonedMutexException("未将相机Image Format Control.Pixel Format中格式设置为BGR8");
-        //    }
-        //}
+                Cv2.CvtColor(imat, imat, ColorConversionCodes.BGR2RGB);//将颜色通道BGR 8转换为RGB
+                GC.Collect();
+                return imat;
+            }
+            catch (Exception)
+            {
+                return null;
+                throw new AbandonedMutexException("未将相机Image Format Control.Pixel Format中格式设置为BGR8");
+            }
+        }
 
         //public void Arguments(int indexes, float arg)//曝光参数设置
         //{

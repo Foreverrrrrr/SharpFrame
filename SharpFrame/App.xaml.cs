@@ -6,6 +6,7 @@ using SharpFrame.Views.ToolViews;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Forms;
+using static SharpFrame.ViewModels.SystemLogInViewModel;
 
 namespace SharpFrame
 {
@@ -28,79 +29,17 @@ namespace SharpFrame
         protected override void OnInitialized()
         {
             SystemLogIn systemLogIn = new SystemLogIn();
-            Permission_Check();
-            SystemLogInViewModel.LogInLoad += (x, y) =>
+            SystemLogInViewModel.LogInLoad += (evt) =>
             {
-                switch (x)
-                {
-                    case "生产员":
-                        base.OnInitialized();
-                        MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.ProductionStaff });
-                        break;
-                    case "工程师":
-                        if (y == "2024")
-                        {
-                            base.OnInitialized();
-                            MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.Engineer });
-                        }
-                        else
-                        {
-                            System.Windows.Forms.MessageBox.Show("输入密码错误", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                        break;
-                    case "供应商":
-                        if (y == "2025")
-                        {
-                            base.OnInitialized();
-                            MainWindowViewModel.PermissionCommand.Execute(new Permission() { type = PermissionType.Supplier });
-                        }
-                        else
-                        {
-                            System.Windows.Forms.MessageBox.Show("输入密码错误", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                            return;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                systemLogIn.Close();
+                evt.Invoke(new Permission() { systemLog = systemLogIn });
             };
-            systemLogIn.Show();
+            systemLogIn.ShowDialog();
+            base.OnInitialized();
             //Cloud_Client client = new Cloud_Client("122.51.121.66", 13222);
             //client.SuccessfuConnectEvent += (t, x) =>
             //{
             //    SystemLogIn.viewModel.Client_On_Line = true;
             //};
-        }
-
-        private void Permission_Check()
-        {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzgwNTQyMEAzMjM5MmUzMDJlMzAzYjMyMzkzYmhGTE1JZ2NlRlRtbG50bnllZ040L0pqMnN2am5qVkgva3RoRGhmS0xXQUU9");
-            ClientKeyMaker.ClientToken clientToken = new ClientKeyMaker.ClientToken();
-            clientToken.LoginEvent += ((b, t1, t2) =>
-            {
-                if (!b)
-                {
-                    SystemLogIn.viewModel.Warranty = false;
-                    System.Windows.Forms.MessageBox.Show($"未授权，请联系管理员进行授权!\r\n30分钟后将自动退出", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                else
-                {
-                    SystemLogIn.viewModel.Warranty = true;
-                }
-            });
-            clientToken.InAdvanceEvent += ((b, t1, t2) =>
-            {
-
-            });
-            clientToken.ExpireEvent += ((b, t1, t2) =>
-            {
-                System.Windows.Forms.MessageBox.Show($"软件授权到期", "提示", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                SystemLogIn.viewModel.Warranty = null;
-            });
-            clientToken.Initialize();
-            ViewModels.AuthorizedRegistrationViewModels.AuthorizedRegistrationViewModel.token = clientToken;
         }
 
         /// <summary>

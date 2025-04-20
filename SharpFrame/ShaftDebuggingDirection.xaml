@@ -1,0 +1,97 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:SharpFrame.Views.SharpStyle" 
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
+    xmlns:prism="http://prismlibrary.com/">
+
+    <Style TargetType="{x:Type local:ShaftDebuggingDirection}">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type local:ShaftDebuggingDirection}">
+                    <Border>
+                        <Grid Margin="5">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="30"/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="20"/>
+                            </Grid.RowDefinitions>
+                            <TextBlock Grid.Row="0" Margin="0,0,0,10" Text="{TemplateBinding StyleName}" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13" Foreground="Black"/>
+                            <Grid  Grid.Row="1" >
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Grid.Column="0" Text="速度" Width="30" Height="20" FontSize="13"/>
+                                <Slider Grid.Column="1" Value="50" Minimum="1" Maximum="100" Style="{StaticResource MaterialDesignDiscreteSlider}"/>
+                            </Grid>
+                            <Grid Grid.Row="2">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Button x:Name="X1" Grid.Column="1" Grid.Row="0" Height="40" Width="80" FontSize="12" Background="White" BorderBrush="Black">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                            <prism:InvokeCommandAction Command="{Binding X_PositiveDirection, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                            <prism:InvokeCommandAction Command="{Binding DirectionStopCommand, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                   CommandParameter="X1"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <materialDesign:PackIcon Kind="ChevronDoubleUp" Height="20" Width="20"/>
+                                </Button>
+                                <Button x:Name="X2" Grid.Column="1" Grid.Row="2" Height="40" Width="80" FontSize="12" Background="White" BorderBrush="Black">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                            <prism:InvokeCommandAction Command="{Binding X_NegativeDirection}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                            <prism:InvokeCommandAction Command="{Binding DirectionStopCommand}" 
+                                                   CommandParameter="X2" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <materialDesign:PackIcon Kind="ChevronDoubleDown" Height="20" Width="20"/>
+                                </Button>
+                                <Button x:Name="Y1" Grid.Column="0" Grid.Row="1" Height="40" Width="80" FontSize="12" Background="White" BorderBrush="Black">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                            <prism:InvokeCommandAction Command="{Binding Y_NegativeDirection}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                            <prism:InvokeCommandAction Command="{Binding DirectionStopCommand}"
+                                                    CommandParameter="Y1" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <materialDesign:PackIcon Kind="ChevronDoubleLeft" Height="20" Width="20"/>
+                                </Button>
+                                <Button x:Name="Y2" Grid.Column="2" Grid.Row="1" Height="40" Width="80" FontSize="12" Background="White" BorderBrush="Black">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                            <prism:InvokeCommandAction Command="{Binding Y_PositiveDirection}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="PreviewMouseLeftButtonUp">
+                                            <prism:InvokeCommandAction Command="{Binding DirectionStopCommand}"
+                                                   CommandParameter="Y2" />
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                    <materialDesign:PackIcon Kind="ChevronDoubleRight" Height="20" Width="20"/>
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

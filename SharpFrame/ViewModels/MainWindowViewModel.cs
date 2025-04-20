@@ -12,6 +12,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using static SharpFrame.Logic.Base.Thread_Auto_Base;
+using static SharpFrame.ViewModels.SystemLogInViewModel;
 
 namespace SharpFrame.ViewModels
 {
@@ -49,8 +50,9 @@ namespace SharpFrame.ViewModels
         {
             this.regionManager = regionManager;
             this.eventAggregator = aggregator;
-            PageLoadFinish = new DelegateCommand(() =>
+            eventAggregator.GetEvent<PageLoadEvent>().Subscribe((classobj) =>
             {
+                Stop_State = true;
                 aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = DateTime.Now.ToString(), Level = "正常", Value = "程序加载完成" });
                 Thread_Auto_Base.NewClass_RunEvent += (t, s, ob) =>
                 {
@@ -60,11 +62,6 @@ namespace SharpFrame.ViewModels
                 {
                     aggregator.GetEvent<MainLogOutput>().Publish(new MainLogStructure() { Time = t.ToString(), Level = "正常", Value = s });
                 });
-                Thread_Auto_Base.NewClass();
-                Stop_State = true;
-                InfoStructure info = new InfoStructure();
-                ProductionInformation.ReadProductionInfo(ref info);
-                aggregator.GetEvent<PageLoadEvent>().Publish(new object[] { null });
             });
             aggregator.GetEvent<Notification>().Subscribe((t) =>
             {
@@ -209,7 +206,7 @@ namespace SharpFrame.ViewModels
         #endregion
 
         #region 停止按钮
-        private bool _stop_state = false;
+        private bool _stop_state;
         /// <summary>
         /// 停止按钮状态
         /// </summary>
@@ -365,25 +362,4 @@ namespace SharpFrame.ViewModels
     /// 进度条动画通知
     /// </summary>
     public class Loadingbar : PubSubEvent<bool> { }
-
-    public class Permission
-    {
-        public PermissionType type { get; set; }
-    }
-
-    public enum PermissionType
-    {
-        /// <summary>
-        /// 工程师
-        /// </summary>
-        Engineer,
-        /// <summary>
-        /// 供应商
-        /// </summary>
-        Supplier,
-        /// <summary>
-        /// 生产员
-        /// </summary>
-        ProductionStaff
-    }
 }
