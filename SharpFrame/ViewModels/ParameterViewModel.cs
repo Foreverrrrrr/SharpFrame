@@ -18,6 +18,7 @@ using System.Linq;
 using System.Web.UI.WebControls;
 using System.Windows.Forms;
 using System.Windows.Input;
+using static SharpFrame.ViewModels.SystemLogInViewModel;
 using Parameter = SharpFrame.Structure.Parameter.Parameter;
 using SystemParameter = SharpFrame.Structure.Parameter.SystemParameter;
 
@@ -42,7 +43,7 @@ namespace SharpFrame.ViewModels
             });
             eventAggregator.GetEvent<PageLoadEvent>().Subscribe((classobj) =>
             {
-                var system_list = ParameterJsonTool.GetJson();
+                List<string> system_list = classobj[0] as List<string>;
                 if (system_list.Count > 0)
                 {
                     for (int i = 0; i < system_list.Count; i++)
@@ -114,7 +115,7 @@ namespace SharpFrame.ViewModels
                     //ParameterJsonTool.NewJosn(DateTime.Now.ToString("yyyy_MM_dd"));
                 }
                 system_list = ParameterJsonTool.GetJson();
-            });
+            }, ThreadOption.UIThread);
             eventAggregator.GetEvent<Close_MessageEvent>().Subscribe(() =>
             {
                 SetParameterValue(ParameterName);

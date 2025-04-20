@@ -10,7 +10,7 @@
                     <Border Height="{Binding VisionHeight, RelativeSource={RelativeSource TemplatedParent}}" Width="{Binding VisionWidth, RelativeSource={RelativeSource TemplatedParent}}">
                         <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
                             <Canvas x:Name="ImageCanvas" Background="LightGray" Height="Auto" Width="Auto">
-                                <Image x:Name="OriginalImageControl" Stretch="None" Height="Auto" Width="Auto" Source="{Binding Image, RelativeSource={RelativeSource TemplatedParent}}"/>
+                                <Image x:Name="OriginalImageControl" Stretch="None" Height="Auto" Width="Auto" Source="{Binding InputImage, RelativeSource={RelativeSource TemplatedParent}}"/>
                                 <Rectangle x:Name="SelectionRectangle" Stroke="Red" StrokeThickness="1" Visibility="Collapsed" >
                                     <Rectangle.Fill>
                                         <SolidColorBrush Color="Red" Opacity="0.3"/>

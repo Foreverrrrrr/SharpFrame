@@ -1,7 +1,9 @@
 ﻿using SharpFrame.ViewModels;
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Animation;
 
 namespace SharpFrame.Views
 {

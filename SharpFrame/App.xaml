@@ -13,6 +13,7 @@
                 <ResourceDictionary Source="/FlowChartStyle.xaml"/>
                 <ResourceDictionary Source="/PictureEditorStyle.xaml"/>
                 <ResourceDictionary Source="/GenericNotificationStyle.xaml"/>
+                <ResourceDictionary Source="/ShaftDebuggingDirection.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

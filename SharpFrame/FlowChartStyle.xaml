@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:syncfusion="http://schemas.syncfusion.com/wpf"
     xmlns:local="clr-namespace:SharpFrame.Views.SharpStyle">
-    
+
     <Style TargetType="syncfusion:Connector">
         <Setter Property="ConnectorGeometryStyle">
             <Setter.Value>
@@ -28,14 +28,14 @@
                 <ControlTemplate TargetType="{x:Type local:FlowChart}">
                     <Border Background="#FFADF100">
                         <syncfusion:SfDiagram x:Name="diagram" Margin="10" PortHoverEffect="Shrink"
-                                              Nodes="{TemplateBinding FlowChartNodes}"
-                                              Connectors="{TemplateBinding Connectors}"
-                                              Constraints="{TemplateBinding Constraints}"
-                                              PortVisibility="Visible"
-                                              ViewPortChangedCommand="{TemplateBinding ViewPortChangedCommand}"
-                                              ItemDoubleTappedCommand="{TemplateBinding ItemDoubleTappedCommand}"  
-                                              ConnectorEditingCommand="{Binding ConnectorEditingCommand}"
-                                              ItemDeletedCommand="{Binding ItemDeletedCommand}">
+                                           Nodes="{TemplateBinding FlowChartNodes}"
+                                           Connectors="{TemplateBinding Connectors}"
+                                           Constraints="{TemplateBinding Constraints}"
+                                           PortVisibility="Visible"
+                                           ViewPortChangedCommand="{TemplateBinding ViewPortChangedCommand}"
+                                           ItemDoubleTappedCommand="{TemplateBinding ItemDoubleTappedCommand}"  
+                                           ConnectorEditingCommand="{Binding ConnectorEditingCommand}"
+                                           ItemDeletedCommand="{Binding ItemDeletedCommand}">
                             <syncfusion:SfDiagram.SnapSettings>
                                 <syncfusion:SnapSettings SnapConstraints="ShowLines" />
                             </syncfusion:SfDiagram.SnapSettings>
