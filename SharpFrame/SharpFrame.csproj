@@ -327,24 +327,6 @@
     <None Include="Log4Net\log4net.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Motion Control\dll\AXIS%28雷赛OIS%29.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\AXIS.ini">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\ErherCAT.eni">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\ErrorSql.db">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\LTDMC.lib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\MCDLL_NET.lib">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Parameter\131.json" />
     <None Include="Parameter\2024_06_13.json" />
     <None Include="Parameter\Base.json" />
@@ -397,24 +379,11 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Debug file\" />
     <Folder Include="Logic\AutoMain\" />
     <Folder Include="ViewModels\DialogServiceViewModels\" />
     <Folder Include="Views\DialogServiceViews\" />
     <Folder Include="Views\PrismDialog\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Motion Control\dll\ADCNCx64.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\APS168.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\LTDMC.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Motion Control\dll\MCDLL_NET.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

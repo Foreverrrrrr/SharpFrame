@@ -2,7 +2,32 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:local="clr-namespace:SharpFrame.Views.SharpStyle" 
                     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes">
-    
+    <Style x:Key="IconButtonStyle" TargetType="Button">
+        <Setter Property="Width" Value="25"/>
+        <Setter Property="Height" Value="25"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Grid>
+                        <ContentPresenter 
+                                HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter Property="Background" Value="#FFE0E0E0"/>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter Property="Background" Value="#FFD0D0D0"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
     <Style TargetType="{x:Type local:GenericNotification}">
         <Setter Property="Template">
             <Setter.Value>
@@ -18,22 +43,22 @@
                                 <local:NotificationTemplateSelector>
                                     <local:NotificationTemplateSelector.InfoTemplate>
                                         <DataTemplate>
-                                            <local:Notification_Info Message="{Binding Message}" MessageTime="{Binding MessageTime}"/>
+                                            <local:Notification_Info Message="{Binding Message}" MessageTime="{Binding MessageTime}" ID="{Binding ID}"/>
                                         </DataTemplate>
                                     </local:NotificationTemplateSelector.InfoTemplate>
                                     <local:NotificationTemplateSelector.WarningTemplate>
                                         <DataTemplate>
-                                            <local:Notification_Warning Message="{Binding Message}" MessageTime="{Binding MessageTime}"/>
+                                            <local:Notification_Warning Message="{Binding Message}" MessageTime="{Binding MessageTime}" ID="{Binding ID}"/>
                                         </DataTemplate>
                                     </local:NotificationTemplateSelector.WarningTemplate>
                                     <local:NotificationTemplateSelector.ErrorTemplate>
                                         <DataTemplate>
-                                            <local:Notification_Error Message="{Binding Message}" MessageTime="{Binding MessageTime}"/>
+                                            <local:Notification_Error Message="{Binding Message}" MessageTime="{Binding MessageTime}" ID="{Binding ID}" CloseCommand="{Binding Delete}"/>
                                         </DataTemplate>
                                     </local:NotificationTemplateSelector.ErrorTemplate>
                                     <local:NotificationTemplateSelector.FatalTemplate>
                                         <DataTemplate>
-                                            <local:Notification_Fatal Message="{Binding Message}" MessageTime="{Binding MessageTime}"/>
+                                            <local:Notification_Fatal Message="{Binding Message}" MessageTime="{Binding MessageTime}" ID="{Binding ID}"/>
                                         </DataTemplate>
                                     </local:NotificationTemplateSelector.FatalTemplate>
                                 </local:NotificationTemplateSelector>
@@ -53,8 +78,8 @@
                             <EventTrigger RoutedEvent="Border.Loaded">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="280" Duration="0:0:0.3"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="300" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -70,7 +95,7 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="10"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="12"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" Foreground="Black" FontSize="12"/>
                                 <TextBlock Grid.Column="0" Grid.Row="1" Margin="3,0,0,0" Text="{TemplateBinding MessageTime}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="10"/>
                             </Grid>
                         </Grid>
@@ -88,8 +113,8 @@
                             <EventTrigger RoutedEvent="Border.Loaded">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="280" Duration="0:0:0.3"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="300" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -105,7 +130,7 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="10"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="12"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" Foreground="Black" FontSize="12"/>
                                 <TextBlock Grid.Column="0" Grid.Row="1" Margin="3,0,0,0" Text="{TemplateBinding MessageTime}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="10"/>
                             </Grid>
                         </Grid>
@@ -123,8 +148,8 @@
                             <EventTrigger RoutedEvent="Border.Loaded">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="280" Duration="0:0:0.3"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="300" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -133,6 +158,8 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="20"/>
+                                <ColumnDefinition Width="2"/>
                             </Grid.ColumnDefinitions>
                             <materialDesign:PackIcon Grid.Column="0" Kind="Alert" Margin="3,0,0,0" Height="35" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center" Foreground="Red"/>
                             <Grid Grid.Column="1">
@@ -140,8 +167,13 @@
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="10"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="12"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" Foreground="Black" FontSize="12"/>
                                 <TextBlock Grid.Column="0" Grid.Row="1" Margin="3,0,0,0" Text="{TemplateBinding MessageTime}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="10"/>
+                            </Grid>
+                            <Grid Grid.Column="2">
+                                <Button Style="{StaticResource IconButtonStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" Command="{TemplateBinding CloseCommand}" CommandParameter="{TemplateBinding ID}">
+                                    <materialDesign:PackIcon  Kind="CloseThick" Margin="0" Height="20" Width="20" Foreground="Black" />
+                                </Button>
                             </Grid>
                         </Grid>
                     </Border>
@@ -158,8 +190,8 @@
                             <EventTrigger RoutedEvent="Border.Loaded">
                                 <BeginStoryboard>
                                     <Storyboard>
-                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="280" Duration="0:0:0.3"/>
-                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Width" From="0.0" To="300" Duration="0:0:0.3"/>
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity" From="0.0" To="1.0" Duration="0:0:0.5"/>
                                     </Storyboard>
                                 </BeginStoryboard>
                             </EventTrigger>
@@ -169,13 +201,13 @@
                                 <ColumnDefinition Width="Auto"/>
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
-                            <materialDesign:PackIcon Grid.Column="0" Kind="CloseThick" Margin="3,0,0,0" Height="35" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+                            <materialDesign:PackIcon Grid.Column="0" Kind="CloseCircle" Margin="3,0,0,0" Height="35" Width="35" HorizontalAlignment="Left" VerticalAlignment="Center"/>
                             <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*"/>
                                     <RowDefinition Height="10"/>
                                 </Grid.RowDefinitions>
-                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="12"/>
+                                <TextBlock Grid.Column="1" Grid.Row="0" Margin="3,0,0,0" Text="{TemplateBinding Message}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="250" Foreground="Black" FontSize="12"/>
                                 <TextBlock Grid.Column="0" Grid.Row="1" Margin="3,0,0,0" Text="{TemplateBinding MessageTime}" HorizontalAlignment="Left" VerticalAlignment="Center" TextWrapping="Wrap" MaxWidth="160" Foreground="Black" FontSize="10"/>
                             </Grid>
                         </Grid>

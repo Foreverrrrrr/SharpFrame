@@ -8,6 +8,7 @@ using System.Windows;
 using System.Windows.Threading;
 using static SharpFrame.Common.Geometry;
 using Prism.Events;
+using Prism.Commands;
 
 namespace SharpFrame.Views.SharpStyle
 {
@@ -42,8 +43,10 @@ namespace SharpFrame.Views.SharpStyle
 
     public class NotificationInfoModel : NotificationModel
     {
+        public override int ID { get; set; }
         public override string Message { get; set; }
         public override string MessageTime { get; set; }
+        public override DelegateCommand<object> Delete { get; set; }
         protected override bool ShouldStartTimer()
         {
             return true;
@@ -52,10 +55,10 @@ namespace SharpFrame.Views.SharpStyle
 
     public class NotificationWarningModel : NotificationModel
     {
+        public override int ID { get; set; }
         public override string Message { get; set; }
-
         public override string MessageTime { get; set; }
-
+        public override DelegateCommand<object> Delete { get; set; }
         protected override bool ShouldStartTimer()
         {
             return true;
@@ -64,10 +67,10 @@ namespace SharpFrame.Views.SharpStyle
 
     public class NotificationErrorModel : NotificationModel
     {
+        public override int ID { get; set; }
         public override string Message { get; set; }
-
         public override string MessageTime { get; set; }
-
+        public override DelegateCommand<object> Delete { get; set; }
         protected override bool ShouldStartTimer()
         {
             return false;
@@ -76,9 +79,10 @@ namespace SharpFrame.Views.SharpStyle
 
     public class NotificationFatalModel : NotificationModel
     {
+        public override int ID { get; set; }
         public override string Message { get; set; }
-
         public override string MessageTime { get; set; }
+        public override DelegateCommand<object> Delete { get; set; }
 
         protected override bool ShouldStartTimer()
         {
@@ -89,7 +93,6 @@ namespace SharpFrame.Views.SharpStyle
     public abstract class NotificationModel
     {
         protected readonly DispatcherTimer AutoRemoveTimer = new DispatcherTimer();
-
         public event RoutedEventHandler AutoRemoveRequested;
         public NotificationModel()
         {
@@ -111,10 +114,13 @@ namespace SharpFrame.Views.SharpStyle
         {
             return true;
         }
+        public abstract int ID { get; set; }
 
         public abstract string Message { get; set; }
 
         public abstract string MessageTime { get; set; }
+
+        public abstract DelegateCommand<object> Delete { get; set; }
     }
 
     public class Notification : PubSubEvent<Notification>

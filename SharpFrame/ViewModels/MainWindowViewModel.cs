@@ -9,6 +9,7 @@ using SharpFrame.Views;
 using SharpFrame.Views.SharpStyle;
 using System;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Windows;
 using static SharpFrame.Logic.Base.Thread_Auto_Base;
 
@@ -71,23 +72,33 @@ namespace SharpFrame.ViewModels
                 switch (t.Type)
                 {
                     case Notification.InfoType.Info:
-                        model = new NotificationInfoModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        model = new NotificationInfoModel() { ID = IsNotice.Count, Message = t.Message, MessageTime = t.MessageTime };
                         break;
                     case Notification.InfoType.Warning:
-                        model = new NotificationWarningModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        model = new NotificationWarningModel() { ID = IsNotice.Count, Message = t.Message, MessageTime = t.MessageTime };
                         break;
                     case Notification.InfoType.Error:
-                        model = new NotificationErrorModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        model = new NotificationErrorModel()
+                        {
+                            ID = IsNotice.Count,
+                            Message = t.Message,
+                            MessageTime = t.MessageTime,
+                        };
+                        model.Delete = new DelegateCommand<object>((obj) =>
+                        {
+                            var rmove = IsNotice.Where(x => x.ID == Convert.ToInt32(obj)).First();
+                            IsNotice.Remove(rmove);
+                        });
                         break;
                     case Notification.InfoType.Fatal:
-                        model = new NotificationFatalModel() { Message = t.Message, MessageTime = t.MessageTime };
+                        model = new NotificationFatalModel() { ID = IsNotice.Count, Message = t.Message, MessageTime = t.MessageTime };
                         break;
                 }
                 IsNotice.Insert(IsNotice.Count, model);
             }, ThreadOption.UIThread);
             VisionSwitching = new DelegateCommand<string>((ManagerName) =>
             {
-                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = ManagerName });
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Error, Message = ManagerName });
                 try
                 {
                     regionManager.Regions["MainRegion"].RequestNavigate(ManagerName);
