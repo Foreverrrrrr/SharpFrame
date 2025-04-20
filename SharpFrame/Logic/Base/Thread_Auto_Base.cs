@@ -131,7 +131,7 @@ namespace SharpFrame.Logic.Base
                     {
                         item.Is_Running = false;
                         Thread_Auto_Base.Auto_Th.Remove(item);
-                        item.New_Thread.Abort();
+                        item.New_Thread.Interrupt();
                         item.New_Thread.Join();
                     }
                     GC.Collect();
@@ -150,7 +150,7 @@ namespace SharpFrame.Logic.Base
                     var t = Thread_Auto_Base.Auto_Th.FirstOrDefault(x => x.Thread_Name == Thread_Name);
                     t.Is_Running = false;
                     Thread_Auto_Base.Auto_Th.Remove(t);
-                    t.New_Thread.Abort();
+                    t.New_Thread.Interrupt();
                     t.New_Thread.Join();
                     GC.Collect();
                 }
