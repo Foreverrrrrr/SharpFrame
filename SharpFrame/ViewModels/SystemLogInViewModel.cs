@@ -70,7 +70,7 @@ namespace SharpFrame.ViewModels
                     Lonin_Log = "正在初始化......";
                     var system_list = ParameterJsonTool.GetJson();
                     pageLoadparameter.Add(system_list);
-                    Thread_Auto_Base.NewClass();
+                    Thread_Auto_Base.NewClass(new object[] { null });
                     InfoStructure info = new InfoStructure();
                     ProductionInformation.ReadProductionInfo(ref info);
                     pageLoadparameter.Add(info);
@@ -96,10 +96,10 @@ namespace SharpFrame.ViewModels
         private void Token()
         {
             Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MzgwNTQyMEAzMjM5MmUzMDJlMzAzYjMyMzkzYmhGTE1JZ2NlRlRtbG50bnllZ040L0pqMnN2am5qVkgva3RoRGhmS0xXQUU9");
-            ClientKeyMaker.ClientToken clientToken = new ClientKeyMaker.ClientToken();
+            ClientKeyMaker.ClientToken clientToken = new ClientKeyMaker.ClientToken("Sharp");
             clientToken.LoginEvent += ((b, t1, t2) =>
             {
-                if (!b)
+                if (b == 0)
                 {
                     Warranty = false;
                     System.Windows.Forms.MessageBox.Show($"未授权，请联系管理员进行授权!\r\n30分钟后将自动退出", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);

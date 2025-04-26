@@ -18,17 +18,21 @@ namespace SharpFrame.ViewModels
             this.eventAggregator = aggregator;
             eventAggregator.GetEvent<MainLogOutput>().Subscribe((MainLogStructure x) =>
             {
-                Log.Info(x);
+                MainLogStructure mainLog = new MainLogStructure();
+                mainLog.Time = x.Time;
+                mainLog.Level = x.Level;
+                mainLog.Value = x.Value;
+                Log.Info(mainLog);
                 if (MainLog.Count < 200)
                 {
-                    MainLog.Insert(0, x);
+                    MainLog.Insert(0, mainLog);
                 }
                 else
                 {
                     MainLog.RemoveAt(MainLog.Count - 1);
-                    MainLog.Insert(0, x);
+                    MainLog.Insert(0, mainLog);
                 }
-            });
+            }, ThreadOption.UIThread);
         }
 
         private ObservableCollection<MainLogStructure> _mainlog = new ObservableCollection<MainLogStructure>();

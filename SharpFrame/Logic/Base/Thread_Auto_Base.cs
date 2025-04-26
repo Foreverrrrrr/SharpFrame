@@ -46,8 +46,9 @@ namespace SharpFrame.Logic.Base
 
         public enum Send_Variable
         {
-            Start, AwaitStarted, Suspend, Stop, Reset, E_Stop
+            Start, AwaitStarted, Suspend, Stop, Reset, ResetOver, E_Stop
         }
+
 
         public Thread_Auto_Base() { }
 
@@ -55,7 +56,7 @@ namespace SharpFrame.Logic.Base
         /// 流程初始化
         /// </summary>
         /// <param name="spintime">线程循环休眠时间</param>
-        public static void NewClass(int spintime = 50)
+        public static void NewClass(object[] objects, int spintime = 50)
         {
             DataStructureConfiguration(typeof(Send_Variable));
             Type baseType = typeof(Thread_Auto_Base);
@@ -63,7 +64,7 @@ namespace SharpFrame.Logic.Base
             Type[] derivedTypes = assembly.GetTypes().Where(t => t.IsSubclassOf(baseType)).ToArray();
             foreach (Type derivedType in derivedTypes)
             {
-                object instance = Activator.CreateInstance(derivedType);
+                object instance = Activator.CreateInstance(derivedType, new object[] { objects });
                 MethodInfo[] methods = derivedType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance);
                 foreach (MethodInfo method in methods)
                 {
@@ -72,6 +73,26 @@ namespace SharpFrame.Logic.Base
                         Thread_Configuration(derivedType.Name, method, instance, spintime);
                 }
                 NewClass_RunEvent?.Invoke(DateTime.Now, derivedType.FullName + "中自动运行线程启动", instance);
+            }
+        }
+
+        public static void InitializeStart()
+        {
+            if (Auto_Th != null)
+            {
+                foreach (var item in Auto_Th)
+                {
+                    item.Class.Initialize(new object());
+                }
+            }
+        }
+
+        public static void InitializeStart(string classname)
+        {
+            if (Auto_Th != null)
+            {
+                var t = Auto_Th.Find(x => x.Thread_Name == classname);
+                t.Class.Initialize(new object());
             }
         }
 
@@ -115,7 +136,39 @@ namespace SharpFrame.Logic.Base
             threadBase.New_Thread.Name = class_na + "." + threadBase.Thread_Name;
             threadBase.New_Thread.IsBackground = true;
             threadBase.New_Thread.Start();
+            threadBase.Class = class_new as Thread_Auto_Base;
+            threadBase.Interrupt = threadBase.Class.Interrupt;
             Auto_Th.Add(threadBase);
+        }
+
+        /// <summary>
+        /// 线程中断暂停
+        /// </summary>
+        public static void Thraead_Stop()
+        {
+            if (Auto_Th != null)
+                if (Auto_Th.Count > 0)
+                {
+                    foreach (var item in Auto_Th)
+                    {
+                        item.Interrupt.Reset();
+                    }
+                }
+        }
+
+        /// <summary>
+        /// 线程中断复位
+        /// </summary>
+        public static void Thraead_Reset()
+        {
+            if (Auto_Th != null)
+                if (Auto_Th.Count > 0)
+                {
+                    foreach (var item in Auto_Th)
+                    {
+                        item.Interrupt.Set();
+                    }
+                }
         }
 
         /// <summary>
@@ -131,7 +184,7 @@ namespace SharpFrame.Logic.Base
                     {
                         item.Is_Running = false;
                         Thread_Auto_Base.Auto_Th.Remove(item);
-                        item.New_Thread.Interrupt();
+                        item.New_Thread.Abort();
                         item.New_Thread.Join();
                     }
                     GC.Collect();
@@ -150,7 +203,7 @@ namespace SharpFrame.Logic.Base
                     var t = Thread_Auto_Base.Auto_Th.FirstOrDefault(x => x.Thread_Name == Thread_Name);
                     t.Is_Running = false;
                     Thread_Auto_Base.Auto_Th.Remove(t);
-                    t.New_Thread.Interrupt();
+                    t.New_Thread.Abort();
                     t.New_Thread.Join();
                     GC.Collect();
                 }

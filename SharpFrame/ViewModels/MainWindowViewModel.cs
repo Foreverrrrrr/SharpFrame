@@ -10,6 +10,7 @@ using SharpFrame.Views.SharpStyle;
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using static SharpFrame.Logic.Base.Thread_Auto_Base;
 using static SharpFrame.ViewModels.SystemLogInViewModel;
@@ -136,6 +137,30 @@ namespace SharpFrame.ViewModels
                     }
                 }
             };
+            eventAggregator.GetEvent<StartInform>().Subscribe(() =>
+            {
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = "启动触发" });
+            }, ThreadOption.BackgroundThread);
+            eventAggregator.GetEvent<ResetInform>().Subscribe(() =>
+            {
+                LoadingBarState = true;
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = "复位触发" });
+                Thread.Sleep(1000);
+                Thread_Auto_Base.SetEnum(Thread_Auto_Base.Send_Variable.ResetOver, true);
+                SystemState = "复位完成";
+                LoadingBarState = false;
+            }, ThreadOption.BackgroundThread);
+            eventAggregator.GetEvent<SuspendInform>().Subscribe(() =>
+            {
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = "暂停触发" });
+
+            }, ThreadOption.BackgroundThread);
+            eventAggregator.GetEvent<StopInform>().Subscribe(() =>
+            {
+                Thread_Auto_Base.Thraead_Dispose();
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = "停止触发" });
+
+            }, ThreadOption.BackgroundThread);
             Viewinitial();
         }
 
@@ -251,7 +276,6 @@ namespace SharpFrame.ViewModels
                     LoadingBarState = false;
                     _reset_state = value;
                     RaisePropertyChanged();
-                    SystemState = "待启动";
                 }
                 else if (!value)
                 {

@@ -201,6 +201,17 @@ namespace SharpFrame.Views.SharpStyle
         public override void OnApplyTemplate()
         {
             base.OnApplyTemplate();
+            SfDiagram = GetTemplateChild("diagram") as SfDiagram;
+            var t2 = SfDiagram.SelectedItems as SelectorViewModel;
+            t2.SelectorConstraints = SelectorConstraints.Tooltip;
+            SfDiagram.SnapSettings = new SnapSettings()
+            {
+                SnapConstraints = SnapConstraints.ShowLines,
+            };
+        }
+        protected override void OnInitialized(EventArgs e)
+        {
+            base.OnInitialized(e);
             ControlElement = this;
             ViewPortChangedCommand = new DelegateCommand<object>((parameter) =>
             {
@@ -212,20 +223,12 @@ namespace SharpFrame.Views.SharpStyle
                 currentViewPort = args.NewValue.ContentBounds;
             }
             );
-            SfDiagram = GetTemplateChild("diagram") as SfDiagram;
-            var t2 = SfDiagram.SelectedItems as SelectorViewModel;
-            t2.SelectorConstraints = SelectorConstraints.Tooltip;
-            SfDiagram.SnapSettings = new SnapSettings()
-            {
-                SnapConstraints = SnapConstraints.ShowLines,
-            };
             ICommand command = InitializationCompleteCommand;
             if (command != null && command.CanExecute(null))
             {
                 command.Execute(null);
             }
         }
-
         public static Brush ConvertHexToBrush(string hexColor)
         {
             BrushConverter converter = new BrushConverter();

@@ -388,6 +388,7 @@ namespace MotionClass
                         } while (AxisStates[axis][4] == 0);
                         do
                         {
+                            Thread.Sleep(20);
                             if (time != 0 && stopwatch.Elapsed.TotalMilliseconds > time)
                                 goto Timeout;
                         } while (LTDMC.dmc_check_success_pulse(Card_Number[0], axis) != 1);
@@ -635,6 +636,7 @@ namespace MotionClass
                         } while (AxisStates[axis][4] == 0);
                         do
                         {
+                            Thread.Sleep(20);
                             if (state.OutTime != 0 && stopwatch.Elapsed.TotalMilliseconds > state.OutTime)
                                 goto Timeout;
                         } while (LTDMC.dmc_check_done(Card_Number[0], state.Axis) != 1);
@@ -648,7 +650,6 @@ namespace MotionClass
                             {
                                 IMoveStateQueue.Remove(state);
                             }
-
                             LTDMC.dmc_set_position(Card_Number[0], axis, 0);
                             LTDMC.dmc_set_encoder(Card_Number[0], axis, 0);
                             return;
@@ -874,15 +875,24 @@ namespace MotionClass
                         return;
                     }
                     CardErrorMessage(LTDMC.dmc_clear_stop_reason(Card_Number[0], item));
-                    if (IMoveStateQueue.Exists(e => e.Axis == item))
+                    if (IMoveStateQueue != null)
                     {
-                        var colose = IMoveStateQueue.Find(e => e.Axis == item);
-                        IMoveStateQueue.Remove(colose);
-                    }
-                    if (IMoveStateQueue.Exists(e => e.Axises.Contains(item)))
-                    {
-                        var colose = IMoveStateQueue.FirstOrDefault(x => x.Axises.Contains(item));
-                        IMoveStateQueue.Remove(colose);
+                        if (IMoveStateQueue.Count > 0)
+                        {
+                            try
+                            {
+                                if (IMoveStateQueue.Exists(e => e.Axises.Contains(item)))
+                                {
+                                    var colose = IMoveStateQueue.FirstOrDefault(x => x.Axises.Contains(item));
+                                    IMoveStateQueue.Remove(colose);
+                                }
+                            }
+                            catch (Exception)
+                            {
+
+
+                            }
+                        }
                     }
                 }
                 MoveState state = new MoveState()
@@ -1777,6 +1787,7 @@ namespace MotionClass
                             } while (AxisStates[axis][4] == 0);
                             do
                             {
+                                Thread.Sleep(20);
                                 if (time != 0 && stopwatch.Elapsed.TotalMilliseconds > time)
                                     goto Timeout;
                             } while (LTDMC.dmc_check_success_pulse(Card_Number[0], axis) != 1);

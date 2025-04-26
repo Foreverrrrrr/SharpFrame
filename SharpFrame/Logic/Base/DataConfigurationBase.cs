@@ -18,3 +18,4 @@
         public int EnumKey { get; set; }
     }
 }
+
