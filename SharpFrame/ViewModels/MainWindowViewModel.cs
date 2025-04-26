@@ -95,7 +95,7 @@ namespace SharpFrame.ViewModels
             }, ThreadOption.UIThread);
             VisionSwitching = new DelegateCommand<string>((ManagerName) =>
             {
-                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Error, Message = ManagerName });
+                aggregator.GetEvent<Notification>().Publish(new Notification() { Type = Notification.InfoType.Info, Message = ManagerName });
                 try
                 {
                     regionManager.Regions["MainRegion"].RequestNavigate(ManagerName);
